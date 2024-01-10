@@ -1,3 +1,7 @@
+# Runtime configuration
+config*.toml
+!config.example.toml
+
 # Python artifacts
 __pycache__/
 *.py[cod]

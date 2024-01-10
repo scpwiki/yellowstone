@@ -14,6 +14,21 @@ $ source env/bin/activate
 $ pip install -r requirements.txt
 ```
 
+Then when doing development, install the development dependencies and then run linting to ensure things are in order:
+
+```
+$ pip install -r requirements.dev.txt
+$ black bzhr
+$ isort bzhr
+$ mypy bzhr
+```
+
+Then, to run a local instance, create a `config.toml` file (see `config.example.toml` as an example) and run:
+
+```
+$ python -m bzhr config.toml
+```
+
 If you are packaging for a production deployment, the easiest method is to build a Docker image and ship that:
 
 ```
