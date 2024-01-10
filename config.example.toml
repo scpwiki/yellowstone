@@ -6,6 +6,9 @@ api-key = "< WIKIDOT API KEY HERE >"
 region = "us-east-2"
 bucket = "wikidot-backup"
 
+access-key = "< ACCESS KEY >"
+secret-key = "< SECRET KEY >"
+
 [backup]
 sites = [
     "scp-int",
