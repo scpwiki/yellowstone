@@ -1,0 +1,3 @@
+boto3>=1.34
+mypy>=1.7
+requests>=2.31
