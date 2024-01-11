@@ -3,6 +3,7 @@ Parsing and storing information gathered from the configuration file.
 """
 
 import tomllib
+from argparse import ArgumentParser
 from dataclasses import dataclass
 
 
@@ -19,3 +20,13 @@ class Config:
         self.s3_region = data["s3"]["region"]
         self.s3_bucket = data["s3"]["bucket"]
         self.site_slugs = data["wikidot"]["sites"]
+
+    @staticmethod
+    def parse_args() -> Config:
+        parser = ArgumentParser(description="The BZHR Wikidot backup system")
+        parser.add_argument(
+            "config",
+            help="The path to the configuration file to use",
+        )
+        args = parser.parse_args()
+        return Config(args.config)
