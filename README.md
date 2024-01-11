@@ -1,6 +1,6 @@
 ## bzhr &mdash; Comprehensive Backups for Wikidot
 
-A new comprehensive backup system for Wikidot, maintained by the SCP-EN Technical Team.
+A new comprehensive backup system for Wikidot, maintained by the SCP-EN Technical Team and contributors.
 
 This program is written for Python 3.11 or later.
 
