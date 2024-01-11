@@ -21,3 +21,6 @@ class BackupDispatcher:
     def __init__(self, config):
         self.config = config
         self.wikidot = Wikidot()
+
+    async def main_loop(self):
+        pass
