@@ -39,4 +39,4 @@ $ docker build -t scpwiki/bzhr:latest .
 
 This software is available for use under the terms of the GNU General Public License v2 Only.
 
-The project is named for the _Bright/Zartion Hominid Replicators (BZHR)_ from [SCP-2000](https://scpwiki.com/scp-2000), an anomaly meant to be able to "reset" humanity in case of a significant K-class event. The BZHR system is the heart of SCP-2000, able to manufacture enough humans to repopulate Earth.
+The project is named for the Bright/Zartion Hominid Replicators (BZHR) from [SCP-2000](https://scpwiki.com/scp-2000), an anomaly meant to be able to "reset" the world in case of a significant K-class event. The BZHR system is the heart of SCP-2000, able to mass-manufacture humans to repopulate Earth.
