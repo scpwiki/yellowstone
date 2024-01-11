@@ -1,15 +1,8 @@
-[wikidot]
-username = "< WIKIDOT USER >"
-api-key = "< WIKIDOT API KEY HERE >"
-
 [aws]
 region = "us-east-2"
 bucket = "wikidot-backup"
 
-access-key = "< ACCESS KEY >"
-secret-key = "< SECRET KEY >"
-
-[backup]
+[wikidot]
 sites = [
     "scp-int",
     "scp-en",

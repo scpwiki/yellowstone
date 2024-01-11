@@ -1,6 +1,5 @@
-# Runtime configuration
-config*.toml
-!config.example.toml
+# Secrets
+.env
 
 # Python artifacts
 __pycache__/
