@@ -8,11 +8,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-    wikidot_username: str
-    wikidot_api_key: str
-    aws_region: str
-    aws_access_key: str
-    aws_secret_key: str
+    s3_region: str
     s3_bucket: str
     site_slugs: list[str]
 
@@ -20,10 +16,6 @@ class Config:
         with open(path, "rb") as file:
             data = tomllib.load(file)
 
-        self.wikidot_username = data["wikidot"]["username"]
-        self.wikidot_api_key = data["wikidot"]["api-key"]
-        self.aws_region = data["aws"]["region"]
-        self.s3_bucket = data["aws"]["bucket"]
-        self.aws_access_key = data["aws"]["access-key"]
-        self.aws_secret_key = data["aws"]["secret-key"]
-        self.site_slugs = data["backup"]["sites"]
+        self.s3_region = data["s3"]["region"]
+        self.s3_bucket = data["s3"]["bucket"]
+        self.site_slugs = data["wikidot"]["sites"]
