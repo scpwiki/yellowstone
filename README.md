@@ -2,7 +2,7 @@
 
 A new comprehensive backup system for Wikidot, maintained by the SCP-EN Technical Team and contributors.
 
-This program is written for Python 3.11 or later.
+This program is written for Python 3.11 or later. You will need a Wikidot API key, which you can get if you have a [Pro Plan](https://www.wikidot.com/plans).
 
 ### Setup
 
