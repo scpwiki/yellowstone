@@ -29,7 +29,10 @@ class Wikidot:
         data["wikidot_token7"] = token7
         cookies = requests.cookies.RequestsCookieJar()
         cookies.set(
-            "wikidot_token7", token7, domain=f"{site_slug}.wikidot.com", path="/",
+            "wikidot_token7",
+            token7,
+            domain=f"{site_slug}.wikidot.com",
+            path="/",
         )
 
         # Make HTTP request
