@@ -4,6 +4,8 @@ Common utilities for interfacing with Wikidot.
 
 from xmlrpc.client import ServerProxy
 
+from .config import getenv
+
 
 class Wikidot:
     __slots__ = ("proxy",)
