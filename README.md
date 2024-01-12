@@ -18,8 +18,8 @@ Then when doing development, install the development dependencies and then run l
 
 ```
 $ pip install -r requirements.dev.txt
-$ black bzhr
-$ isort bzhr
+$ ruff check bzhr
+$ ruff format bzhr
 $ mypy bzhr
 ```
 

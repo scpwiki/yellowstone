@@ -1,3 +1,2 @@
-black>=23.0
-isort>=5.13
 mypy>=1.7
+ruff>=0.1
