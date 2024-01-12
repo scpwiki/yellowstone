@@ -47,7 +47,9 @@ class Wikidot:
         # Process body
         match response["status"]:
             case "ok":
-                return response["body"]
+                body = response["body"]
+                assert isinstance(body, dict)
+                return body
             case "wrong_token7":
                 raise WikidotTokenError
             case status:
