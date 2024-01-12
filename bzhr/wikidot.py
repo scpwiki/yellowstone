@@ -57,6 +57,7 @@ class Wikidot:
 
     @staticmethod
     def generate_token7() -> str:
+        # TODO need to do fetching logic
         return "".join(random.choice(string.hexdigits) for _ in range(32))
 
 
