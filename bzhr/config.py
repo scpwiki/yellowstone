@@ -2,6 +2,7 @@
 Parsing and storing information gathered from the configuration file.
 """
 
+import os
 import tomllib
 from argparse import ArgumentParser
 from dataclasses import dataclass
@@ -30,3 +31,10 @@ class Config:
         )
         args = parser.parse_args()
         return Config(args.config)
+
+
+def getenv(var_name) -> str:
+    value = os.getenv(var_name)
+    if not value:
+        raise RuntimeError(f"No value for environment variable {var_name}")
+    return value
