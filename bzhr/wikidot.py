@@ -47,7 +47,7 @@ class Wikidot:
                 return response["body"]
             case "wrong_token7":
                 raise WikidotTokenError
-            status:
+            case status:
                 raise WikidotError(status)
 
     @staticmethod
