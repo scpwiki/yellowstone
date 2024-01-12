@@ -42,10 +42,13 @@ class Wikidot:
         response = r.json()
 
         # Process body
-        if response["status"] == "ok":
-            return response["body"]
-        else:
-            raise WikidotError(response["status"])
+        match response["status"]:
+            case "ok":
+                return response["body"]
+            case "wrong_token7":
+                raise WikidotTokenError
+            status:
+                raise WikidotError(status)
 
     @staticmethod
     def generate_token7() -> str:
@@ -53,4 +56,8 @@ class Wikidot:
 
 
 class WikidotError(RuntimeError):
+    pass
+
+
+class WikidotTokenError(WikidotError):
     pass
