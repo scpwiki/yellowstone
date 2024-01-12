@@ -8,7 +8,7 @@ This program is written for Python 3.11 or later. You will need a Wikidot API ke
 
 Create a Python virtual environment, and then install this project's dependencies:
 
-```
+```bash
 $ python -m venv env
 $ source env/bin/activate
 $ pip install -r requirements.txt
@@ -16,22 +16,22 @@ $ pip install -r requirements.txt
 
 Then when doing development, install the development dependencies and then run linting to ensure things are in order:
 
-```
+```bash
 $ pip install -r requirements.dev.txt
-$ ruff check bzhr
-$ ruff format bzhr
+$ ruff check -n bzhr  # -n here and below means --no-cache
+$ ruff format -n bzhr
 $ mypy bzhr
 ```
 
 Then, to run a local instance, create a `config.toml` file (see `config.example.toml` as an example) and run:
 
-```
+```bash
 $ python -m bzhr config.toml
 ```
 
 If you are packaging for a production deployment, the easiest method is to build a Docker image and ship that:
 
-```
+```bash
 $ docker build -t scpwiki/bzhr:latest .
 ```
 
