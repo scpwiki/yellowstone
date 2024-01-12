@@ -22,7 +22,7 @@ class Config:
         self.site_slugs = data["wikidot"]["sites"]
 
     @staticmethod
-    def parse_args() -> Config:
+    def parse_args():
         parser = ArgumentParser(description="The BZHR Wikidot backup system")
         parser.add_argument(
             "config",

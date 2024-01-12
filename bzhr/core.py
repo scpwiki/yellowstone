@@ -27,7 +27,7 @@ class BackupDispatcher:
         self.config = config
         self.wikidot = Wikidot()
         self.database = pugsql.module("queries/")
-        self.datbase.connect(os.getenv("POSTGRES_DATABASE_URL"))
+        self.database.connect(os.getenv("POSTGRES_DATABASE_URL"))
 
     def main_loop(self):
         pass
