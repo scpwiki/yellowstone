@@ -1,5 +1,4 @@
 [s3]
-region = "us-east-2"
 bucket = "wikidot-backup"
 
 [wikidot]

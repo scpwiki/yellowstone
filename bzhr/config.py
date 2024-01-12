@@ -10,7 +10,6 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-    s3_region: str
     s3_bucket: str
     site_slugs: list[str]
 
@@ -18,7 +17,6 @@ class Config:
         with open(path, "rb") as file:
             data = tomllib.load(file)
 
-        self.s3_region = data["s3"]["region"]
         self.s3_bucket = data["s3"]["bucket"]
         self.site_slugs = data["wikidot"]["sites"]
 
