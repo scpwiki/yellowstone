@@ -29,5 +29,5 @@ class BackupDispatcher:
         self.database = pugsql.module("queries/")
         self.datbase.connect(os.getenv("POSTGRES_DATABASE_URL"))
 
-    async def main_loop(self):
+    def main_loop(self):
         pass

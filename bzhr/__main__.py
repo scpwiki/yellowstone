@@ -1,4 +1,3 @@
-import asyncio
 
 from dotenv import load_dotenv
 
@@ -9,4 +8,4 @@ if __name__ == "__main__":
     load_dotenv()
     config = Config.parse_args()
     dispatch = BackupDispatcher(config)
-    asyncio.run(dispatch.main_loop())
+    dispatch.main_loop()
