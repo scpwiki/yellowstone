@@ -1,3 +1,6 @@
+"""
+Entrypoint for the BZHR Wikidot backup service.
+"""
 
 from dotenv import load_dotenv
 
