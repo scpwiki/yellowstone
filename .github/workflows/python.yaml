@@ -5,6 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      RUFF_NO_CACHE: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4
