@@ -2,8 +2,6 @@
 Entrypoint for the Yellowstone Wikidot backup service.
 """
 
-import asyncio
-
 from dotenv import load_dotenv
 
 from .config import Config
@@ -13,4 +11,4 @@ if __name__ == "__main__":
     load_dotenv()
     config = Config.parse_args()
     dispatch = BackupDispatcher(config)
-    asyncio.run(dispatch.main_loop())
+    dispatch.run()

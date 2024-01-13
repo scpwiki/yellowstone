@@ -5,11 +5,22 @@ This class instance runs the core of the server, which intakes new events
 and processes new tasks to be run in response.
 """
 
+from enum import Enum, unique
+from typing import NoReturn
+
 import pugsql
 
 from .config import Config, getenv
 from .s3 import S3
+from .types import Json
 from .wikidot import Wikidot
+
+
+@unique
+class JobType(Enum):
+    INDEX_SITE_PAGES = "index-site-pages"
+    INDEX_SITE_FORUMS = "index-site-forums"
+    INDEX_SITE_MEMBERS = "index-site-members"
 
 
 class BackupDispatcher:
@@ -31,5 +42,29 @@ class BackupDispatcher:
         self.database.connect(getenv("POSTGRES_DATABASE_URL"))
         self.s3 = S3(config)
 
-    async def main_loop(self) -> None:
-        pass
+    def run(self) -> NoReturn:
+        while True:
+            self.queue_all_sites()
+            self.process_all_jobs()
+
+    def queue_all_sites(self) -> None:
+        for site_slug in self.config.site_slugs:
+            self.add_job(JobType.INDEX_SITE_PAGES, site_slug)
+            self.add_job(JobType.INDEX_SITE_FORUMS, site_slug)
+            self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug)
+
+    def add_job(self, job_type: JobType, job_object: str, data: Json = None) -> None:
+        self.database.add_job(job_type=job_type.value, job_object=job_object, data=data)
+
+    def process_all_jobs(self) -> None:
+        while True:
+            jobs = self.database.get_jobs()
+            if not jobs:
+                # No more jobs
+                break
+
+            for job in jobs:
+                self.process_job(job)
+
+    def process_job(self, job) -> None:
+        raise NotImplementedError
