@@ -61,7 +61,7 @@ class BackupDispatcher:
             jobs = self.database.get_jobs()
             if not jobs:
                 # No more jobs
-                break
+                return
 
             for job in jobs:
                 self.process_job(job)
