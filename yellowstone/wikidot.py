@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 class Wikidot:
     __slots__ = ("proxy",)
 
+    proxy: ServerProxy
+
     def __init__(self) -> None:
         username = getenv("WIKIDOT_USERNAME")
         api_key = getenv("WIKIDOT_API_KEY")
