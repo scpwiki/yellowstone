@@ -35,19 +35,13 @@ class Wikidot:
         # Set token7
         token7 = self.generate_token7()
         data["wikidot_token7"] = token7
-        cookies = requests.cookies.RequestsCookieJar()
-        cookies.set(
-            "wikidot_token7",
-            token7,
-            domain=f"{site_slug}.wikidot.com",
-            path="/",
-        )
 
         # Make HTTP request
         r = requests.post(
-            f"https://{site_slug}.wikidot.com/ajax_module_connector",
+            f"https://{site_slug}.wikidot.com/ajax-module-connector.php",
+            cookies={"wikidot_token7": token7},
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
             data=data,
-            cookies=cookies,
         )
         r.raise_for_status()
         response = r.json()
