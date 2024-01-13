@@ -2,6 +2,7 @@
 Common utilities for interfacing with Wikidot.
 """
 
+import logging
 import random
 import string
 from xmlrpc.client import ServerProxy
@@ -10,6 +11,8 @@ from .config import getenv
 from .exceptions import WikidotError, WikidotTokenError
 
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 class Wikidot:
@@ -25,6 +28,8 @@ class Wikidot:
         )
 
     def ajax_module_connector(self, site_slug: str, data: dict) -> dict:
+        logger.debug("Making AJAX call for site '%s': %r", site_slug, data)
+
         # Set token7
         token7 = self.generate_token7()
         data["wikidot_token7"] = token7

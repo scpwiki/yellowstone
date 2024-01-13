@@ -2,10 +2,13 @@
 Parsing and storing information gathered from the configuration file.
 """
 
+import logging
 import os
 import tomllib
 from argparse import ArgumentParser
 from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -15,6 +18,7 @@ class Config:
 
     def __init__(self, path) -> None:
         with open(path, "rb") as file:
+            logger.info("Reading configuration file from %s", path)
             data = tomllib.load(file)
 
         self.s3_bucket = data["s3"]["bucket"]
@@ -22,6 +26,7 @@ class Config:
 
     @staticmethod
     def parse_args() -> "Config":
+        logger.debug("Parsing command-line arguments")
         parser = ArgumentParser(description="The Yellowstone Wikidot backup system")
         parser.add_argument(
             "config",

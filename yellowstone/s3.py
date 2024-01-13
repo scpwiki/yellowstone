@@ -3,6 +3,7 @@ Utilities for interacting with the S3 bucket where Wikidot files are being kept.
 """
 
 import hashlib
+import logging
 import os
 
 import boto3
@@ -11,6 +12,8 @@ from botocore.exceptions import ClientError
 from .config import Config, getenv
 
 FILE_DIRECTORY = "files"
+
+logger = logging.getLogger(__name__)
 
 
 class S3:
@@ -32,6 +35,7 @@ class S3:
     def upload_file(self, blob: bytes) -> None:
         blob_hash = hashlib.sha512(blob).hexdigest()
         path = os.path.join(FILE_DIRECTORY, blob_hash)
+        logging.info("Uploading S3 blob (hash %s, length %d)", blob_hash, len(blob))
 
         # Only upload if not present
         if self.object_exists(path):
@@ -42,6 +46,7 @@ class S3:
             )
 
     def object_exists(self, path) -> bool:
+        logging.debug("Checking if S3 path '%s' exists", path)
         try:
             self.client.head_object(
                 Bucket=self.bucket,
