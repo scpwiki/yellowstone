@@ -7,6 +7,7 @@ import string
 from xmlrpc.client import ServerProxy
 
 from .config import getenv
+from .exceptions import WikidotError, WikidotTokenError
 
 import requests
 
@@ -58,11 +59,3 @@ class Wikidot:
     @staticmethod
     def generate_token7() -> str:
         return "".join(random.choice(string.hexdigits) for _ in range(32))
-
-
-class WikidotError(RuntimeError):
-    pass
-
-
-class WikidotTokenError(WikidotError):
-    pass
