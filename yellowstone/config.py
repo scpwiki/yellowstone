@@ -22,7 +22,7 @@ class Config:
 
     @staticmethod
     def parse_args():
-        parser = ArgumentParser(description="The BZHR Wikidot backup system")
+        parser = ArgumentParser(description="The Yellowstone Wikidot backup system")
         parser.add_argument(
             "config",
             help="The path to the configuration file to use",

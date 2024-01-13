@@ -1,5 +1,5 @@
 """
-Entrypoint for the BZHR Wikidot backup service.
+Entrypoint for the Yellowstone Wikidot backup service.
 """
 
 import asyncio

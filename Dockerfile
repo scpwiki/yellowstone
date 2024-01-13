@@ -5,4 +5,4 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "-m", "bzhr", "/app/config.toml"]
+CMD ["python", "-m", "yellowstone", "/app/config.toml"]

@@ -1,4 +1,4 @@
-## bzhr &mdash; Comprehensive Backups for Wikidot
+## Yellowstone &mdash; Comprehensive Backups for Wikidot
 
 A new comprehensive backup system for Wikidot, maintained by the SCP-EN Technical Team and contributors.
 
@@ -18,25 +18,25 @@ Then when doing development, install the development dependencies and then run l
 
 ```bash
 $ pip install -r requirements.dev.txt
-$ ruff check -n bzhr  # -n here and below means --no-cache
-$ ruff format -n bzhr
-$ mypy bzhr
+$ ruff check -n yellowstone  # -n here and below means --no-cache
+$ ruff format -n yellowstone
+$ mypy yellowstone
 ```
 
 Then, to run a local instance, create a `config.toml` file (see `config.example.toml` as an example) and run:
 
 ```bash
-$ python -m bzhr config.toml
+$ python -m yellowstone config.toml
 ```
 
 If you are packaging for a production deployment, the easiest method is to build a Docker image and ship that:
 
 ```bash
-$ docker build -t scpwiki/bzhr:latest .
+$ docker build -t scpwiki/yellowstone:latest .
 ```
 
 ### License and Naming
 
 This software is available for use under the terms of the GNU General Public License v2 only.
 
-The project is named for the Bright/Zartion Hominid Replicators (BZHR) from [SCP-2000](https://scpwiki.com/scp-2000), an anomaly meant to be able to "reset" the world in case of a significant K-class event. The BZHR system is the heart of SCP-2000, able to mass-manufacture humans to repopulate Earth.
+The project is named for [SCP-2000](https://scpwiki.com/scp-2000), an anomaly meant to be able to "reset" the world in case of a significant K-class event. This anomaly is kept underground in Yellowstone National Park, thus the name.
