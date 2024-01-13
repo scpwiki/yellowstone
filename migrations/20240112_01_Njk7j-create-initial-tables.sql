@@ -45,5 +45,6 @@ CREATE TABLE page (
 CREATE TABLE job (
     job_id SERIAL PRIMARY KEY,
     job_type TEXT NOT NULL,
+    job_object TEXT NOT NULL,
     data JSON NOT NULL
 );
