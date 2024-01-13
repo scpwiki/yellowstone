@@ -23,4 +23,5 @@ def set_up_logging():
     logger.setLevel(level=logging.DEBUG)
     logger.addHandler(file_handler)
     logger.addHandler(stdout_handler)
+
     logger.info("Starting the Yellowstone Wikidot backup service...")
