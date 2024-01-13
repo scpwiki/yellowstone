@@ -5,6 +5,7 @@ This class instance runs the core of the server, which intakes new events
 and processes new tasks to be run in response.
 """
 
+import json
 from enum import Enum, unique
 from typing import NoReturn
 
@@ -54,7 +55,11 @@ class BackupDispatcher:
             self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug)
 
     def add_job(self, job_type: JobType, job_object: str, data: Json = None) -> None:
-        self.database.add_job(job_type=job_type.value, job_object=job_object, data=data)
+        self.database.add_job(
+            job_type=job_type.value,
+            job_object=job_object,
+            data=json.dumps(data),
+        )
 
     def process_all_jobs(self) -> None:
         while True:
