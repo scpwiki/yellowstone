@@ -24,12 +24,12 @@ class BackupDispatcher:
     wikidot: Wikidot
     s3: S3
 
-    def __init__(self, config):
+    def __init__(self, config) -> None:
         self.config = config
         self.wikidot = Wikidot()
         self.s3 = S3(config)
         self.database = pugsql.module("queries/")
         self.database.connect(getenv("POSTGRES_DATABASE_URL"))
 
-    async def main_loop(self):
+    async def main_loop(self) -> None:
         pass
