@@ -46,5 +46,7 @@ CREATE TABLE job (
     job_id SERIAL PRIMARY KEY,
     job_type TEXT NOT NULL,
     job_object TEXT NOT NULL,
-    data JSON NOT NULL
+    data JSON NOT NULL,
+
+    UNIQUE (job_type, job_object)
 );
