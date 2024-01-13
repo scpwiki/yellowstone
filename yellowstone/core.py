@@ -6,6 +6,7 @@ and processes new tasks to be run in response.
 """
 
 import json
+import logging
 from enum import Enum, unique
 from typing import NoReturn, TypedDict
 
@@ -15,6 +16,8 @@ from .config import Config, getenv
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
+
+logger = logging.getLogger(__name__)
 
 
 @unique
@@ -52,17 +55,21 @@ class BackupDispatcher:
         self.s3 = S3(config)
 
     def run(self) -> NoReturn:
+        logger.info("Running Yellowstone dispatcher")
         while True:
+            logger.info("Starting new process cycle")
             self.queue_all_sites()
             self.process_all_jobs()
 
     def queue_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
+            logger.info("Queueing site start jobs")
             self.add_job(JobType.INDEX_SITE_PAGES, site_slug)
             self.add_job(JobType.INDEX_SITE_FORUMS, site_slug)
             self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug)
 
     def add_job(self, job_type: JobType, job_object: str, data: Json = None) -> None:
+        logger.debug("Adding job %s for %s (data %r)", job_type.value, job_object, data)
         self.database.add_job(
             job_type=job_type.value,
             job_object=job_object,
@@ -70,17 +77,20 @@ class BackupDispatcher:
         )
 
     def process_all_jobs(self) -> None:
+        logger.info("Processing all jobs in queue")
         while True:
             jobs = self.database.get_jobs()
             if not jobs:
-                # No more jobs
+                logger.info("No more jobs received, done")
                 return
 
+            logger.debug("Got %d jobs from queue", len(jobs))
             for job in jobs:
                 self.process_job(job)
 
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
+        logger.info("Processing job %r", job)
         match job_type:
             case JobType.INDEX_SITE_PAGES:
                 raise NotImplementedError
