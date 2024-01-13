@@ -4,3 +4,4 @@ pugsql>=0.2.4
 python-dotenv>=1.0
 requests>=2.31
 types-requests>=2.31.0.0
+yoyo-migrations>=8.0

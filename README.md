@@ -4,6 +4,12 @@ A new comprehensive backup system for Wikidot, maintained by the SCP-EN Technica
 
 This program is written for Python 3.11 or later. You will need a Wikidot API key, which you can get if you have a [Pro Plan](https://www.wikidot.com/plans).
 
+### Configuration
+
+The `.env` file is sourced by the process to pull in secrets. Look at `.env.example` for the expected structure of this file. These secrets can also be set in the environment directly.
+
+Within `yoyo.ini`, override the database URL with the value of `$POSTGRES_DATABASE_URL`.
+
 ### Setup
 
 Create a Python virtual environment, and then install this project's dependencies:
