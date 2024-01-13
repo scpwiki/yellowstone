@@ -83,8 +83,8 @@ class BackupDispatcher:
         job_type = JobType(job["job_type"])
         match job_type:
             case JobType.INDEX_SITE_PAGES:
-                raise NotImplemented
+                raise NotImplementedError
             case JobType.INDEX_SITE_FORUMS:
-                raise NotImplemented
+                raise NotImplementedError
             case JobType.INDEX_SITE_MEMBERS:
-                raise NotImplemented
+                raise NotImplementedError
