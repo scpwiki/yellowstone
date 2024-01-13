@@ -2,6 +2,7 @@
 
 from Crypto.Hash import KangarooTwelve
 
+
 def hash_text(value: str) -> bytes:
     h = KangarooTwelve.new()
     h.update(value.encode("utf-8"))

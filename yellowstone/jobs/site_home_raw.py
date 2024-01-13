@@ -4,7 +4,7 @@ Scrape site and page data from the home page of a site.
 
 import re
 
-from ..utils import download_html, regex_extract
+from ..scraper import download_html, regex_extract
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
 SITE_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.siteId = (\d+);")
@@ -14,7 +14,7 @@ PAGE_SLUG_REGEX = re.compile(r'WIKIREQUEST\.info\.pageUnixName = "([^"]+)";')
 PAGE_CATEGORY_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.categoryId = (\d+);")
 
 
-def fetch(*, database, site_slug: str) -> SiteHomeRaw:
+def fetch(*, database, site_slug: str) -> None:
     url = f"https://{site_slug}.wikidot.com/"
     html = download_html(url)
     language = regex_extract(url, html, LANGUAGE_REGEX)[1]
