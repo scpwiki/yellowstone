@@ -20,10 +20,10 @@ jobs:
         run: pip install -r requirements.dev.txt
 
       - name: MyPy
-        run: mypy bzhr
+        run: mypy yellowstone
 
       - name: Lints
-        run: ruff check bzhr
+        run: ruff check yellowstone
 
       - name: Formatting
-        run: ruff format --check bzhr
+        run: ruff format --check yellowstone
