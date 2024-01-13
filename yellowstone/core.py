@@ -7,7 +7,7 @@ and processes new tasks to be run in response.
 
 import json
 from enum import Enum, unique
-from typing import NoReturn
+from typing import NoReturn, TypedDict
 
 import pugsql
 
@@ -22,6 +22,14 @@ class JobType(Enum):
     INDEX_SITE_PAGES = "index-site-pages"
     INDEX_SITE_FORUMS = "index-site-forums"
     INDEX_SITE_MEMBERS = "index-site-members"
+
+
+class JobDict(TypedDict):
+    job_id: int
+    job_type: str
+    job_object: str
+    attempts: int
+    data: Json
 
 
 class BackupDispatcher:
@@ -71,5 +79,5 @@ class BackupDispatcher:
             for job in jobs:
                 self.process_job(job)
 
-    def process_job(self, job) -> None:
+    def process_job(self, job: JobDict) -> None:
         raise NotImplementedError
