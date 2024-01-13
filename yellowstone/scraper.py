@@ -5,6 +5,7 @@ Utilities to assist with scraping.
 import re
 
 import requests
+from bs4 import BeautifulSoup, Tag
 
 from .exceptions import ScrapingError
 
@@ -21,3 +22,11 @@ def regex_extract(source: str, body: str, regex: re.Pattern) -> re.Match:
         raise ScrapingError(f"Pattern {regex.pattern} failed for {source}")
 
     return match
+
+
+def find_element(source: str, soup: BeautifulSoup, selector: str) -> Tag:
+    element = soup.select_one(selector)
+    if element is None:
+        raise ScrapingError(f"No {selector} found for {source}")
+
+    return element

@@ -6,7 +6,7 @@ import re
 
 from bs4 import BeautifulSoup
 
-from ..scraper import download_html, regex_extract
+from ..scraper import download_html, find_element, regex_extract
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
 SITE_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.siteId = (\d+);")
@@ -30,7 +30,8 @@ def fetch(*, database, site_slug: str) -> None:
     assert site_slug == site_slug_ex, "site slug in scraped page doesn't match"
 
     soup = BeautifulSoup(html, "html.parser")
-    element = soup.select_one("a#discuss-button")
+    element = find_element(url, soup, "a#discuss-button")
+    assert isinstance(element["href"], str), "element href is not a string"
     match = FORUM_POST_ID_REGEX.fullmatch(element["href"])
     if match is None:
         discussion_thread_id = None
