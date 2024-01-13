@@ -13,4 +13,3 @@ class WikidotError(RuntimeError):
 
 class WikidotTokenError(WikidotError):
     pass
-
