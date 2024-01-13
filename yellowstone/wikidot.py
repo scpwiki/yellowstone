@@ -14,7 +14,7 @@ import requests
 class Wikidot:
     __slots__ = ("proxy",)
 
-    def __init__(self):
+    def __init__(self) -> None:
         username = getenv("WIKIDOT_USERNAME")
         api_key = getenv("WIKIDOT_API_KEY")
         self.proxy = ServerProxy(

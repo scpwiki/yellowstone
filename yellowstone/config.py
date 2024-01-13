@@ -13,7 +13,7 @@ class Config:
     s3_bucket: str
     site_slugs: list[str]
 
-    def __init__(self, path):
+    def __init__(self, path) -> None:
         with open(path, "rb") as file:
             data = tomllib.load(file)
 
@@ -21,7 +21,7 @@ class Config:
         self.site_slugs = data["wikidot"]["sites"]
 
     @staticmethod
-    def parse_args():
+    def parse_args() -> "Config":
         parser = ArgumentParser(description="The Yellowstone Wikidot backup system")
         parser.add_argument(
             "config",
