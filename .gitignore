@@ -1,6 +1,9 @@
 # Secrets
 .env
 
+# Logging
+yellowstone.log
+
 # Python artifacts
 __pycache__/
 *.py[cod]
