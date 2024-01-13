@@ -19,7 +19,7 @@ CREATE TABLE text (
 );
 
 CREATE TABLE page (
-    site_slug TEXT FOREIGN KEY site(site_slug),
+    site_slug TEXT REFERENCES site(site_slug),
     page_slug TEXT NOT NULL,
     page_id INTEGER,
     created_at TIMESTAMP WITH TIME ZONE,
