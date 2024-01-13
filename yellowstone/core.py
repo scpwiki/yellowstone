@@ -8,6 +8,7 @@ and processes new tasks to be run in response.
 import pugsql
 
 from .config import Config, getenv
+from .jobs import site_home_raw
 from .s3 import S3
 from .wikidot import Wikidot
 
