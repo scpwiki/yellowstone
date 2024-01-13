@@ -17,7 +17,9 @@ def set_up_logging():
     file_handler.setFormatter(logging.Formatter(LOG_FORMAT))
 
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setFormatter(logging.Formatter(LOG_FILE_FORMAT, datefmt=LOG_DATE_FORMAT))
+    stdout_handler.setFormatter(
+        logging.Formatter(LOG_FILE_FORMAT, datefmt=LOG_DATE_FORMAT),
+    )
 
     logger = logging.getLogger(__package__)
     logger.setLevel(level=logging.DEBUG)
