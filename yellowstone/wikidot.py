@@ -29,7 +29,7 @@ class Wikidot:
             use_datetime=True,
         )
 
-    def ajax_module_connector(self, site_slug: str, data: dict) -> dict:
+    def ajax_module_connector(self, site_slug: str, data: dict) -> str:
         logger.debug("Making AJAX call for site '%s': %r", site_slug, data)
 
         # Set token7
@@ -50,7 +50,7 @@ class Wikidot:
         match response["status"]:
             case "ok":
                 body = response["body"]
-                assert isinstance(body, dict)
+                assert isinstance(body, str)
                 return body
             case "wrong_token7":
                 raise WikidotTokenError
