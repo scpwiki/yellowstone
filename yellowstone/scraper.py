@@ -4,6 +4,7 @@ Utilities to assist with scraping.
 
 import logging
 import re
+from typing import Union
 
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -29,7 +30,7 @@ def regex_extract(source: str, body: str, regex: re.Pattern) -> re.Match:
     return match
 
 
-def find_element(source: str, soup: BeautifulSoup, selector: str) -> Tag:
+def find_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) -> Tag:
     logging.debug("Selecting %s from %s", selector, source)
     element = soup.select_one(selector)
     if element is None:

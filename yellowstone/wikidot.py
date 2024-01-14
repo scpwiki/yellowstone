@@ -29,7 +29,12 @@ class Wikidot:
             use_datetime=True,
         )
 
-    def ajax_module_connector(self, site_slug: str, module_name: str, data: dict) -> str:
+    def ajax_module_connector(
+        self,
+        site_slug: str,
+        module_name: str,
+        data: dict,
+    ) -> str:
         logger.debug("Making AJAX call for site '%s': %r", site_slug, data)
 
         # Set token7
