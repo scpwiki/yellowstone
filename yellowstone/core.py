@@ -86,7 +86,6 @@ class BackupDispatcher:
                 logger.info("No more jobs received, done")
                 return
 
-            logger.debug("Got %d jobs from queue", len(jobs))
             for job in jobs:
                 self.process_job(job)
 
