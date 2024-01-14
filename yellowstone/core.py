@@ -17,6 +17,8 @@ from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
 
+MAX_RETRIES = 5
+
 logger = logging.getLogger(__name__)
 
 
@@ -91,10 +93,29 @@ class BackupDispatcher:
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
         logger.info("Processing job %r", job)
-        match job_type:
-            case JobType.INDEX_SITE_PAGES:
-                raise NotImplementedError
-            case JobType.INDEX_SITE_FORUMS:
-                raise NotImplementedError
-            case JobType.INDEX_SITE_MEMBERS:
-                raise NotImplementedError
+        try:
+            match job_type:
+                case JobType.INDEX_SITE_PAGES:
+                    raise NotImplementedError
+                case JobType.INDEX_SITE_FORUMS:
+                    raise NotImplementedError
+                case JobType.INDEX_SITE_MEMBERS:
+                    raise NotImplementedError
+        except Exception as _:
+            logger.error("Error occurred while processing job", exc_info=True)
+            if job["attempts"] < MAX_RETRIES:
+                logger.debug(
+                    "Adding to attempt count, currently at %d",
+                    job["attempts"],
+                )
+                self.database.fail_job(job_id=job["job_id"])
+            else:
+                logger.error("Job failed too many times, sending to dead letter queue")
+                with self.database.transaction():
+                    self.database.delete_job(job_id=job["job_id"])
+                    self.database.add_dead_job(
+                        job_id=job["job_id"],
+                        job_type=job["job_type"],
+                        job_object=job["job_object"],
+                        data=json.dumps(job["data"]),
+                    )
