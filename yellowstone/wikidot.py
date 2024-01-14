@@ -39,7 +39,7 @@ class Wikidot:
 
         # Set token7
         token7 = self.generate_token7()
-        data["module_name"] = module_name
+        data["moduleName"] = module_name
         data["wikidot_token7"] = token7
 
         # Make HTTP request
