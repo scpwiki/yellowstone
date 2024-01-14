@@ -10,6 +10,29 @@ CREATE TABLE site (
     UNIQUE (wikidot_id)
 );
 
+CREATE TABLE "user" (
+    user_slug TEXT PRIMARY KEY,
+    user_name TEXT,
+    wikidot_id INTEGER,
+    created_at TIMESTAMP,
+    account_type TEXT,
+    real_name TEXT,
+    bio TEXT,
+    karma SMALLINT,
+    website TEXT,
+    gender TEXT,
+
+    UNIQUE (wikidot_id)
+);
+
+CREATE TABLE site_member (
+    user_id INTEGER,
+    site_id INTEGER,
+    joined_at TIMESTAMP WITH TIME ZONE NOT NULL,
+
+    PRIMARY KEY (user_id, site_id)
+);
+
 -- Content-based hash using kangarootwelve
 CREATE TABLE text (
     hash BYTEA PRIMARY KEY,
