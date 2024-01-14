@@ -8,7 +8,6 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup, Tag
 
-from ..core import BackupDispatcher
 from ..exceptions import ScrapingError
 from ..scraper import find_element, regex_extract
 
@@ -18,14 +17,14 @@ TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
 
 
 @dataclass
-class MemberInfo:
+class SiteMemberData:
     name: str
     slug: str
     id: int
     joined_at: datetime
 
 
-def fetch(core: BackupDispatcher, site_slug: str, offset: int) -> None:
+def get(site_slug: str, offset: int) -> list[SiteMemberData]:
     assert offset > 0, "Offset cannot be zero or negative"
     html = core.wikidot.ajax_module_connector(
         site_slug,
@@ -38,13 +37,12 @@ def fetch(core: BackupDispatcher, site_slug: str, offset: int) -> None:
     )
     soup = BeautifulSoup(html, "html.parser")
     rows = soup.find_all("tr")
-    for row in rows:
-        member = process_row(str(row), row)
-        # TODO if ID matches then update the slug
-        # TODO add job for user info
+    return list(map(process_row, rows))
 
 
-def process_row(source: str, row: Tag) -> MemberInfo:
+def process_row(row: Tag) -> MemberInfo:
+    source = str(row)
+
     # Extract user information
     element = row.find_all("a")[1]
     name = element.text
@@ -55,7 +53,7 @@ def process_row(source: str, row: Tag) -> MemberInfo:
     element = find_element(source, row, "span.odate")
     joined_at = get_join_date(source, element.attrs["class"])
 
-    return MemberInfo(
+    return SiteMemberData(
         name=name,
         slug=slug,
         id=id,

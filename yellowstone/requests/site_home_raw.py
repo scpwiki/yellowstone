@@ -3,10 +3,11 @@ Scrape site and page data from the home page of a site.
 """
 
 import re
+from dataclasses import dataclass
+from typing import Optional
 
 from bs4 import BeautifulSoup
 
-from ..core import BackupDispatcher
 from ..scraper import download_html, find_element, regex_extract
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
@@ -18,7 +19,19 @@ PAGE_CATEGORY_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.categoryId = (\d+);")
 FORUM_POST_ID_REGEX = re.compile(r"/forum/t-(\d+)/.*")
 
 
-def fetch(core: BackupDispatcher, site_slug: str) -> None:
+@dataclass
+class SiteHomeData:
+    site_slug: str
+    site_id: int
+    site_language: str
+    home_page_slug: str
+    home_page_id: int
+    home_page_discussion_thread_id: Optional[int]
+    home_page_category_id: int
+
+
+
+def get(site_slug: str) -> SiteHomeData:
     url = f"https://{site_slug}.wikidot.com/"
     html = download_html(url)
 
@@ -39,17 +52,12 @@ def fetch(core: BackupDispatcher, site_slug: str) -> None:
     else:
         discussion_thread_id = int(match[1])
 
-    core.database.add_site(
+    return SiteHomeData(
         site_slug=site_slug,
-        wikidot_id=site_id,
-        home_slug=page_slug,
-        language=language,
-    )
-    core.database.add_page(
-        site_slug=site_slug,
-        page_slug=page_slug,
-        page_id=page_id,
-        page_category_id=page_category_id,
-        discussion_thread_id=discussion_thread_id,
-        discussion_thread_fetched=True,
+        site_id=site_id,
+        site_language=language,
+        home_page_slug=page_slug,
+        home_page_id=page_id,
+        home_page_discussion_thread_id=discussion_thread_id,
+        home_page_category_id=page_category_id,
     )
