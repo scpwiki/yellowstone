@@ -6,6 +6,7 @@ import re
 
 from bs4 import BeautifulSoup
 
+from ..core import BackupDispatcher
 from ..scraper import download_html, find_element, regex_extract
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
@@ -17,7 +18,7 @@ PAGE_CATEGORY_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.categoryId = (\d+);")
 FORUM_POST_ID_REGEX = re.compile(r"/forum/t-(\d+)/.*")
 
 
-def fetch(*, database, site_slug: str) -> None:
+def fetch(core: BackupDispatcher, site_slug: str) -> None:
     url = f"https://{site_slug}.wikidot.com/"
     html = download_html(url)
 
@@ -38,13 +39,13 @@ def fetch(*, database, site_slug: str) -> None:
     else:
         discussion_thread_id = int(match[1])
 
-    database.add_site(
+    core.database.add_site(
         site_slug=site_slug,
         wikidot_id=site_id,
         home_slug=page_slug,
         language=language,
     )
-    database.add_page(
+    core.database.add_page(
         site_slug=site_slug,
         page_slug=page_slug,
         page_id=page_id,
