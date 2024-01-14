@@ -26,6 +26,7 @@ class MemberInfo:
 
 
 def fetch(core: BackupDispatcher, site_slug: str, offset: int) -> None:
+    assert offset > 0, "Offset cannot be zero or negative"
     html = core.wikidot.ajax_module_connector(
         site_slug,
         "membership/MembersListModule",
