@@ -2,6 +2,7 @@
 Retrieve groups of site members by page.
 """
 
+import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime
@@ -14,6 +15,8 @@ from ..wikidot import Wikidot
 
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
