@@ -47,7 +47,7 @@ class S3:
 
         # Only upload if not present
         if not self.object_exists(path):
-            logging.info(
+            logger.info(
                 "Uploading S3 blob (directory %s, hash %s, length %d)",
                 directory,
                 hex_hash,
