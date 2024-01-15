@@ -4,6 +4,7 @@ Utilities to assist with scraping.
 
 import logging
 import re
+from datetime import datetime
 from typing import Union
 
 import requests

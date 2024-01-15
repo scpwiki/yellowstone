@@ -10,7 +10,7 @@ from datetime import datetime
 from bs4 import Tag
 
 from ..exceptions import ScrapingError
-from ..scraper import find_element, make_soup, regex_extract
+from ..scraper import find_element, make_soup, regex_extract, get_entity_date
 from ..wikidot import Wikidot
 
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
@@ -56,7 +56,7 @@ def process_row(row: Tag) -> MemberInfo:
 
     # Extract membership join date
     element = find_element(source, row, "span.odate")
-    joined_at = get_join_date(source, element.attrs["class"])
+    joined_at = get_entity_date(source, element.attrs["class"])
 
     return SiteMemberData(
         name=name,
