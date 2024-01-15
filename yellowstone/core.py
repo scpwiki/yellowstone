@@ -118,11 +118,6 @@ class BackupDispatcher:
         except UnknownJobError:
             logger.error("Fatal: No job implementation", exc_info=True)
             raise
-        except NotImplementedError:
-            logger.error(
-                "Job hit not-yet-implemented component, not increasing attempt count",
-                exc_info=True,
-            )
         except Exception as _:
             logger.error("Error occurred while processing job", exc_info=True)
             if job["attempts"] < MAX_RETRIES:
