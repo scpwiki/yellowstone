@@ -39,6 +39,12 @@ class Config:
         args = parser.parse_args()
         return Config(args.config)
 
+    def uses_tls(self, site_slug: str) -> bool:
+        return site_slug in self.sites_use_tls
+
+    def uses_admin_members(self, site_slug: str) -> bool:
+        return site_slug in self.sites_use_admin_members
+
 
 def getenv(var_name) -> str:
     value = os.getenv(var_name)
