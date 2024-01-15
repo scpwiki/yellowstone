@@ -13,6 +13,8 @@ from ..scraper import find_element, get_entity_date, make_soup, regex_extract
 from ..wikidot import Wikidot
 from .user import get_user_slug
 
+ADMIN_MEMBER_MODULE = "managesite/members/ManageSiteMembersListModule"
+REGULAR_MEMBER_MODULE = "membership/MembersListModule"
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
 
 logger = logging.getLogger(__name__)
@@ -26,14 +28,13 @@ class SiteMemberData:
     joined_at: datetime
 
 
-def get(site_slug: str, offset: int, *, wikidot: Wikidot) -> list[SiteMemberData]:
+def get(site_slug: str, offset: int, *, wikidot: Wikidot, use_admin: bool = False) -> list[SiteMemberData]:
     logger.info("Retrieving site member data for %s (offset %d)", site_slug, offset)
 
     assert offset > 0, "Offset cannot be zero or negative"
     html = wikidot.ajax_module_connector(
         site_slug,
-        # TODO, use "managesite/members/ManageSiteMembersListModule" in case of errors on big sites?
-        "membership/MembersListModule",
+        ADMIN_MEMBER_MODULE if use_admin else REGULAR_MEMBER_MODULE,
         {
             "page": offset,
             "group": "",
