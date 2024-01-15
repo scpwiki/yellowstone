@@ -6,7 +6,7 @@ as the next page of the list.
 """
 
 import logging
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from ..requests import site_members
 from . import JobType
@@ -19,8 +19,8 @@ START_OFFSET = 1
 logger = logging.getLogger(__name__)
 
 
-def run(core: "BackupDispatcher", *, site_slug: str, offset: Optional[int]) -> None:
-    offset = offset or START_OFFSET
+def run(core: "BackupDispatcher", *, site_slug: str, offset: int) -> None:
+    assert offset >= START_OFFSET, "Offset cannot be zero or negative"
     site_id = core.site_id_cache[site_slug]
     logger.info(
         "Retrieving page %d of site members from '%s' (%d)",

@@ -38,7 +38,6 @@ def get(
     logger.info("Retrieving site member data for %s (offset %d)", site_slug, offset)
 
     # TODO fix ADMIN_MEMBER_MODULE execution
-    assert offset > 0, "Offset cannot be zero or negative"
     html = wikidot.ajax_module_connector(
         site_slug,
         ADMIN_MEMBER_MODULE if use_admin else REGULAR_MEMBER_MODULE,

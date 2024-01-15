@@ -15,6 +15,7 @@ import pugsql
 from .config import Config, getenv
 from .exceptions import UnknownJobError
 from .jobs import JobType, get_site, get_user, get_user_avatar, index_site_members
+from .jobs.index_site_members import START_OFFSET as START_MEMBER_OFFSET
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
@@ -72,7 +73,7 @@ class BackupDispatcher:
     def queue_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
             logger.info("Queueing site start jobs for '%s'", site_slug)
-            self.add_job(JobType.INDEX_SITE_PAGES, site_slug)
+            self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug, START_MEMBER_OFFSET)
             self.add_job(JobType.INDEX_SITE_FORUMS, site_slug)
             self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug)
 
@@ -110,7 +111,7 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_FORUMS:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
-                    assert data is None or isinstance(data, int), "INDEX_SITE_MEMBERS"
+                    assert isinstance(data, int), "INDEX_SITE_MEMBERS"
                     index_site_members.run(self, site_slug=value, offset=data)
                 case JobType.FETCH_USER:
                     assert isinstance(data, int), "GET_USER"
