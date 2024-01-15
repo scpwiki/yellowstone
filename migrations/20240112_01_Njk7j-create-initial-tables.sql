@@ -7,8 +7,8 @@ CREATE TABLE site (
     site_slug TEXT PRIMARY KEY,
     wikidot_id INTEGER NOT NULL UNIQUE,
     home_slug TEXT NOT NULL,
-    name TEXT NOT NULL,
-    tagline TEXT NOT NULL,
+    name TEXT,
+    tagline TEXT,
     language TEXT NOT NULL
 );
 

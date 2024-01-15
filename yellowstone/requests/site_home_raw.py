@@ -30,8 +30,8 @@ logger = logging.getLogger(__name__)
 class SiteHomeData:
     slug: str
     id: int
-    name: str
-    tagline: str
+    name: Optional[str]
+    tagline: Optional[str]
     language: str
     home_page_slug: str
     home_page_id: int
@@ -70,9 +70,13 @@ def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     )
 
 
-def get_site_titles(source: str, soup: BeautifulSoup) -> tuple[str, str]:
+def get_site_titles(source: str, soup: BeautifulSoup) -> tuple[Optional[str], Optional[str]]:
     logger.debug("Extracting page title and subtitle from %s", source)
-    header = find_element(source, soup, "div#header")
+    header = soup.select_one("div#header")
+    if header is None:
+        logger.warning("No div#header found in %s", source)
+        return None, None
+
     name = find_element(source, header, "h1 span").text
     tagline = find_element(source, header, "h2 span").text
     return name, tagline
