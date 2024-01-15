@@ -22,8 +22,8 @@ def set_up_logging():
     )
 
     logger = logging.getLogger(__package__)
+    logger.propagate = False
     logger.setLevel(level=logging.DEBUG)
-    logger.handlers.clear()
     logger.addHandler(file_handler)
     logger.addHandler(stdout_handler)
 
