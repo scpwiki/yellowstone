@@ -86,18 +86,15 @@ class BackupDispatcher:
 
     def process_all_jobs(self) -> None:
         logger.info("Processing all jobs in queue")
-        has_jobs = True
-        while has_jobs:
-            has_jobs = self.process_job_batch()
+        while self.has_jobs():
+            jobs = self.database.get_jobs()
+            for job in jobs:
+                self.process_job(job)
         logger.info("No more jobs received, done")
 
-    def process_job_batch(self) -> bool:
-        ran_job = False
-        jobs = self.database.get_jobs()
-        for job in jobs:
-            ran_job = True
-            self.process_job(job)
-        return ran_job
+    def has_jobs(self) -> bool:
+        row = self.database.has_jobs()
+        return row["exists"]
 
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
