@@ -1,2 +1,3 @@
 mypy>=1.7
 ruff>=0.1
+yoyo-migrations>=8.0
