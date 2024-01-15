@@ -15,7 +15,4 @@ use-tls = [
     "techcheck",
 ]
 
-use-admin-members-list = [
-    "scp-wiki",
-    "techcheck",
-]
+use-admin-members-list = []
