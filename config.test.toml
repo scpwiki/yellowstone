@@ -11,6 +11,7 @@ always-fetch-site = true
 
 use-tls = [
     "scp-wiki",
+    "techcheck",
 ]
 
 use-admin-members-list = [

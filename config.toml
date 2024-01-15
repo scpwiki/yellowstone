@@ -123,6 +123,7 @@ always-fetch-site = false
 # can be excluded.
 use-tls = [
     "scp-wiki",
+    "techcheck",
 ]
 
 # For some sites, the members list is so big Wikidot
