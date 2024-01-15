@@ -31,6 +31,7 @@ class SiteMemberData:
 def get(site_slug: str, offset: int, *, wikidot: Wikidot, use_admin: bool = False) -> list[SiteMemberData]:
     logger.info("Retrieving site member data for %s (offset %d)", site_slug, offset)
 
+    # TODO fix ADMIN_MEMBER_MODULE execution
     assert offset > 0, "Offset cannot be zero or negative"
     html = wikidot.ajax_module_connector(
         site_slug,
