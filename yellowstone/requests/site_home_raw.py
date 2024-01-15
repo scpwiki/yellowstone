@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
-from bs import BeautifulSoup
+from bs4 import BeautifulSoup
 
 from ..scraper import download_html, find_element, make_soup, regex_extract
 from ..wikidot import Wikidot

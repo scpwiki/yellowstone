@@ -7,7 +7,7 @@ and processes new tasks to be run in response.
 
 import json
 import logging
-from typing import NoReturn, Optional, TypedDict
+from typing import NoReturn, TypedDict
 
 import pugsql
 
@@ -64,7 +64,7 @@ class BackupDispatcher:
     def insert_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
             logger.info("Inserting site '%s' into database", site_slug)
-            get_site.run(site_slug)
+            get_site.run(self, site_slug=site_slug)
 
     def queue_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
@@ -104,7 +104,7 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_FORUMS:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
-                    assert isinstance(data, Optional[int]), "INDEX_SITE_MEMBERS"
+                    assert data is None or isinstance(data, int), "INDEX_SITE_MEMBERS"
                     index_site_members.run(self, site_slug=value, offset=data)
                 case JobType.FETCH_USER:
                     assert isinstance(data, int), "GET_USER"

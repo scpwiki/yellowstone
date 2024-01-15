@@ -5,8 +5,8 @@ Retrieves all information associated with a user.
 import logging
 from typing import TYPE_CHECKING
 
-from .. import JobType
 from ..requests import user as user_data
+from . import JobType
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher

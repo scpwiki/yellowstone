@@ -8,9 +8,9 @@ as the next page of the list.
 import logging
 from typing import Optional
 
-from .. import JobType
 from ..core import BackupDispatcher
 from ..requests import site_members
+from . import JobType
 
 START_OFFSET = 1
 
