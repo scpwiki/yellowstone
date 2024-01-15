@@ -53,7 +53,7 @@ class S3:
         if not self.object_exists(path):
             self.client.put_object(
                 Bucket=self.bucket,
-                Path=path,
+                Key=path,
                 Body=blob,
             )
 
