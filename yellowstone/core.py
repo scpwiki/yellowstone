@@ -106,9 +106,10 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_MEMBERS:
                     raise NotImplementedError
                 case JobType.FETCH_USER:
-                    raise NotImplementedError
+                    assert data is None, "GET_USER job has no data"
+                    fetch_user(self, user_slug=value)
                 case JobType.FETCH_USER_AVATAR:
-                    assert isinstance(data, int), "GET_USER_AVATAR job data not integer (user ID)"
+                    assert isinstance(data, int), "GET_USER_AVATAR job data not integer"
                     fetch_user_avatar(self, user_slug=value, user_id=data)
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
@@ -129,7 +130,7 @@ class BackupDispatcher:
                 )
                 self.database.fail_job(job_id=job["job_id"])
             else:
-                logger.error("Job failed hard, or too many times, sending to dead letter queue")
+                logger.error("Job failed too many times, sending to dead letter queue")
                 with self.database.transaction():
                     self.database.delete_job(job_id=job["job_id"])
                     self.database.add_dead_job(
