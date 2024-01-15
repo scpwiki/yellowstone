@@ -33,15 +33,15 @@ class S3:
             aws_secret_access_key=getenv("S3_SECRET_KEY"),
         )
 
-    def upload_avatar(self, blob: bytes) -> None:
-        self.upload_blob(blob, AVATAR_DIRECTORY)
+    def upload_avatar(self, blob: bytes) -> bytes:
+        return self.upload_blob(blob, AVATAR_DIRECTORY)
 
-    def upload_file(self, blob: bytes) -> None:
-        self.upload_blob(blob, FILE_DIRECTORY)
+    def upload_file(self, blob: bytes) -> bytes:
+        return self.upload_blob(blob, FILE_DIRECTORY)
 
-    def upload_blob(self, blob: bytes, directory: str) -> None:
-        blob_hash = hashlib.sha512(blob).hexdigest()
-        path = os.path.join(directory, blob_hash)
+    def upload_blob(self, blob: bytes, directory: str) -> bytes:
+        blob_hash = hashlib.sha512(blob)
+        path = os.path.join(directory, blob_hash.hexdigest())
         logging.info(
             "Uploading S3 blob (directory %s, hash %s, length %d)",
             directory,
@@ -56,6 +56,9 @@ class S3:
                 Path=path,
                 Body=blob,
             )
+
+        # Return object hash
+        return blob_hash.digest()
 
     def object_exists(self, path) -> bool:
         logging.debug("Checking if S3 path '%s' exists", path)
