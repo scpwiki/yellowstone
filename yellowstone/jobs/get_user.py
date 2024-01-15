@@ -4,7 +4,7 @@ Retrieves all information associated with a user.
 
 import logging
 
-from ..jobs import JobType
+from .. import JobType
 from ..requests import user as user_data
 
 logger = logging.getLogger(__name__)

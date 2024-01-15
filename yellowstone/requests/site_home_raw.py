@@ -23,11 +23,11 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class SiteHomeData:
-    site_slug: str
-    site_id: int
-    site_name: str
-    site_tagline: str
-    site_language: str
+    slug: str
+    id: int
+    name: str
+    tagline: str
+    language: str
     home_page_slug: str
     home_page_id: int
     home_page_discussion_thread_id: Optional[int]
@@ -53,11 +53,11 @@ def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     discussion_thread_id = get_discussion_thread_id(source, soup)
 
     return SiteHomeData(
-        site_slug=site_slug,
-        site_id=site_id,
-        site_name=name,
-        site_tagline=tagline,
-        site_language=language,
+        slug=site_slug,
+        id=site_id,
+        name=name,
+        tagline=tagline,
+        language=language,
         home_page_slug=page_slug,
         home_page_id=page_id,
         home_page_discussion_thread_id=discussion_thread_id,

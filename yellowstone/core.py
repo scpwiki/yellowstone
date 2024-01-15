@@ -13,7 +13,7 @@ import pugsql
 
 from .config import Config, getenv
 from .exceptions import UnknownJobError
-from .jobs import JobType, get_user, get_user_avatar
+from .jobs import JobType, get_user, get_user_avatar, get_site
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
@@ -37,11 +37,13 @@ class BackupDispatcher:
         "wikidot",
         "database",
         "s3",
+        "site_id_cache",
     )
 
     config: Config
     wikidot: Wikidot
     s3: S3
+    site_id_cache: dict[str, int]
 
     def __init__(self, config) -> None:
         self.config = config
@@ -49,17 +51,24 @@ class BackupDispatcher:
         self.database = pugsql.module("queries/")
         self.database.connect(getenv("POSTGRES_DATABASE_URL"))
         self.s3 = S3(config)
+        self.site_id_cache = {}
 
     def run(self) -> NoReturn:
         logger.info("Running Yellowstone dispatcher")
         while True:
             logger.info("Starting new process cycle")
+            self.insert_all_sites()
             self.queue_all_sites()
             self.process_all_jobs()
 
+    def insert_all_sites(self) -> None:
+        for site_slug in self.config.site_slugs:
+            logger.info("Inserting site '%s' into database", site_slug)
+            get_site.run(site_slug)
+
     def queue_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
-            logger.info("Queueing site start jobs")
+            logger.info("Queueing site start jobs for '%s'", site_slug)
             self.add_job(JobType.INDEX_SITE_PAGES, site_slug)
             self.add_job(JobType.INDEX_SITE_FORUMS, site_slug)
             self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug)
