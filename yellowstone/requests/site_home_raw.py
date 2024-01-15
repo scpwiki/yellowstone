@@ -84,7 +84,11 @@ def get_site_titles(source: str, soup: BeautifulSoup) -> tuple[Optional[str], Op
 
 def get_discussion_thread_id(source: str, soup: BeautifulSoup) -> Optional[int]:
     logger.debug("Extracting discussion thread ID (if any) from %s", source)
-    element = find_element(source, soup, "a#discuss-button")
+    element = soup.select_one("a#discuss-button")
+    if element is None:
+        logger.info("Site has discussion threads disabled")
+        return None
+
     assert isinstance(element["href"], str), "element href is not a string"
     match = FORUM_POST_ID_REGEX.fullmatch(element["href"])
     if match is None:
