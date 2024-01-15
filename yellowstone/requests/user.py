@@ -5,13 +5,16 @@ Retrieve information corresponding to one user account.
 import logging
 import re
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, date
+from typing import Optional
 
 from bs4 import Tag
 
 from ..scraper import ScrapingError, make_soup, regex_extract, find_element, get_entity_date
+from ..utils import chunks
 from ..wikidot import Wikidot
 
+KARMA_LEVEL_STRIP_REGEX = re.compile(r"([\w ]+?) *\t.*?")
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
 
 logger = logging.getLogger(__name__)
@@ -93,6 +96,11 @@ def is_wikidot_pro(value: str) -> bool:
 
 
 def karma_level(value: str) -> int:
+    # Strip out only the relevant level
+    match = KARMA_LEVEL_STRIP_REGEX.match(value)
+    assert match is not None, "No match for stripping out karma level data"
+
+    # Return the equivalent integer value
     logger.debug("Extracting karma level from description '%s'", value)
     match value:
         case "none":
