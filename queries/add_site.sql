@@ -4,4 +4,3 @@ INSERT INTO site (site_slug, wikidot_id, home_slug, name, tagline, language)
     ON CONFLICT (site_slug)
     DO UPDATE
         SET home_slug = :home_slug, name = :name, tagline = :tagline, language = :language
-        WHERE site_slug = :site_slug
