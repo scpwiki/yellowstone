@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from ..scraper import download_html, find_element, make_soup, regex_extract
+from ..wikidot import Wikidot
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
 SITE_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.siteId = (\d+);")
@@ -33,10 +34,10 @@ class SiteHomeData:
     home_page_category_id: int
 
 
-def get(site_slug: str) -> SiteHomeData:
+def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     logger.info("Retrieving site home page for %s", site_slug)
 
-    url = f"https://{site_slug}.wikidot.com/"
+    url = wikidot.site_url(site_slug)
     html = download_html(url)
 
     language = regex_extract(url, html, LANGUAGE_REGEX)[1]
