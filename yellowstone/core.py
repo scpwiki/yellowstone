@@ -13,6 +13,7 @@ from typing import NoReturn, TypedDict
 import pugsql
 
 from .config import Config, getenv
+from .exceptions import JobFailed
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
@@ -103,23 +104,23 @@ class BackupDispatcher:
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
         except UnknownJobError:
-            logger.error("Fatal: Encountered unknown job type")
+            logger.error("Fatal: No job implementation", exc_info=True)
             raise
         except NotImplementedError:
             logger.error(
                 "Job hit not-yet-implemented component, not increasing attempt count",
                 exc_info=True,
             )
-        except Exception as _:
+        except Exception as error:
             logger.error("Error occurred while processing job", exc_info=True)
-            if job["attempts"] < MAX_RETRIES:
+            if job["attempts"] < MAX_RETRIES and not isinstance(error, JobFailed):
                 logger.debug(
                     "Adding to attempt count, currently at %d",
                     job["attempts"],
                 )
                 self.database.fail_job(job_id=job["job_id"])
             else:
-                logger.error("Job failed too many times, sending to dead letter queue")
+                logger.error("Job failed hard, or too many times, sending to dead letter queue")
                 with self.database.transaction():
                     self.database.delete_job(job_id=job["job_id"])
                     self.database.add_dead_job(

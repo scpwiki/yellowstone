@@ -3,6 +3,10 @@ Defines exceptions used by the service.
 """
 
 
+class JobFailed(RuntimeError):
+    pass
+
+
 class ScrapingError(RuntimeError):
     pass
 
