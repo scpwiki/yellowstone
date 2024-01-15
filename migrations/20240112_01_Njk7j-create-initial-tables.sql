@@ -25,7 +25,7 @@ CREATE TABLE "user" (
     website TEXT,
     bio TEXT,
     wikidot_pro BOOLEAN NOT NULL,
-    karma SMALLINT NOT NULL CHECK (0 <= karma AND karma <= 5),
+    karma SMALLINT CHECK (karma IS NULL OR (0 <= karma AND karma <= 5)),  -- Karma can be hidden if Pro
     avatar BYTEA CHECK (avatar IS NULL OR length(avatar) = 64)  -- SHA-512 hash size
 );
 

@@ -40,7 +40,7 @@ class UserData:
     website: Optional[str]
     bio: Optional[str]
     wikidot_pro: bool
-    karma: int
+    karma: Optional[int]
 
 
 def get(user_id: int, *, wikidot: Wikidot) -> UserData:
@@ -108,10 +108,15 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
             case _:
                 raise ScrapingError(f"Unknown field in user details: {field!r}")
 
-    # Assert unconditional details
+    # Field post-processing
     assert created_at is not None, "No user creation date found"
-    assert wikidot_pro is not None, "No account type found"
-    assert karma is not None, "No karma found"
+
+    if wikidot_pro is None:
+        # Wikidot Pro provides a feature to hide your pro status.
+        # So if there's no account type field, that ironically
+        # indicates that the account must be Pro, so we can
+        # just set it here ourselves.
+        wikidot_pro = True
 
     # Build and return
     return UserData(
