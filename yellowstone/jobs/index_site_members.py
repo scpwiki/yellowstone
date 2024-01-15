@@ -20,10 +20,20 @@ logger = logging.getLogger(__name__)
 def run(core: BackupDispatcher, *, site_slug: str, offset: Optional[int]) -> None:
     offset = offset or START_OFFSET
     site_id = core.site_id_cache[site_slug]
-    logger.info("Retrieving page %d of site members from '%s' (%d)", offset, site_slug, site_id)
+    logger.info(
+        "Retrieving page %d of site members from '%s' (%d)",
+        offset,
+        site_slug,
+        site_id,
+    )
 
     # Make request and process all results
-    members = site_members.get(site_slug, offset, wikidot=core.wikidot, use_admin=core.config.uses_admin_members(site_slug))
+    members = site_members.get(
+        site_slug,
+        offset,
+        wikidot=core.wikidot,
+        use_admin=core.config.uses_admin_members(site_slug),
+    )
 
     if members:
         with core.database.transaction():
@@ -32,5 +42,9 @@ def run(core: BackupDispatcher, *, site_slug: str, offset: Optional[int]) -> Non
 
             # Add all site members, and queue their users for update
             for member in members:
-                core.database.add_site_member(user_id=member.id, site_id=site_id, joined_at=member.joined_at)
+                core.database.add_site_member(
+                    user_id=member.id,
+                    site_id=site_id,
+                    joined_at=member.joined_at,
+                )
                 core.add_job(JobType.FETCH_USER, member.slug, member.id)

@@ -28,7 +28,13 @@ class SiteMemberData:
     joined_at: datetime
 
 
-def get(site_slug: str, offset: int, *, wikidot: Wikidot, use_admin: bool = False) -> list[SiteMemberData]:
+def get(
+    site_slug: str,
+    offset: int,
+    *,
+    wikidot: Wikidot,
+    use_admin: bool = False,
+) -> list[SiteMemberData]:
     logger.info("Retrieving site member data for %s (offset %d)", site_slug, offset)
 
     # TODO fix ADMIN_MEMBER_MODULE execution
