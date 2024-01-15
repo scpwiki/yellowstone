@@ -104,13 +104,13 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_FORUMS:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
-                    assert isinstance(data, Optional[int]), "INDEX_SITE_MEMBERS type validation"
+                    assert isinstance(data, Optional[int]), "INDEX_SITE_MEMBERS"
                     index_site_members.run(self, site_slug=value, offset=data)
                 case JobType.FETCH_USER:
-                    assert isinstance(data, int), "GET_USER type validation"
+                    assert isinstance(data, int), "GET_USER"
                     get_user.run(self, user_slug=value, user_id=data)
                 case JobType.FETCH_USER_AVATAR:
-                    assert isinstance(data, int), "GET_USER_AVATAR validation"
+                    assert isinstance(data, int), "GET_USER_AVATAR"
                     get_user_avatar.run(self, user_slug=value, user_id=data)
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
