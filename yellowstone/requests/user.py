@@ -22,7 +22,18 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class UserData:
-    pass
+    id: int
+    slug: str
+    name: str
+    created_at: datetime
+    real_name: Optional[str]
+    gender: Optional[str]
+    birthday: Optional[date]
+    location: Optional[str]
+    website: Optional[str]
+    bio: Optional[str]
+    wikidot_pro: bool
+    karma: int
 
 
 def get(user_id: int, *, wikidot: Wikidot) -> UserData:
