@@ -7,6 +7,10 @@ class ScrapingError(RuntimeError):
     pass
 
 
+class UnknownJobError(RuntimeError):
+    pass
+
+
 class WikidotError(RuntimeError):
     pass
 

@@ -100,6 +100,11 @@ class BackupDispatcher:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
                     raise NotImplementedError
+                case _:
+                    raise UnknownJobError(f"Unknown job type: {job_type}")
+        except UnknownJobError:
+            logger.error("Fatal: Encountered unknown job type")
+            raise
         except NotImplementedError:
             logger.error(
                 "Job hit not-yet-implemented component, not increasing attempt count",
