@@ -44,7 +44,6 @@ class UserData:
 
 
 def get(user_id: int, *, wikidot: Wikidot) -> UserData:
-    logger.info("Retrieving user data for %d", user_id)
     source = f"users/UserInfoWinModule ({user_id})"
 
     # Fetch from standard 'www' site to avoid dealing with localization issues
