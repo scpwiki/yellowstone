@@ -5,31 +5,30 @@ SET default_toast_compression=lz4;
 
 CREATE TABLE site (
     site_slug TEXT PRIMARY KEY,
-    wikidot_id INTEGER NOT NULL,
+    wikidot_id INTEGER NOT NULL UNIQUE,
     home_slug TEXT NOT NULL,
-    language TEXT NOT NULL,
-
-    UNIQUE (wikidot_id)
+    language TEXT NOT NULL
 );
 
 CREATE TABLE "user" (
     user_slug TEXT PRIMARY KEY,
-    user_name TEXT,
-    wikidot_id INTEGER,
-    created_at TIMESTAMP,
-    account_type TEXT,
+    user_name TEXT NOT NULL,
+    wikidot_id INTEGER NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL,
     real_name TEXT,
-    bio TEXT,
-    karma SMALLINT,
-    website TEXT,
     gender TEXT,
-
-    UNIQUE (wikidot_id)
+    birthday DATE,
+    location TEXT,
+    website TEXT,
+    bio TEXT,
+    wikidot_pro BOOLEAN NOT NULL,
+    karma SMALLINT NOT NULL CHECK (0 <= karma AND karma <= 5),
+    website TEXT
 );
 
 CREATE TABLE site_member (
-    user_id INTEGER,
-    site_id INTEGER,
+    user_id INTEGER NOT NULL,
+    site_id INTEGER NOT NULL,
     joined_at TIMESTAMP WITH TIME ZONE NOT NULL,
 
     PRIMARY KEY (user_id, site_id)
@@ -46,23 +45,21 @@ CREATE TABLE text (
 CREATE TABLE page (
     site_slug TEXT REFERENCES site(site_slug),
     page_slug TEXT NOT NULL,
-    page_id INTEGER,
-    created_at TIMESTAMP WITH TIME ZONE,
+    page_id INTEGER NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE,
     deleted_at TIMESTAMP WITH TIME ZONE,
-    created_by TEXT,
-    updated_by TEXT,
-    title TEXT,
-    parent_slug TEXT,
-    parent_slug_fetched BOOLEAN DEFAULT false,
-    tags TEXT[],
-    wikitext BYTEA,
-    html BYTEA,
-    page_category_id INTEGER,
+    created_by INTEGER NOT NULL REFERENCES "user"(wikidot_id),
+    updated_by INTEGER REFERENCES "user"(wikidot_id),
+    title TEXT NOT NULL,
+    parent_page_slug TEXT,
+    tags TEXT[] NOT NULL,
+    wikitext BYTEA NOT NULL REFERENCES text(hash),
+    html BYTEA NOT NULL REFERENCES text(hash),
+    page_category_id INTEGER NOT NULL,
     discussion_thread_id INTEGER,
-    discussion_thread_fetched BOOLEAN DEFAULT false,
-    rating REAL,
-    comments INTEGER,
+    rating REAL NOT NULL,
+    comments INTEGER NOT NULL,
 
     UNIQUE (site_slug, page_slug, deleted_at)
 );
