@@ -13,7 +13,7 @@ from typing import NoReturn, TypedDict
 import pugsql
 
 from .config import Config, getenv
-from .exceptions import JobFailed
+from .jobs import *
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
@@ -94,6 +94,8 @@ class BackupDispatcher:
 
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
+        value = job["job_object"]
+        data = json.loads(job["data"])
         logger.info("Processing job %r", job)
         try:
             match job_type:
@@ -120,7 +122,7 @@ class BackupDispatcher:
             )
         except Exception as error:
             logger.error("Error occurred while processing job", exc_info=True)
-            if job["attempts"] < MAX_RETRIES and not isinstance(error, JobFailed):
+            if job["attempts"] < MAX_RETRIES:
                 logger.debug(
                     "Adding to attempt count, currently at %d",
                     job["attempts"],
