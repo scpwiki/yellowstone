@@ -109,6 +109,13 @@ sites = [
     "brucebase",
 ]
 
+# All sites which *require* use of TLS.
+# Sites that are HTTP-only or allow both
+# can be excluded.
+use-tls = [
+    "scp-wiki",
+]
+
 # For some sites, the members list is so big Wikidot
 # cannot produce data for recent pages of site
 # membership.

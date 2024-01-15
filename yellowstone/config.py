@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 class Config:
     s3_bucket: str
     site_slugs: list[str]
+    sites_use_tls: list[str]
     sites_use_admin_members: list[str]
 
     def __init__(self, path) -> None:
@@ -24,6 +25,7 @@ class Config:
 
         self.s3_bucket = data["s3"]["bucket"]
         self.site_slugs = data["wikidot"]["sites"]
+        self.sites_use_tls = data["wikidot"]["use-tls"]
         self.sites_use_admin_members = data["wikidot"]["use-admin-members-list"]
 
     @staticmethod
