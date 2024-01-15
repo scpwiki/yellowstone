@@ -96,7 +96,6 @@ class BackupDispatcher:
 
         logger.info("No more jobs received, done")
 
-
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
         # TODO: remove concept of job_object?
