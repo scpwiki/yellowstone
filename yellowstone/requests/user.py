@@ -138,6 +138,7 @@ def karma_level(value: str) -> int:
     # Strip out only the relevant level
     match = KARMA_LEVEL_STRIP_REGEX.match(value)
     assert match is not None, "No match for stripping out karma level data"
+    value = match[1]
 
     # Return the equivalent integer value
     logger.debug("Extracting karma level from description '%s'", value)
