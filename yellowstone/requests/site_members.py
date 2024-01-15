@@ -1,5 +1,5 @@
 """
-Retrieve site members by page.
+Retrieve groups of site members by page.
 """
 
 import re
