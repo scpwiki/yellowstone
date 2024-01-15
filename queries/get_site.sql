@@ -1,3 +1,3 @@
 -- :name get_site :one
 SELECT * FROM site
-    WHERE slug = :slug
+    WHERE site_slug = :slug
