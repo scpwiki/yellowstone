@@ -101,9 +101,24 @@ sites = [
     "kaktuskontainer",
     "scpdsandbox",
     "scptestwiki",
+    "techcheck",
     "co-team",
     "mast-team",
     "scpclassic",
     "scpexplained",
     "brucebase",
+]
+
+# For some sites, the members list is so big Wikidot
+# cannot produce data for recent pages of site
+# membership.
+#
+# If those errors are occurring, then add that site
+# to this list.
+#
+# This requires that the account that has the API key
+# has admin permissions.
+use-admin-members-list = [
+    "scp-wiki",
+    "techcheck",
 ]
