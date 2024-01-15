@@ -34,7 +34,7 @@ class S3:
         )
 
     def upload_avatar(self, blob: bytes) -> None:
-        self.upload_avatar(blob, AVATAR_DIRECTORY)
+        self.upload_blob(blob, AVATAR_DIRECTORY)
 
     def upload_file(self, blob: bytes) -> None:
         self.upload_blob(blob, FILE_DIRECTORY)

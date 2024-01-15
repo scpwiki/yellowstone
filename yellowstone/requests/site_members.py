@@ -11,7 +11,7 @@ from bs4 import Tag
 
 from ..scraper import find_element, make_soup, regex_extract, get_entity_date
 from ..wikidot import Wikidot
-from .user import USER_SLUG_REGEX
+from .user import get_user_slug
 
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
 
@@ -50,7 +50,7 @@ def process_row(row: Tag) -> SiteMemberData:
     # Extract user information
     element = row.find_all("a")[1]
     name = element.text
-    slug = regex_extract(source, element["href"], USER_SLUG_REGEX)[1]
+    slug = get_user_slug(source, element)
     id = int(regex_extract(source, element["onclick"], USER_ID_REGEX)[1])
 
     # Extract membership join date

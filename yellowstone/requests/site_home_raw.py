@@ -2,6 +2,7 @@
 Scrape site and page data from the home page of a site.
 """
 
+import logging
 import re
 from dataclasses import dataclass
 from typing import Optional
@@ -16,7 +17,7 @@ PAGE_SLUG_REGEX = re.compile(r'WIKIREQUEST\.info\.pageUnixName = "([^"]+)";')
 PAGE_CATEGORY_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.categoryId = (\d+);")
 FORUM_POST_ID_REGEX = re.compile(r"/forum/t-(\d+)/.*")
 
-logger = logging.getName(__name__)
+logger = logging.getLogger(__name__)
 
 
 @dataclass

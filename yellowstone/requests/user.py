@@ -57,7 +57,7 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
     # Get name-like fields
     name = find_element(source, soup, "h1").text
     element = find_element(source, soup, "a.btn-primary")
-    slug = regex_extract(source, element["href"], USER_SLUG_REGEX)[1]
+    slug = get_user_slug(source, element)
 
     # Process user details
     created_at = None
@@ -125,6 +125,14 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
         wikidot_pro=wikidot_pro,
         karma=karma,
     )
+
+
+def get_user_slug(source: str, element: Tag) -> str:
+    href = element["href"]
+    assert isinstance(href, str), "multiple href attributes found"
+    match = regex_extract(source, href, USER_SLUG_REGEX)
+    assert isinstance(match[1], str), "match group is not a string"
+    return match[1]
 
 
 def split_user_detail(columns: tuple[Tag, Tag]) -> tuple[str, str, Tag]:
