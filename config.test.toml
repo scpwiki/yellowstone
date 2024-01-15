@@ -3,6 +3,7 @@ bucket = "wikidot-backup"
 
 [wikidot]
 sites = [
+    "scp-wiki",
     "scptestwiki",
     "techcheck",
 ]
