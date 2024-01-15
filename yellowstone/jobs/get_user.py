@@ -3,9 +3,13 @@ Retrieves all information associated with a user.
 """
 
 import logging
+from typing import TYPE_CHECKING
 
 from .. import JobType
 from ..requests import user as user_data
+
+if TYPE_CHECKING:
+    from ..core import BackupDispatcher
 
 logger = logging.getLogger(__name__)
 

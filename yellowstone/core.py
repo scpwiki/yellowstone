@@ -13,7 +13,7 @@ import pugsql
 
 from .config import Config, getenv
 from .exceptions import UnknownJobError
-from .jobs import JobType, get_user, get_user_avatar, get_site, index_site_members
+from .jobs import JobType, get_site, get_user, get_user_avatar, index_site_members
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot

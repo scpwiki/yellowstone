@@ -5,10 +5,15 @@ Scrape site and page data from the home page of a site.
 import logging
 import re
 from dataclasses import dataclass
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+from bs import BeautifulSoup
 
 from ..scraper import download_html, find_element, make_soup, regex_extract
 from ..wikidot import Wikidot
+
+if TYPE_CHECKING:
+    pass
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
 SITE_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.siteId = (\d+);")
@@ -37,7 +42,7 @@ class SiteHomeData:
 def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     logger.info("Retrieving site home page for %s", site_slug)
 
-    url = wikidot.site_url(site_slug)
+    source = url = wikidot.site_url(site_slug)
     html = download_html(url)
 
     language = regex_extract(url, html, LANGUAGE_REGEX)[1]
@@ -49,7 +54,7 @@ def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     assert site_slug == site_slug_ex, "site slug in scraped page doesn't match"
 
     soup = make_soup(html)
-    name, tagline = get_site_tagline(source, soup)
+    name, tagline = get_site_titles(source, soup)
     discussion_thread_id = get_discussion_thread_id(source, soup)
 
     return SiteHomeData(
@@ -65,7 +70,7 @@ def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     )
 
 
-def get_site_taglines(source: str, soup: BeautifulSoup) -> tuple[str, str]:
+def get_site_titles(source: str, soup: BeautifulSoup) -> tuple[str, str]:
     logger.debug("Extracting page title and subtitle from %s", source)
     header = find_element(source, soup, "div#header")
     name = find_element(source, header, "h1 span").text

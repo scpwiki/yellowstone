@@ -3,9 +3,13 @@ Stores the current avatar for a user.
 """
 
 import logging
+from typing import TYPE_CHECKING
 
 from ..exceptions import JobFailed
 from ..requests import user_avatar
+
+if TYPE_CHECKING:
+    from ..core import BackupDispatcher
 
 logger = logging.getLogger(__name__)
 

@@ -8,8 +8,8 @@ as the next page of the list.
 import logging
 from typing import Optional
 
-from ..core import BackupDispatcher
 from .. import JobType
+from ..core import BackupDispatcher
 from ..requests import site_members
 
 START_OFFSET = 1

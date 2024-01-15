@@ -8,10 +8,13 @@ start of the process.
 """
 
 import logging
+from typing import TYPE_CHECKING
 
-from .. import JobType
 from ..requests import site_home_raw
 from ..wikidot import Wikidot
+
+if TYPE_CHECKING:
+    from ..core import BackupDispatcher
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +36,12 @@ def run(core: "BackupDispatcher", *, site_slug: str) -> None:
         core.site_id_cache[site_slug] = site.id
 
 
-def insert_site(*, database, wikidot: Wikidot) -> site_home_raw.SiteHomeData:
+def insert_site(
+    site_slug: str,
+    *,
+    database,
+    wikidot: Wikidot,
+) -> site_home_raw.SiteHomeData:
     site = site_home_raw.get(site_slug, wikidot=wikidot)
 
     database.add_site(
