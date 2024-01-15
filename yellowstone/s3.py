@@ -41,16 +41,18 @@ class S3:
 
     def upload_blob(self, blob: bytes, directory: str) -> bytes:
         blob_hash = hashlib.sha512(blob)
-        path = os.path.join(directory, blob_hash.hexdigest())
-        logging.info(
-            "Uploading S3 blob (directory %s, hash %s, length %d)",
-            directory,
-            blob_hash,
-            len(blob),
-        )
+        hex_hash = blob_hash.hexdigest()
+        path = os.path.join(directory, hex_hash)
+        logger.debug("Want to persist blob to S3 (hash %s)", hex_hash)
 
         # Only upload if not present
         if not self.object_exists(path):
+            logging.info(
+                "Uploading S3 blob (directory %s, hash %s, length %d)",
+                directory,
+                hex_hash,
+                len(blob),
+            )
             self.client.put_object(
                 Bucket=self.bucket,
                 Key=path,
