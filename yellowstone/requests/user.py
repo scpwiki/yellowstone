@@ -103,7 +103,7 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
     assert karma is not None, "No karma found"
 
     # Build and return
-    return UserDate(
+    return UserData(
         id=user_id,
         slug=slug,
         name=name,
