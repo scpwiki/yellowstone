@@ -62,41 +62,64 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
     wikidot_pro = None
     karma = None
 
-    rows = soup.find_all("tr")
-    for row in rows:
-        field, value, element = split_user_detail(row)
+    rows = chunks(soup.find_all("td"), 2)
+    for columns in rows:
+        field, value, element = split_user_detail(columns)
         match field:
             case "Real name":
-                real_name = element.text
+                real_name = value
             case "Gender":
-                gender = element.text
+                gender = value
             case "Birthday":
                 # We can't use get_entity_date(), this is just a string
                 birthday = datetime.strptime(value, "%d %b %Y").date()
             case "From":
-                location = element.text
+                location = value
             case "Website":
-                website = element.text
+                website = value
             case "Wikidot.com User since:":
+                element = find_element(source, element, "span.odate")
                 created_at = get_entity_date(source, element)
             case "About":
-                bio = element.text
+                bio = value
             case "Account type":
-                wikidot_pro = account_type(element.text)
+                wikidot_pro = is_wikidot_pro(value)
             case "Karma level":
-                karma = karma_level(element.text)
+                karma = karma_level(value)
+
             # These are member fields, not user fields, ignore
             case "Member of this Site: since":  # sic
                 pass
             case "Role in this Site":
                 pass
+
             # Error case
             case _:
                 raise ScrapingError(f"Unknown field in user details: {field!r}")
 
+    # Assert unconditional details
+    assert created_at is not None, "No user creation date found"
+    assert wikidot_pro is not None, "No account type found"
+    assert karma is not None, "No karma found"
 
-def split_user_detail(row: Tag) -> tuple[str, str, Tag]:
-    field, element = row.find_all("td")
+    # Build and return
+    return UserDate(
+        id=user_id,
+        slug=slug,
+        name=name,
+        created_at=created_at,
+        real_name=real_name,
+        gender=gender,
+        birthday=birthday,
+        location=location,
+        website=website,
+        bio=bio,
+        wikidot_pro=wikidot_pro,
+        karma=karma,
+    )
+
+def split_user_detail(columns: tuple[Tag, Tag]) -> tuple[str, str, Tag]:
+    field, element = columns
     assert "active" in field.attrs["class"], "field lacks 'active' class"
     return field.text.strip(), element.text.strip(), element
 
