@@ -94,6 +94,7 @@ class BackupDispatcher:
 
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
+        # TODO: remove concept of job_object?
         data = job["data"]
         value = job["job_object"]
         logger.info("Processing job %r", job)
