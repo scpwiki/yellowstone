@@ -12,6 +12,8 @@ from bs4 import Tag
 from ..scraper import ScrapingError, make_soup, regex_extract, find_element, get_entity_date
 from ..wikidot import Wikidot
 
+USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
+
 logger = logging.getLogger(__name__)
 
 
