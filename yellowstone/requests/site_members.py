@@ -25,6 +25,8 @@ class SiteMemberData:
 
 
 def get(site_slug: str, offset: int) -> list[SiteMemberData]:
+    logger.info("Retrieving site member data for %s (offset %d)", site_slug, offset)
+
     assert offset > 0, "Offset cannot be zero or negative"
     html = core.wikidot.ajax_module_connector(
         site_slug,

@@ -32,6 +32,8 @@ class SiteHomeData:
 
 
 def get(site_slug: str) -> SiteHomeData:
+    logger.info("Retrieving site home page for %s", site_slug)
+
     url = f"https://{site_slug}.wikidot.com/"
     html = download_html(url)
 
