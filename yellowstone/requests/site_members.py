@@ -64,7 +64,7 @@ def process_row(row: Tag) -> SiteMemberData:
 
     # Extract membership join date
     element = find_element(source, row, "span.odate")
-    joined_at = get_entity_date(source, element.attrs["class"])
+    joined_at = get_entity_date(source, element)
 
     return SiteMemberData(
         name=name,
