@@ -5,24 +5,27 @@ Common utilities for interfacing with Wikidot.
 import logging
 import random
 import string
+from functools import cache
 from xmlrpc.client import ServerProxy
 
 import requests
 
-from .config import getenv
+from .config import Config, getenv
 from .exceptions import WikidotError, WikidotTokenError
 
 logger = logging.getLogger(__name__)
 
 
 class Wikidot:
-    __slots__ = ("proxy",)
+    __slots__ = ("proxy", "config")
 
+    config: Config
     proxy: ServerProxy
 
-    def __init__(self) -> None:
+    def __init__(self, config) -> None:
         username = getenv("WIKIDOT_USERNAME")
         api_key = getenv("WIKIDOT_API_KEY")
+        self.config = config
         self.proxy = ServerProxy(
             f"https://{username}:{api_key}@www.wikidot.com/xml-rpc-api.php",
             use_builtin_types=True,
