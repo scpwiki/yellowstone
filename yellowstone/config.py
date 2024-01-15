@@ -18,7 +18,7 @@ class Config:
     sites_use_tls: list[str]
     sites_use_admin_members: list[str]
 
-    def __init__(self, path) -> None:
+    def __init__(self, path: str) -> None:
         with open(path, "rb") as file:
             logger.info("Reading configuration file from %s", path)
             data = tomllib.load(file)
