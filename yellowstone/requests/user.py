@@ -5,6 +5,7 @@ Retrieve information corresponding to one user account.
 import logging
 import re
 from dataclasses import dataclass
+from datetime import datetime
 
 from bs4 import Tag
 
@@ -49,7 +50,8 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
             case "Gender":
                 gender = element.text
             case "Birthday":
-                birthday = get_entity_date(source, element)
+                # We can't use get_entity_date(), this is just a string
+                birthday = datetime.strptime(value, "%d %b %Y").date()
             case "From":
                 location = element.text
             case "Website":
