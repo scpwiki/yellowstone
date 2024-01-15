@@ -6,18 +6,20 @@ as the next page of the list.
 """
 
 import logging
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
-from ..core import BackupDispatcher
 from ..requests import site_members
 from . import JobType
+
+if TYPE_CHECKING:
+    from ..core import BackupDispatcher
 
 START_OFFSET = 1
 
 logger = logging.getLogger(__name__)
 
 
-def run(core: BackupDispatcher, *, site_slug: str, offset: Optional[int]) -> None:
+def run(core: "BackupDispatcher", *, site_slug: str, offset: Optional[int]) -> None:
     offset = offset or START_OFFSET
     site_id = core.site_id_cache[site_slug]
     logger.info(
