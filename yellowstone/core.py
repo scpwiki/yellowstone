@@ -7,6 +7,7 @@ and processes new tasks to be run in response.
 
 import json
 import logging
+import time
 from typing import NoReturn, TypedDict
 
 import pugsql
@@ -19,6 +20,7 @@ from .types import Json
 from .wikidot import Wikidot
 
 MAX_RETRIES = 4
+FULL_WORKLOAD_PAUSE = 10
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +62,7 @@ class BackupDispatcher:
             self.queue_all_sites()
             self.process_all_jobs()
             logger.info("Finished everything! Starting new process cycle")
+            time.sleep(FULL_WORKLOAD_PAUSE)
 
     def insert_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
