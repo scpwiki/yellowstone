@@ -70,7 +70,10 @@ def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     )
 
 
-def get_site_titles(source: str, soup: BeautifulSoup) -> tuple[Optional[str], Optional[str]]:
+def get_site_titles(
+    source: str,
+    soup: BeautifulSoup,
+) -> tuple[Optional[str], Optional[str]]:
     logger.debug("Extracting page title and subtitle from %s", source)
     header = soup.select_one("div#header")
     if header is None:
@@ -82,7 +85,10 @@ def get_site_titles(source: str, soup: BeautifulSoup) -> tuple[Optional[str], Op
     return name, tagline
 
 
-def get_discussion_thread_id(source: str, soup: BeautifulSoup) -> Optional[int]:
+def get_discussion_thread_id(
+    source: str,
+    soup: BeautifulSoup,
+) -> Optional[int]:
     logger.debug("Extracting discussion thread ID (if any) from %s", source)
     element = soup.select_one("a#discuss-button")
     if element is None:
