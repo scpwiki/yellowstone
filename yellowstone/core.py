@@ -13,7 +13,8 @@ from typing import NoReturn, TypedDict
 import pugsql
 
 from .config import Config, getenv
-from .jobs import *
+from .exceptions import UnknownJobError
+from .jobs import get_user, get_user_avatar
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
@@ -107,10 +108,10 @@ class BackupDispatcher:
                     raise NotImplementedError
                 case JobType.FETCH_USER:
                     assert isinstance(data, int), "GET_USER job data not integer"
-                    fetch_user(self, user_slug=value, user_id=data)
+                    get_user(self, user_slug=value, user_id=data)
                 case JobType.FETCH_USER_AVATAR:
                     assert isinstance(data, int), "GET_USER_AVATAR job data not integer"
-                    fetch_user_avatar(self, user_slug=value, user_id=data)
+                    get_user_avatar(self, user_slug=value, user_id=data)
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
         except UnknownJobError:
@@ -121,7 +122,7 @@ class BackupDispatcher:
                 "Job hit not-yet-implemented component, not increasing attempt count",
                 exc_info=True,
             )
-        except Exception as error:
+        except Exception as _:
             logger.error("Error occurred while processing job", exc_info=True)
             if job["attempts"] < MAX_RETRIES:
                 logger.debug(

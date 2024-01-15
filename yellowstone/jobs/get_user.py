@@ -4,7 +4,6 @@ Retrieves all information associated with a user.
 
 import logging
 
-from ..exceptions import JobFailed
 from ..requests import user as user_data
 from ..job import JobType
 from ..core import BackupDispatcher
