@@ -47,7 +47,7 @@ class Wikidot:
 
         # Make HTTP request
         r = requests.post(
-            f"http://{site_slug}.wikidot.com/ajax-module-connector.php",
+            self.ajax_module_url(site_slug),
             cookies={"wikidot_token7": token7},
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             data=data,
@@ -65,6 +65,11 @@ class Wikidot:
                 raise WikidotTokenError
             case status:
                 raise WikidotError(status)
+
+    @cache
+    def ajax_module_url(self, site_slug: str) -> str:
+        protocol = "https" if self.config.uses_tls(site_slug) else "http"
+        return f"{protocol}://{site_slug}.wikidot.com/ajax-module-connector.php"
 
     @staticmethod
     def generate_token7() -> str:
