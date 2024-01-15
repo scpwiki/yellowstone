@@ -23,7 +23,7 @@ CREATE TABLE "user" (
     bio TEXT,
     wikidot_pro BOOLEAN NOT NULL,
     karma SMALLINT NOT NULL CHECK (0 <= karma AND karma <= 5),
-    avatar BYTEA
+    avatar BYTEA CHECK (avatar IS NULL OR length(avatar) = 64)  -- SHA-512 hash size
 );
 
 CREATE TABLE site_member (
