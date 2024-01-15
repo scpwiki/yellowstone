@@ -67,9 +67,13 @@ class Wikidot:
                 raise WikidotError(status)
 
     @cache
-    def ajax_module_url(self, site_slug: str) -> str:
+    def site_url(self, site_slug: str) -> str:
         protocol = "https" if self.config.uses_tls(site_slug) else "http"
-        return f"{protocol}://{site_slug}.wikidot.com/ajax-module-connector.php"
+        return f"{protocol}://{site_slug}.wikidot.com"
+
+    @cache
+    def ajax_module_url(self, site_slug: str) -> str:
+        return f"{self.site_url(site_slug)}/ajax-module-connector.php"
 
     @staticmethod
     def generate_token7() -> str:
