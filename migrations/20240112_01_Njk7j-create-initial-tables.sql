@@ -22,7 +22,8 @@ CREATE TABLE "user" (
     website TEXT,
     bio TEXT,
     wikidot_pro BOOLEAN NOT NULL,
-    karma SMALLINT NOT NULL CHECK (0 <= karma AND karma <= 5)
+    karma SMALLINT NOT NULL CHECK (0 <= karma AND karma <= 5),
+    avatar BYTEA
 );
 
 CREATE TABLE site_member (
