@@ -10,7 +10,13 @@ from typing import Optional
 
 from bs4 import Tag
 
-from ..scraper import ScrapingError, make_soup, regex_extract, find_element, get_entity_date
+from ..scraper import (
+    ScrapingError,
+    make_soup,
+    regex_extract,
+    find_element,
+    get_entity_date,
+)
 from ..utils import chunks
 from ..wikidot import Wikidot
 
@@ -38,12 +44,12 @@ class UserData:
 
 def get(user_id: int, *, wikidot: Wikidot) -> UserData:
     logger.info("Retrieving user data for %d", user_id)
+    source = f"users/UserInfoWinModule ({user_id})"
 
     # Fetch from standard 'www' site to avoid dealing with localization issues
-    source = f"users/UserInfoWinModule ({user_id})"
-    html = wikidot.ajax_module_connector("www",
-                                  "users/UserInfoWinModule",
-                                  { "user_id": user_id })
+    html = wikidot.ajax_module_connector(
+        "www", "users/UserInfoWinModule", {"user_id": user_id},
+    )
     soup = make_soup(html)
 
     # Get name-like fields
@@ -117,6 +123,7 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
         wikidot_pro=wikidot_pro,
         karma=karma,
     )
+
 
 def split_user_detail(columns: tuple[Tag, Tag]) -> tuple[str, str, Tag]:
     field, element = columns

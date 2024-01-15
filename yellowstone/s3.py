@@ -42,7 +42,12 @@ class S3:
     def upload_blob(self, blob: bytes, directory: str) -> None:
         blob_hash = hashlib.sha512(blob).hexdigest()
         path = os.path.join(directory, blob_hash)
-        logging.info("Uploading S3 blob (directory %s, hash %s, length %d)", directory, blob_hash, len(blob))
+        logging.info(
+            "Uploading S3 blob (directory %s, hash %s, length %d)",
+            directory,
+            blob_hash,
+            len(blob),
+        )
 
         # Only upload if not present
         if self.object_exists(path):

@@ -28,7 +28,6 @@ class SiteHomeData:
     home_page_category_id: int
 
 
-
 def get(site_slug: str) -> SiteHomeData:
     logger.info("Retrieving site home page for %s", site_slug)
 
