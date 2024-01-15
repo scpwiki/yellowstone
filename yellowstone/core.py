@@ -18,7 +18,7 @@ from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
 
-MAX_RETRIES = 5
+MAX_RETRIES = 4
 
 logger = logging.getLogger(__name__)
 
