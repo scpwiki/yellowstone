@@ -21,6 +21,7 @@ from ..utils import chunks
 from ..wikidot import Wikidot
 
 KARMA_LEVEL_STRIP_REGEX = re.compile(r"([\w ]+?) *\t.*?")
+DATE_REGEX = re.compile(r"(\d+) (\w+) (\d+)")
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
 
 logger = logging.getLogger(__name__)
@@ -80,7 +81,10 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
                 gender = value
             case "Birthday":
                 # We can't use get_entity_date(), this is just a string
-                birthday = datetime.strptime(value, "%d %b %Y").date()
+                #
+                # We also can't use datetime.strptime, since year values
+                # might be too small (e.g. 101).
+                birthday = parse_date(source, value)
             case "From":
                 location = value
             case "Website":
@@ -139,6 +143,44 @@ def split_user_detail(columns: tuple[Tag, Tag]) -> tuple[str, str, Tag]:
     field, element = columns
     assert "active" in field.attrs["class"], "field lacks 'active' class"
     return field.text.strip(), element.text.strip(), element
+
+
+def parse_month(value: str) -> int:
+    match value:
+        case "Jan":
+            return 1
+        case "Feb":
+            return 2
+        case "Mar":
+            return 3
+        case "Apr":
+            return 4
+        case "May":
+            return 5
+        case "Jun":
+            return 6
+        case "Jul":
+            return 7
+        case "Aug":
+            return 8
+        case "Sep":
+            return 9
+        case "Oct":
+            return 10
+        case "Nov":
+            return 11
+        case "Dec":
+            return 12
+        case _:
+            raise ScrapingError(f"Unknown month value: {value!r}")
+
+
+def parse_date(source: str, value: str) -> date:
+    match = regex_extract(source, value, DATE_REGEX)
+    year = int(match[3])
+    month = parse_month(match[2])
+    day = int(match[1])
+    return date(year, month, day)
 
 
 def is_wikidot_pro(value: str) -> bool:
