@@ -44,7 +44,7 @@ class Wikidot:
 
         # Make HTTP request
         r = requests.post(
-            f"https://{site_slug}.wikidot.com/ajax-module-connector.php",
+            f"http://{site_slug}.wikidot.com/ajax-module-connector.php",
             cookies={"wikidot_token7": token7},
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             data=data,
