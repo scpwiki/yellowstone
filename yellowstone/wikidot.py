@@ -64,7 +64,7 @@ class Wikidot:
             case "wrong_token7":
                 raise WikidotTokenError
             case status:
-                raise WikidotError(status)
+                raise WikidotError(response["message"])
 
     @cache
     def site_url(self, site_slug: str) -> str:
