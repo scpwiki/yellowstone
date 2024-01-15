@@ -11,6 +11,7 @@ from botocore.exceptions import ClientError
 
 from .config import Config, getenv
 
+AVATAR_DIRECTORY = "avatars"
 FILE_DIRECTORY = "files"
 
 logger = logging.getLogger(__name__)
@@ -32,10 +33,16 @@ class S3:
             aws_secret_access_key=getenv("S3_SECRET_KEY"),
         )
 
+    def upload_avatar(self, blob: bytes) -> None:
+        self.upload_avatar(blob, AVATAR_DIRECTORY)
+
     def upload_file(self, blob: bytes) -> None:
+        self.upload_blob(blob, FILE_DIRECTORY)
+
+    def upload_blob(self, blob: bytes, directory: str) -> None:
         blob_hash = hashlib.sha512(blob).hexdigest()
-        path = os.path.join(FILE_DIRECTORY, blob_hash)
-        logging.info("Uploading S3 blob (hash %s, length %d)", blob_hash, len(blob))
+        path = os.path.join(directory, blob_hash)
+        logging.info("Uploading S3 blob (directory %s, hash %s, length %d)", directory, blob_hash, len(blob))
 
         # Only upload if not present
         if self.object_exists(path):
