@@ -2,3 +2,6 @@ target-version = "py311"
 
 line-length = 88
 indent-width = 4
+
+[lint]
+select = ["E", "F", "I"]

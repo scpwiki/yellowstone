@@ -27,7 +27,6 @@ Then when doing development, install the development dependencies and then run l
 ```bash
 $ pip install -r requirements.dev.txt
 $ ruff check -n yellowstone  # -n here and below means --no-cache
-$ ruff check -n --select I --fix yellowstone
 $ ruff format -n yellowstone
 $ mypy yellowstone
 ```
