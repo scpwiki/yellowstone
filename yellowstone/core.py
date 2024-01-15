@@ -140,3 +140,6 @@ class BackupDispatcher:
                         job_object=job["job_object"],
                         data=json.dumps(job["data"]),
                     )
+        else:
+            logger.debug("Job completed successfully, removing from queue")
+            self.database.delete_job(job_id=job["job_id"])
