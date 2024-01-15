@@ -50,7 +50,7 @@ class S3:
         )
 
         # Only upload if not present
-        if self.object_exists(path):
+        if not self.object_exists(path):
             self.client.put_object(
                 Bucket=self.bucket,
                 Path=path,
