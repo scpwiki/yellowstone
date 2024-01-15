@@ -26,3 +26,15 @@ INSERT INTO "user" (
     :wikidot_pro,
     :karma
 )
+    ON CONFLICT (wikidot_id)
+    DO UPDATE
+        SET user_slug = :user_slug,
+            user_name = :user_name,
+            real_name = :real_name,
+            gender = :gender,
+            birthday = :birthday,
+            location = :location,
+            website = :website,
+            bio = :bio,
+            wikidot_pro = :wikidot_pro,
+            karma = :karma
