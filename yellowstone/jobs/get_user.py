@@ -17,7 +17,7 @@ def run(core: "BackupDispatcher", *, user_slug: str, user_id: int) -> None:
     core.database.add_user(
         user_slug=user.slug,
         user_name=user.name,
-        wikidot_id=user.id,
+        user_id=user.id,
         created_at=user.created_at,
         real_name=user.real_name,
         gender=user.gender,

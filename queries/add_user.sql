@@ -15,7 +15,7 @@ INSERT INTO "user" (
 ) VALUES (
     :user_slug,
     :user_name,
-    :wikidot_id,
+    :user_id,
     :created_at,
     :real_name,
     :gender,
