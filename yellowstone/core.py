@@ -96,7 +96,6 @@ class BackupDispatcher:
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
         value = job["job_object"]
-        data = json.loads(job["data"])
         logger.info("Processing job %r", job)
         try:
             match job_type:
