@@ -56,10 +56,10 @@ class BackupDispatcher:
     def run(self) -> NoReturn:
         logger.info("Running Yellowstone dispatcher")
         while True:
-            logger.info("Starting new process cycle")
             self.insert_all_sites()
             self.queue_all_sites()
             self.process_all_jobs()
+            logger.info("Finished everything! Starting new process cycle")
 
     def insert_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
