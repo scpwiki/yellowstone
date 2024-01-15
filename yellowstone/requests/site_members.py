@@ -9,7 +9,7 @@ from datetime import datetime
 
 from bs4 import Tag
 
-from ..scraper import find_element, make_soup, regex_extract, get_entity_date
+from ..scraper import find_element, get_entity_date, make_soup, regex_extract
 from ..wikidot import Wikidot
 from .user import get_user_slug
 

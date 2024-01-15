@@ -7,14 +7,13 @@ and processes new tasks to be run in response.
 
 import json
 import logging
-from enum import Enum, unique
 from typing import NoReturn, TypedDict
 
 import pugsql
 
 from .config import Config, getenv
 from .exceptions import UnknownJobError
-from .jobs import get_user, get_user_avatar
+from .jobs import JobType, get_user, get_user_avatar
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
@@ -22,15 +21,6 @@ from .wikidot import Wikidot
 MAX_RETRIES = 5
 
 logger = logging.getLogger(__name__)
-
-
-@unique
-class JobType(Enum):
-    INDEX_SITE_PAGES = "index-site-pages"
-    INDEX_SITE_FORUMS = "index-site-forums"
-    INDEX_SITE_MEMBERS = "index-site-members"
-    FETCH_USER = "fetch-user"
-    FETCH_USER_AVATAR = "fetch-user-avatar"
 
 
 class JobDict(TypedDict):
@@ -95,6 +85,7 @@ class BackupDispatcher:
 
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
+        data = job["data"]
         value = job["job_object"]
         logger.info("Processing job %r", job)
         try:
@@ -107,10 +98,10 @@ class BackupDispatcher:
                     raise NotImplementedError
                 case JobType.FETCH_USER:
                     assert isinstance(data, int), "GET_USER job data not integer"
-                    get_user(self, user_slug=value, user_id=data)
+                    get_user.run(self, user_slug=value, user_id=data)
                 case JobType.FETCH_USER_AVATAR:
                     assert isinstance(data, int), "GET_USER_AVATAR job data not integer"
-                    get_user_avatar(self, user_slug=value, user_id=data)
+                    get_user_avatar.run(self, user_slug=value, user_id=data)
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
         except UnknownJobError:

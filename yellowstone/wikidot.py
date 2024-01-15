@@ -7,10 +7,10 @@ import random
 import string
 from xmlrpc.client import ServerProxy
 
+import requests
+
 from .config import getenv
 from .exceptions import WikidotError, WikidotTokenError
-
-import requests
 
 logger = logging.getLogger(__name__)
 

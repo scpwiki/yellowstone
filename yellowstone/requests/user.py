@@ -5,17 +5,17 @@ Retrieve information corresponding to one user account.
 import logging
 import re
 from dataclasses import dataclass
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Optional
 
 from bs4 import Tag
 
 from ..scraper import (
     ScrapingError,
-    make_soup,
-    regex_extract,
     find_element,
     get_entity_date,
+    make_soup,
+    regex_extract,
 )
 from ..utils import chunks
 from ..wikidot import Wikidot

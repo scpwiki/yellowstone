@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
-from ..scraper import download_html, find_element, regex_extract, make_soup
+from ..scraper import download_html, find_element, make_soup, regex_extract
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
 SITE_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.siteId = (\d+);")
