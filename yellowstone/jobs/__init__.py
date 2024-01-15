@@ -1,5 +1,10 @@
 """
 Contains all jobs which can be invoked by the service.
+
+This refers to high-level operations which retrieve some
+usable chunk of information from various sources within
+Wikidot. For instance, a combination of an XMLRPC API call
+and scraping.
 """
 
 from enum import Enum, unique
