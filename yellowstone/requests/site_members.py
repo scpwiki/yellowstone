@@ -6,10 +6,11 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import Tag
 
 from ..exceptions import ScrapingError
-from ..scraper import find_element, regex_extract
+from ..scraper import find_element, make_soup, regex_extract
+from ..wikidot import Wikidot
 
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")

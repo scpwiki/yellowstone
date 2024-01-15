@@ -6,9 +6,7 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
-from bs4 import BeautifulSoup
-
-from ..scraper import download_html, find_element, regex_extract
+from ..scraper import download_html, find_element, regex_extract, make_soup
 
 LANGUAGE_REGEX = re.compile(r"WIKIREQUEST\.info\.lang = '([^']+)';")
 SITE_ID_REGEX = re.compile(r"WIKIREQUEST\.info\.siteId = (\d+);")
@@ -45,7 +43,7 @@ def get(site_slug: str) -> SiteHomeData:
     page_category_id = int(regex_extract(url, html, PAGE_CATEGORY_ID_REGEX)[1])
     assert site_slug == site_slug_ex, "site slug in scraped page doesn't match"
 
-    soup = BeautifulSoup(html, "html.parser")
+    soup = make_soup(html)
     element = find_element(url, soup, "a#discuss-button")
     assert isinstance(element["href"], str), "element href is not a string"
     match = FORUM_POST_ID_REGEX.fullmatch(element["href"])
