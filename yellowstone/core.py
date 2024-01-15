@@ -7,13 +7,13 @@ and processes new tasks to be run in response.
 
 import json
 import logging
-from typing import NoReturn, TypedDict
+from typing import NoReturn, Optional, TypedDict
 
 import pugsql
 
 from .config import Config, getenv
 from .exceptions import UnknownJobError
-from .jobs import JobType, get_user, get_user_avatar, get_site
+from .jobs import JobType, get_user, get_user_avatar, get_site, index_site_members
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
@@ -104,12 +104,13 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_FORUMS:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
-                    raise NotImplementedError
+                    assert isinstance(data, Optional[int]), "INDEX_SITE_MEMBERS type validation"
+                    index_site_members.run(self, site_slug=value, offset=data)
                 case JobType.FETCH_USER:
-                    assert isinstance(data, int), "GET_USER job data not integer"
+                    assert isinstance(data, int), "GET_USER type validation"
                     get_user.run(self, user_slug=value, user_id=data)
                 case JobType.FETCH_USER_AVATAR:
-                    assert isinstance(data, int), "GET_USER_AVATAR job data not integer"
+                    assert isinstance(data, int), "GET_USER_AVATAR validation"
                     get_user_avatar.run(self, user_slug=value, user_id=data)
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
