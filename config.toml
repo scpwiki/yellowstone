@@ -109,6 +109,15 @@ sites = [
     "brucebase",
 ]
 
+# On startup, always fetch basic site data
+# (e.g. home page, tagline, etc) even if
+# the site is already in the database.
+#
+# This data is rarely edited but it sometimes
+# is, and setting this to true essentially
+# forcibly refreshes site data.
+always-fetch-site = false
+
 # All sites which *require* use of TLS.
 # Sites that are HTTP-only or allow both
 # can be excluded.

@@ -17,6 +17,7 @@ class Config:
     site_slugs: list[str]
     sites_use_tls: list[str]
     sites_use_admin_members: list[str]
+    always_fetch_site: bool
 
     def __init__(self, path: str) -> None:
         with open(path, "rb") as file:
@@ -27,6 +28,7 @@ class Config:
         self.site_slugs = data["wikidot"]["sites"]
         self.sites_use_tls = data["wikidot"]["use-tls"]
         self.sites_use_admin_members = data["wikidot"]["use-admin-members-list"]
+        self.always_fetch_site = data["wikidot"]["always-fetch-site"]
 
     @staticmethod
     def parse_args() -> "Config":
