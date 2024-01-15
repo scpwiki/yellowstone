@@ -1,0 +1,19 @@
+[s3]
+bucket = "wikidot-backup"
+
+[wikidot]
+sites = [
+    "scptestwiki",
+    "techcheck",
+]
+
+always-fetch-site = true
+
+use-tls = [
+    "scp-wiki",
+]
+
+use-admin-members-list = [
+    "scp-wiki",
+    "techcheck",
+]
