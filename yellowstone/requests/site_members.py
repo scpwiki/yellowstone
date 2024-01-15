@@ -32,6 +32,7 @@ def get(site_slug: str, offset: int, *, wikidot: Wikidot) -> list[SiteMemberData
     assert offset > 0, "Offset cannot be zero or negative"
     html = wikidot.ajax_module_connector(
         site_slug,
+        # TODO, use "managesite/members/ManageSiteMembersListModule" in case of errors on big sites?
         "membership/MembersListModule",
         {
             "page": offset,
