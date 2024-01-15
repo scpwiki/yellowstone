@@ -4,14 +4,13 @@ Retrieves all information associated with a user.
 
 import logging
 
-from ..core import BackupDispatcher
 from ..jobs import JobType
 from ..requests import user as user_data
 
 logger = logging.getLogger(__name__)
 
 
-def run(core: BackupDispatcher, *, user_slug: str, user_id: int) -> None:
+def run(core: "BackupDispatcher", *, user_slug: str, user_id: int) -> None:
     logger.info("Retrieving user information for '%s' (%d)", user_slug, user_id)
 
     user = user_data.get(user_id, wikidot=core.wikidot)
