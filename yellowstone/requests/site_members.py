@@ -9,7 +9,6 @@ from datetime import datetime
 
 from bs4 import Tag
 
-from ..exceptions import ScrapingError
 from ..scraper import find_element, make_soup, regex_extract, get_entity_date
 from ..wikidot import Wikidot
 from .user import USER_SLUG_REGEX
@@ -45,7 +44,7 @@ def get(site_slug: str, offset: int, *, wikidot: Wikidot) -> list[SiteMemberData
     return list(map(process_row, rows))
 
 
-def process_row(row: Tag) -> MemberInfo:
+def process_row(row: Tag) -> SiteMemberData:
     source = str(row)
 
     # Extract user information

@@ -48,7 +48,9 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
 
     # Fetch from standard 'www' site to avoid dealing with localization issues
     html = wikidot.ajax_module_connector(
-        "www", "users/UserInfoWinModule", {"user_id": user_id},
+        "www",
+        "users/UserInfoWinModule",
+        {"user_id": user_id},
     )
     soup = make_soup(html)
 
