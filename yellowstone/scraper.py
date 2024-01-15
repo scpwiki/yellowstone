@@ -47,6 +47,7 @@ def find_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) ->
 
 
 def get_entity_date(source: str, tag: Tag) -> datetime:
+    assert tag.name == "span", "HTML date entity is not span"
     for klass in tag.attrs["class"]:
         match = TIMESTAMP_REGEX.fullmatch(klass)
         if match is not None:
