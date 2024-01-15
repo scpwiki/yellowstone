@@ -46,6 +46,11 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
                                   { "user_id": user_id })
     soup = make_soup(html)
 
+    # Get name-like fields
+    name = find_element(source, soup, "h1").text
+    element = find_element(source, soup, "a.btn-primary")
+    slug = regex_extract(source, element["href"], USER_SLUG_REGEX)[1]
+
     # Process user details
     created_at = None
     real_name = None
