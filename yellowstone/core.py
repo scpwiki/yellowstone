@@ -28,6 +28,8 @@ class JobType(Enum):
     INDEX_SITE_PAGES = "index-site-pages"
     INDEX_SITE_FORUMS = "index-site-forums"
     INDEX_SITE_MEMBERS = "index-site-members"
+    FETCH_USER = "fetch-user"
+    FETCH_USER_AVATAR = "fetch-user-avatar"
 
 
 class JobDict(TypedDict):
@@ -101,6 +103,11 @@ class BackupDispatcher:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
                     raise NotImplementedError
+                case JobType.FETCH_USER:
+                    raise NotImplementedError
+                case JobType.FETCH_USER_AVATAR:
+                    assert isinstance(data, int), "GET_USER_AVATAR job data not integer (user ID)"
+                    fetch_user_avatar(self, user_slug=value, user_id=data)
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
         except UnknownJobError:
