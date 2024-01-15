@@ -106,8 +106,8 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_MEMBERS:
                     raise NotImplementedError
                 case JobType.FETCH_USER:
-                    assert data is None, "GET_USER job has no data"
-                    fetch_user(self, user_slug=value)
+                    assert isinstance(data, int), "GET_USER job data not integer"
+                    fetch_user(self, user_slug=value, user_id=data)
                 case JobType.FETCH_USER_AVATAR:
                     assert isinstance(data, int), "GET_USER_AVATAR job data not integer"
                     fetch_user_avatar(self, user_slug=value, user_id=data)
