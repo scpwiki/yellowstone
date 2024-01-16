@@ -1,3 +1,4 @@
+-- Adds or updates a user
 -- :name add_user :insert
 INSERT INTO "user" (
     user_slug,
@@ -37,4 +38,15 @@ INSERT INTO "user" (
             website = :website,
             bio = :bio,
             wikidot_pro = :wikidot_pro,
-            karma = :karma
+            karma = :karma;
+
+
+-- Gets a user by ID
+-- :name get_user_by_id :one
+SELECT * FROM "user"
+    WHERE wikidot_id = :user_id;
+
+-- Gets a user by slug
+-- :name get_user_by_slug :one
+SELECT * FROM "user"
+    WHERE user_slug = :user_slug;
