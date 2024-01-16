@@ -77,6 +77,7 @@ sites = [
     "borradores-scp-es",
     "borradores-scp-es-2",
     "scp-th-sandbox",
+    "pseudo-scp-jp",
     "scp-jp-sandbox2",
     "scp-jp-sandbox3",
     "scp-jp-storage",
