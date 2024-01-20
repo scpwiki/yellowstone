@@ -70,17 +70,15 @@ CREATE TABLE page (
 CREATE TABLE job (
     job_id SERIAL PRIMARY KEY,
     job_type TEXT NOT NULL,
-    job_object TEXT NOT NULL,
     attempts INTEGER NOT NULL DEFAULT 0,
     data JSON NOT NULL,
 
-    UNIQUE (job_type, job_object)
+    UNIQUE (job_type, data)
 );
 
 CREATE TABLE job_dead (
     job_id INTEGER PRIMARY KEY,
     buried_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
     job_type TEXT NOT NULL,
-    job_object TEXT NOT NULL,
     data JSON NOT NULL
 );
