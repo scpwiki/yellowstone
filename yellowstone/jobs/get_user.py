@@ -3,7 +3,7 @@ Retrieves all information associated with a user.
 """
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 from ..requests import user as user_data
 from . import JobType
@@ -14,8 +14,13 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def run(core: "BackupDispatcher", *, user_slug: str, user_id: int) -> None:
-    logger.info("Retrieving user information for '%s' (%d)", user_slug, user_id)
+class GetUserJob(TypedDict):
+    user_id: int
+
+
+def run(core: "BackupDispatcher", data: GetUserJob) -> None:
+    user_id = data["user_id"]
+    logger.info("Retrieving user information for user ID %d", user_id)
 
     user = user_data.get(user_id, wikidot=core.wikidot)
     core.database.add_user(
@@ -34,4 +39,4 @@ def run(core: "BackupDispatcher", *, user_slug: str, user_id: int) -> None:
     )
 
     # Enqueue avatar job
-    core.add_job(JobType.FETCH_USER_AVATAR, user_slug, user_id)
+    core.add_job(JobType.FETCH_USER_AVATAR, data)

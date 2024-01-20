@@ -73,17 +73,15 @@ class BackupDispatcher:
     def queue_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
             logger.info("Queueing site start jobs for '%s'", site_slug)
-            self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug, START_MEMBER_OFFSET)
-            self.add_job(JobType.INDEX_SITE_FORUMS, site_slug)
-            self.add_job(JobType.INDEX_SITE_MEMBERS, site_slug)
-
-    def add_job(self, job_type: JobType, job_object: str, data: Json = None) -> None:
-        logger.debug("Adding job %s for %s (data %r)", job_type.value, job_object, data)
-        self.database.add_job(
-            job_type=job_type.value,
-            job_object=job_object,
-            data=json.dumps(data),
-        )
+            # add_index_site_pages_job(site_slug)
+            # add_index_site_forums_job(site_slug)
+            add_index_site_members_job(
+                self.database,
+                {
+                    "site_slug": site_slug,
+                    "offset": START_MEMBER_OFFSET,
+                },
+            )
 
     def process_all_jobs(self) -> None:
         logger.info("Processing all jobs in queue")
@@ -96,13 +94,13 @@ class BackupDispatcher:
 
     def has_jobs(self) -> bool:
         row = self.database.has_jobs()
-        return row["exists"]
+        exists = row["exists"]
+        assert isinstance(exists, bool)
+        return exists
 
     def process_job(self, job: JobDict) -> None:
         job_type = JobType(job["job_type"])
-        # TODO: remove concept of job_object?
         data = job["data"]
-        value = job["job_object"]
         logger.info("Processing job %r", job)
         try:
             match job_type:
@@ -111,14 +109,14 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_FORUMS:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
-                    assert isinstance(data, int), "INDEX_SITE_MEMBERS"
-                    index_site_members.run(self, site_slug=value, offset=data)
+                    assert isinstance(data, index_site_members.SiteMemberJob), "INDEX_SITE_MEMBERS"
+                    index_site_members.run(self, data)
                 case JobType.FETCH_USER:
-                    assert isinstance(data, int), "GET_USER"
-                    get_user.run(self, user_slug=value, user_id=data)
+                    assert isinstance(data, get_user.GetUserJob), "GET_USER"
+                    get_user.run(self, data)
                 case JobType.FETCH_USER_AVATAR:
-                    assert isinstance(data, int), "GET_USER_AVATAR"
-                    get_user_avatar.run(self, user_slug=value, user_id=data)
+                    assert isinstance(data, get_user_avatar.GetUserAvatarJob), "GET_USER_AVATAR"
+                    get_user_avatar.run(self, data)
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
         except UnknownJobError:

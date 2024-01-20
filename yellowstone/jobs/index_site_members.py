@@ -6,7 +6,7 @@ as the next page of the list.
 """
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 from ..requests import site_members
 from . import JobType
@@ -19,7 +19,15 @@ START_OFFSET = 1
 logger = logging.getLogger(__name__)
 
 
-def run(core: "BackupDispatcher", *, site_slug: str, offset: int) -> None:
+class SiteMemberJob(TypedDict):
+    site_slug: str
+    offset: int
+
+
+def run(core: "BackupDispatcher", data: SiteMemberJob) -> None:
+    site_slug = data["site_slug"]
+    offset = data["offset"]
+
     assert offset >= START_OFFSET, "Offset cannot be zero or negative"
     site_id = core.site_id_cache[site_slug]
     logger.info(
