@@ -9,13 +9,12 @@ and scraping.
 
 import json
 from enum import Enum, unique
-from typing import TYPE_CHECKING
+from typing import cast
 
 from ..types import Json
+from .get_user import GetUserJob
+from .get_user_avatar import GetUserAvatarJob
 from .index_site_members import SiteMemberJob
-
-if TYPE_CHECKING:
-    pass
 
 
 @unique
@@ -28,6 +27,7 @@ class JobType(Enum):
 
 
 # TODO change to JobManager class?
+
 
 def add_raw_job(database, type: JobType, data: Json) -> None:
     database.add_job(
@@ -45,4 +45,12 @@ def add_index_site_forums_job(database, data: None) -> None:
 
 
 def add_index_site_members_job(database, data: SiteMemberJob) -> None:
-    add_raw_job(database, JobType.INDEX_SITE_MEMBERS, data)
+    add_raw_job(database, JobType.INDEX_SITE_MEMBERS, cast(Json, data))
+
+
+def add_fetch_user_job(database, data: GetUserJob) -> None:
+    add_raw_job(database, JobType.FETCH_USER, cast(Json, data))
+
+
+def add_fetch_user_avatar_job(database, data: GetUserAvatarJob) -> None:
+    add_raw_job(database, JobType.FETCH_USER_AVATAR, cast(Json, data))

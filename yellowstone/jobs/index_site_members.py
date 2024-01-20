@@ -9,7 +9,7 @@ import logging
 from typing import TYPE_CHECKING, TypedDict
 
 from ..requests import site_members
-from . import JobType
+from . import add_fetch_user_job, add_index_site_members_job
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -48,7 +48,10 @@ def run(core: "BackupDispatcher", data: SiteMemberJob) -> None:
     if members:
         with core.database.transaction():
             # Queue the next offset, for iterating over pages using the job queue
-            core.add_job(JobType.INDEX_SITE_MEMBERS, site_slug, offset + 1)
+            add_index_site_members_job(
+                core.database,
+                {"site_slug": site_slug, "offset": offset + 1},
+            )
 
             # Add all site members, and queue their users for update
             for member in members:
@@ -57,4 +60,4 @@ def run(core: "BackupDispatcher", data: SiteMemberJob) -> None:
                     site_id=site_id,
                     joined_at=member.joined_at,
                 )
-                core.add_job(JobType.FETCH_USER, member.slug, member.id)
+                add_fetch_user_job(core.database, {"user_id": member.id})

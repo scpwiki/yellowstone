@@ -8,13 +8,20 @@ and processes new tasks to be run in response.
 import json
 import logging
 import time
-from typing import NoReturn, TypedDict
+from typing import NoReturn, TypedDict, cast
 
 import pugsql
 
 from .config import Config, getenv
 from .exceptions import UnknownJobError
-from .jobs import JobType, get_site, get_user, get_user_avatar, index_site_members
+from .jobs import (
+    JobType,
+    add_index_site_members_job,
+    get_site,
+    get_user,
+    get_user_avatar,
+    index_site_members,
+)
 from .jobs.index_site_members import START_OFFSET as START_MEMBER_OFFSET
 from .s3 import S3
 from .types import Json
@@ -73,8 +80,8 @@ class BackupDispatcher:
     def queue_all_sites(self) -> None:
         for site_slug in self.config.site_slugs:
             logger.info("Queueing site start jobs for '%s'", site_slug)
-            # add_index_site_pages_job(site_slug)
-            # add_index_site_forums_job(site_slug)
+            # XXX add_index_site_pages_job(site_slug)
+            # XXX add_index_site_forums_job(site_slug)
             add_index_site_members_job(
                 self.database,
                 {
@@ -109,14 +116,17 @@ class BackupDispatcher:
                 case JobType.INDEX_SITE_FORUMS:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
-                    assert isinstance(data, index_site_members.SiteMemberJob), "INDEX_SITE_MEMBERS"
-                    index_site_members.run(self, data)
+                    index_site_members.run(
+                        self,
+                        cast(index_site_members.SiteMemberJob, data),
+                    )
                 case JobType.FETCH_USER:
-                    assert isinstance(data, get_user.GetUserJob), "GET_USER"
-                    get_user.run(self, data)
+                    get_user.run(self, cast(get_user.GetUserJob, data))
                 case JobType.FETCH_USER_AVATAR:
-                    assert isinstance(data, get_user_avatar.GetUserAvatarJob), "GET_USER_AVATAR"
-                    get_user_avatar.run(self, data)
+                    get_user_avatar.run(
+                        self,
+                        cast(get_user_avatar.GetUserAvatarJob, data),
+                    )
                 case _:
                     raise UnknownJobError(f"Unknown job type: {job_type}")
         except UnknownJobError:

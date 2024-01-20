@@ -6,7 +6,7 @@ import logging
 from typing import TYPE_CHECKING, TypedDict
 
 from ..requests import user as user_data
-from . import JobType
+from . import add_fetch_user_avatar_job
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -39,4 +39,4 @@ def run(core: "BackupDispatcher", data: GetUserJob) -> None:
     )
 
     # Enqueue avatar job
-    core.add_job(JobType.FETCH_USER_AVATAR, data)
+    add_fetch_user_avatar_job(core.database, data)
