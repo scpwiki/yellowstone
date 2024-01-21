@@ -9,4 +9,4 @@ INSERT INTO site (site_slug, wikidot_id, home_slug, name, tagline, language)
 -- :name get_site :one
 -- Gets site by slug
 SELECT * FROM site
-    WHERE site_slug = :slug;
+    WHERE site_slug = :site_slug;
