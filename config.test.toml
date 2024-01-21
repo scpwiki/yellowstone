@@ -8,7 +8,7 @@ sites = [
     "techcheck",
 ]
 
-always-fetch-site = true
+always-fetch-site = false
 
 use-tls = [
     "scp-wiki",
