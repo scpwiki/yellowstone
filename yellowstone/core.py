@@ -121,7 +121,10 @@ class BackupDispatcher:
                         cast(index_site_members.SiteMemberJob, data),
                     )
                 case JobType.FETCH_USER:
-                    get_user.run(self, cast(get_user.GetUserJob, data))
+                    get_user.run(
+                        self,
+                        cast(get_user.GetUserJob, data),
+                    )
                 case JobType.FETCH_USER_AVATAR:
                     get_user_avatar.run(
                         self,
