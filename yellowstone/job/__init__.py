@@ -39,7 +39,6 @@ class JobType(Enum):
 class JobDict(TypedDict):
     job_id: int
     job_type: str
-    job_object: str
     attempts: int
     data: Json
 
@@ -122,7 +121,6 @@ class JobManager:
                     self.database.add_dead_job(
                         job_id=job["job_id"],
                         job_type=job["job_type"],
-                        job_object=job["job_object"],
                         data=json.dumps(job["data"]),
                     )
         else:
