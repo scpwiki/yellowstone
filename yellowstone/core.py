@@ -15,8 +15,8 @@ import pugsql
 from .config import Config, getenv
 from .exception import UnknownJobError
 from .job import (
+    JobManager,
     JobType,
-    add_index_site_members_job,
     get_site,
     get_user,
     get_user_avatar,
@@ -46,12 +46,14 @@ class BackupDispatcher:
         "config",
         "wikidot",
         "database",
+        "job",
         "s3",
         "site_id_cache",
     )
 
     config: Config
     wikidot: Wikidot
+    job: JobManager
     s3: S3
     site_id_cache: dict[str, int]
 
@@ -60,6 +62,7 @@ class BackupDispatcher:
         self.wikidot = Wikidot(config)
         self.database = pugsql.module("queries/")
         self.database.connect(getenv("POSTGRES_DATABASE_URL"))
+        self.job = JobManager(self.database)
         self.s3 = S3(config)
         self.site_id_cache = {}
 
@@ -82,8 +85,7 @@ class BackupDispatcher:
             logger.info("Queueing site start jobs for '%s'", site_slug)
             # XXX add_index_site_pages_job(site_slug)
             # XXX add_index_site_forums_job(site_slug)
-            add_index_site_members_job(
-                self.database,
+            self.job.index_site_members(
                 {
                     "site_slug": site_slug,
                     "offset": START_MEMBER_OFFSET,

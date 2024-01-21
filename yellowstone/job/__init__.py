@@ -26,31 +26,33 @@ class JobType(Enum):
     FETCH_USER_AVATAR = "fetch-user-avatar"
 
 
-# TODO change to JobManager class?
+class JobManager:
+    __slots__ = ("database",)
 
+    def __init__(self, database):
+        self.database = database
 
-def add_raw_job(database, type: JobType, data: Json) -> None:
-    database.add_job(
-        job_type=type.value,
-        data=json.dumps(data),
-    )
+    def add_raw(self, type: JobType, data: Json) -> None:
+        self.database.add_job(
+            job_type=type.value,
+            data=json.dumps(data),
+        )
 
+    def index_site_pages(self, data: None) -> None:
+        self.add_raw(JobType.INDEX_SITE_PAGES, data)
 
-def add_index_site_pages_job(database, data: None) -> None:
-    add_raw_job(database, JobType.INDEX_SITE_PAGES, data)
+    def index_site_forums(self, data: None) -> None:
+        self.add_raw(JobType.INDEX_SITE_FORUMS, data)
 
+    def index_site_members(self, data: SiteMemberJob) -> None:
+        self.add_raw(JobType.INDEX_SITE_MEMBERS, cast(Json, data))
 
-def add_index_site_forums_job(database, data: None) -> None:
-    add_raw_job(database, JobType.INDEX_SITE_FORUMS, data)
+    def fetch_user(self, data: GetUserJob) -> None:
+        self.add_raw(JobType.FETCH_USER, cast(Json, data))
 
+    def fetch_user_avatar(self, data: GetUserAvatarJob) -> None:
+        self.add_raw(JobType.FETCH_USER_AVATAR, cast(Json, data))
 
-def add_index_site_members_job(database, data: SiteMemberJob) -> None:
-    add_raw_job(database, JobType.INDEX_SITE_MEMBERS, cast(Json, data))
-
-
-def add_fetch_user_job(database, data: GetUserJob) -> None:
-    add_raw_job(database, JobType.FETCH_USER, cast(Json, data))
-
-
-def add_fetch_user_avatar_job(database, data: GetUserAvatarJob) -> None:
-    add_raw_job(database, JobType.FETCH_USER_AVATAR, cast(Json, data))
+    def process_job(self):
+        # TODO
+        ...
