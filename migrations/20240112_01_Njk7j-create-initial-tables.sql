@@ -71,7 +71,7 @@ CREATE TABLE job (
     job_id SERIAL PRIMARY KEY,
     job_type TEXT NOT NULL,
     attempts INTEGER NOT NULL DEFAULT 0,
-    data JSON NOT NULL,
+    data JSONB NOT NULL,
 
     UNIQUE (job_type, data)
 );
