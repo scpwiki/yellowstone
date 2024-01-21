@@ -1,8 +1,8 @@
 -- :name add_job :insert
 -- Add new job to queue
-INSERT INTO job (job_type, job_object, data)
-    VALUES (:job_type, :job_object, :data)
-    ON CONFLICT (job_type, job_object)
+INSERT INTO job (job_type, data)
+    VALUES (:job_type, :data)
+    ON CONFLICT (job_type, data)
     DO NOTHING;
 
 -- :name has_jobs :one
@@ -27,5 +27,5 @@ DELETE FROM job
 
 -- :name add_dead_job :insert
 -- Add job to dead letter queue
-INSERT INTO job_dead (job_id, job_type, job_object, data)
-    VALUES (:job_id, :job_type, :job_object, :data);
+INSERT INTO job_dead (job_id, job_type, data)
+    VALUES (:job_id, :job_type, :data);
