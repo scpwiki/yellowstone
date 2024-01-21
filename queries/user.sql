@@ -1,5 +1,4 @@
 -- :name add_user :insert
--- Adds or updates a user
 INSERT INTO "user" (
     user_slug,
     user_name,
@@ -42,11 +41,9 @@ INSERT INTO "user" (
 
 
 -- :name get_user_by_id :one
--- Gets a user by ID
 SELECT * FROM "user"
     WHERE wikidot_id = :user_id;
 
 -- :name get_user_by_slug :one
--- Gets a user by slug
 SELECT * FROM "user"
     WHERE user_slug = :user_slug;
