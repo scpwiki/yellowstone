@@ -5,7 +5,7 @@ Stores the current avatar for a user.
 import logging
 from typing import TYPE_CHECKING, TypedDict
 
-from ..requests import user_avatar
+from ..request import user_avatar
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher

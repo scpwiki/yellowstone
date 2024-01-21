@@ -11,7 +11,7 @@ from xmlrpc.client import ServerProxy
 import requests
 
 from .config import Config, getenv
-from .exceptions import WikidotError, WikidotTokenError
+from .exception import WikidotError, WikidotTokenError
 
 logger = logging.getLogger(__name__)
 

@@ -10,7 +10,7 @@ from typing import Union
 import requests
 from bs4 import BeautifulSoup, Tag
 
-from .exceptions import ScrapingError
+from .exception import ScrapingError
 
 TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
 

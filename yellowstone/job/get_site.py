@@ -10,7 +10,7 @@ start of the process.
 import logging
 from typing import TYPE_CHECKING
 
-from ..requests import site_home_raw
+from ..request import site_home_raw
 from ..wikidot import Wikidot
 
 if TYPE_CHECKING:

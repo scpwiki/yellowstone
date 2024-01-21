@@ -5,7 +5,7 @@ Retrieves all information associated with a user.
 import logging
 from typing import TYPE_CHECKING, TypedDict
 
-from ..requests import user as user_data
+from ..request import user as user_data
 from . import add_fetch_user_avatar_job
 
 if TYPE_CHECKING:

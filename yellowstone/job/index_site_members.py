@@ -8,7 +8,7 @@ as the next page of the list.
 import logging
 from typing import TYPE_CHECKING, TypedDict
 
-from ..requests import site_members
+from ..request import site_members
 from . import add_fetch_user_job, add_index_site_members_job
 
 if TYPE_CHECKING:

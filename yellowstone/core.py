@@ -13,8 +13,8 @@ from typing import NoReturn, TypedDict, cast
 import pugsql
 
 from .config import Config, getenv
-from .exceptions import UnknownJobError
-from .jobs import (
+from .exception import UnknownJobError
+from .job import (
     JobType,
     add_index_site_members_job,
     get_site,
@@ -22,7 +22,7 @@ from .jobs import (
     get_user_avatar,
     index_site_members,
 )
-from .jobs.index_site_members import START_OFFSET as START_MEMBER_OFFSET
+from .job.index_site_members import START_OFFSET as START_MEMBER_OFFSET
 from .s3 import S3
 from .types import Json
 from .wikidot import Wikidot
