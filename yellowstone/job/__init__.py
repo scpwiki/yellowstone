@@ -64,6 +64,16 @@ class JobManager:
     def index_site_members(self, data: SiteMemberJob) -> None:
         self.add_raw(JobType.INDEX_SITE_MEMBERS, cast(Json, data))
 
+    def index_site_members_continue(self, site_slug: str) -> None:
+        # Reads the last member page, and continues from there
+        offset = self.database.get_last_number_offset(site_slug=site_slug)
+        self.index_site_members(
+            {
+                "site_slug": site_slug,
+                "offset": offset,
+            },
+        )
+
     def fetch_user(self, data: GetUserJob) -> None:
         self.add_raw(JobType.FETCH_USER, cast(Json, data))
 

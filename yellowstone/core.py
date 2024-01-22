@@ -68,12 +68,7 @@ class BackupDispatcher:
             logger.info("Queueing site start jobs for '%s'", site_slug)
             # XXX add_index_site_pages_job(site_slug)
             # XXX add_index_site_forums_job(site_slug)
-            self.job.index_site_members(
-                {
-                    "site_slug": site_slug,
-                    "offset": START_MEMBER_OFFSET,
-                },
-            )
+            self.job.index_site_members_continue(site_slug)
 
     def process_all_jobs(self) -> None:
         logger.info("Processing all jobs in queue")
