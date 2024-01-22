@@ -16,7 +16,6 @@ from .job import (
     JobManager,
     get_site,
 )
-from .job.index_site_members import START_OFFSET as START_MEMBER_OFFSET
 from .s3 import S3
 from .wikidot import Wikidot
 

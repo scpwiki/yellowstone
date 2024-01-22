@@ -12,6 +12,11 @@ CREATE TABLE site (
     language TEXT NOT NULL
 );
 
+CREATE TABLE site_progress (
+    site_slug TEXT PRIMARY KEY REFERENCES site(site_slug),
+    last_member_offset INTEGER NOT NULL DEFAULT 1
+);
+
 CREATE TABLE "user" (
     user_slug TEXT PRIMARY KEY,
     user_name TEXT NOT NULL,

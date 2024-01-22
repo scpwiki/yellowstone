@@ -13,8 +13,6 @@ from ..request import site_members
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
 
-START_OFFSET = 1
-
 logger = logging.getLogger(__name__)
 
 
@@ -44,6 +42,7 @@ def run(core: "BackupDispatcher", data: SiteMemberJob) -> None:
         use_admin=core.config.uses_admin_members(site_slug),
     )
 
+    # Save member data
     if members:
         with core.database.transaction():
             # Queue the next offset, for iterating over pages using the job queue
@@ -57,3 +56,6 @@ def run(core: "BackupDispatcher", data: SiteMemberJob) -> None:
                     joined_at=member.joined_at,
                 )
                 core.job.fetch_user({"user_id": member.id})
+
+    # Save member page progress
+    core.database.update_last_member_offset(last_offset=offset)

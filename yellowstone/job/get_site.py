@@ -52,6 +52,7 @@ def insert_site(
         language=site.language,
         home_slug=site.home_page_slug,
     )
+    database.add_site_progress(site_slug=site.slug)
 
     # TODO insert basic home data
     _ = site.home_page_id
