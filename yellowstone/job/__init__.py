@@ -65,6 +65,12 @@ class JobManager:
         self.add_raw(JobType.INDEX_SITE_MEMBERS, cast(Json, data))
 
     def index_site_members_continue(self, site_slug: str) -> None:
+        # Only queue if there already isn't a member index job for the site
+        job = self.database.get_site_member_job(site_slug=site_slug)
+        if job is not None:
+            logger.debug("Found an index-site-members job for this site")
+            return
+
         # Reads the last member page, and continues from there
         offset = self.database.get_last_number_offset(site_slug=site_slug)
         self.index_site_members(
