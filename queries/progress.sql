@@ -5,7 +5,7 @@ INSERT INTO site_progress (site_slug)
     DO NOTHING;
 
 -- :name get_last_member_offset :one
-SELECT get_last_member_offset FROM site_progress
+SELECT last_member_offset FROM site_progress
     WHERE site_slug = :site_slug;
 
 -- :name update_last_member_offset :affected
