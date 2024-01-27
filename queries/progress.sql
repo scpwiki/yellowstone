@@ -10,5 +10,5 @@ SELECT last_member_offset FROM site_progress
 
 -- :name update_last_member_offset :affected
 UPDATE site_progress
-    SET last_member_offset = MAX(last_member_offset, :last_offset)
+    SET last_member_offset = max(last_member_offset, :last_offset)
     WHERE site_slug = :site_slug;

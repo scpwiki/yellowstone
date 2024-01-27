@@ -58,4 +58,4 @@ def run(core: "BackupDispatcher", data: SiteMemberJob) -> None:
                 core.job.fetch_user({"user_id": member.id})
 
     # Save member page progress
-    core.database.update_last_member_offset(last_offset=offset)
+    core.database.update_last_member_offset(site_slug=site_slug, last_offset=offset)
