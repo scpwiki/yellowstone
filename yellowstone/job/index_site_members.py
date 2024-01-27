@@ -23,7 +23,7 @@ class SiteMemberJob(TypedDict):
 
 def run(core: "BackupDispatcher", data: SiteMemberJob) -> None:
     site_slug = data["site_slug"]
-    offset = data["offset"]
+    offset = data["offset"]["last_member_offset"]
 
     assert offset >= 1, "Offset cannot be zero or negative"
     site_id = core.site_id_cache[site_slug]
