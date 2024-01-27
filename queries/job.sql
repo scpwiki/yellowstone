@@ -5,15 +5,15 @@ INSERT INTO job (job_type, data)
     DO NOTHING;
 
 -- :name has_jobs :one
-SELECT EXISTS (SELECT * FROM job LIMIT 1)
+SELECT EXISTS (SELECT * FROM job LIMIT 1);
 
 -- :name get_job :one
-SELECT * FROM job ORDER BY random() LIMIT 1
+SELECT * FROM job ORDER BY random() LIMIT 1;
 
 -- :name fail_job :affected
 UPDATE job
     SET attempts = attempts + 1
-    WHERE job_id = :job_id
+    WHERE job_id = :job_id;
 
 -- :name delete_job :affected
 DELETE FROM job
