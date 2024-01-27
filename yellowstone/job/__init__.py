@@ -72,7 +72,7 @@ class JobManager:
             return
 
         # Reads the last member page, and continues from there
-        offset = self.database.get_last_number_offset(site_slug=site_slug)
+        offset = self.database.get_last_member_offset(site_slug=site_slug)
         self.index_site_members(
             {
                 "site_slug": site_slug,
