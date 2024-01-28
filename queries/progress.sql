@@ -13,11 +13,16 @@ UPDATE site_progress
     SET last_member_offset = GREATEST(last_member_offset, :last_offset)
     WHERE site_slug = :site_slug;
 
--- :name add_forum_category_progress :insert
-INSERT INTO forum_category_progress (forum_category_id)
-    VALUES (:category_id)
+-- :name set_forum_category_progress :insert
+INSERT INTO forum_category_progress (forum_category_id, thread_count, post_count, last_thread_id, last_post_id)
+    VALUES (:category_id, :thread_count, :post_count, :last_thread_id, :last_post_id)
     ON CONFLICT (forum_category_id)
-    DO NOTHING;
+    DO UPDATE
+    SET
+        thread_count = :thread_count,
+        post_count = :post_count,
+        last_thread_id = GREATEST(last_thread_id, :last_thread_id),
+        last_post_id = GREATEST(last_post_id, :last_post_id);
 
 -- :name get_forum_category_progress :one
 SELECT
