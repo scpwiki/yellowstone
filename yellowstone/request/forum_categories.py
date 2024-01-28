@@ -6,7 +6,6 @@ import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from functools import partial
 
 from bs4 import Tag
 
@@ -62,15 +61,13 @@ def get(
     )
     soup = make_soup(html)
     source = f"{wikidot.site_url(site_slug)}/forum"
-    convert_group = partial(convert_group, source=source)
-    return list(map(convert_group, soup.select(".forum-group")))
+    return list(map(lambda group: convert_group(source, group), soup.select(".forum-group")))
 
 
 def convert_group(source: str, group: Tag) -> ForumGroupData:
     name = find_element(source, group, ".head .title").text
     description = find_element(source, group, ".head .description").text
-    convert_category = partial(convert_category, source=source)
-    categories = list(map(convert_category, group.select("table tr:not(.head)")))
+    categories = list(map(lambda category: convert_category(source, category), group.select("table tr:not(.head)")))
 
     return ForumGroupData(
         name=name,
