@@ -76,8 +76,7 @@ CREATE TABLE forum_group (
     internal_id SERIAL PRIMARY KEY,
     site_id INTEGER NOT NULL REFERENCES site(site_id),
     name TEXT NOT NULL,
-    description TEXT NOT NULL,
-
+    description TEXT NOT NULL
 );
 
 CREATE TABLE forum_category (
