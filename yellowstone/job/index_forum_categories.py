@@ -5,7 +5,9 @@ This then queues each forum category for thread indexing.
 """
 
 import logging
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Optional, TypedDict
+
+from ..request import forum_categories
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -64,13 +66,13 @@ def run(core: "BackupDispatcher", *, data: ForumCategoriesJob) -> None:
 
             if needs_update(progress, category):
                 core.job.index_forum_threads(
-                    {"site_slug": site_slug, "category_id": category.id}
+                    {"site_slug": site_slug, "category_id": category.id},
                 )
 
 
 def needs_update(
     last_progress: ForumCategoryProgressRow,
-    category: ForumCategoryData,
+    category: forum_categories.ForumCategoryData,
 ) -> bool:
     if category.thread_count > last_progress["thread_count"]:
         logger.debug(
