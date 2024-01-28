@@ -12,7 +12,7 @@ from bs4 import Tag
 
 from ..request.site_members import USER_ID_REGEX
 from ..request.user import USER_SLUG_REGEX
-from ..scraper import find_element, make_soup, regex_extract, get_entity_date
+from ..scraper import find_element, get_entity_date, make_soup, regex_extract
 from ..wikidot import Wikidot
 
 CATEGORY_ID_REGEX = re.compile(r"\/forum\/c-(\d+)(?:\/.+)?")
@@ -67,14 +67,21 @@ def get(
     )
     soup = make_soup(html)
     source = f"{site_slug} forum"
-    return list(map(lambda group: extract_group(source, group), soup.select(".forum-group")))
+    return list(
+        map(lambda group: extract_group(source, group), soup.select(".forum-group")),
+    )
 
 
 def extract_group(source: str, group: Tag) -> ForumGroupData:
     name = find_element(source, group, ".head .title").text
     source = f"{source} group '{name}'"
     description = find_element(source, group, ".head .description").text
-    categories = list(map(lambda category: extract_category(source, category), group.select("table tr:not(.head)")))
+    categories = list(
+        map(
+            lambda category: extract_category(source, category),
+            group.select("table tr:not(.head)"),
+        )
+    )
 
     return ForumGroupData(
         name=name,
@@ -115,7 +122,9 @@ def extract_last_post(source: str, element: Tag) -> Optional[ForumCategoryLastPo
         return None
 
     element_user = find_element(source, element, "a")
-    user_id = int(regex_extract(source, element_user.attrs["onclick"], USER_ID_REGEX)[1])
+    user_id = int(
+        regex_extract(source, element_user.attrs["onclick"], USER_ID_REGEX)[1],
+    )
     user_slug = regex_extract(source, element_user.attrs["href"], USER_SLUG_REGEX)[1]
     user_name = find_element(source, element_user, "img.small").attrs["alt"]
 
