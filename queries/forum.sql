@@ -1,6 +1,6 @@
 -- :name add_forum_group :insert
-INSERT INTO forum_group (site_id, name, description)
-    VALUES (:site_id, :name, :description)
+INSERT INTO forum_group (site_slug, name, description)
+    VALUES (:site_slug, :name, :description)
     RETURNING internal_id;
 
 -- :name add_forum_category :insert

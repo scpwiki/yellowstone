@@ -74,7 +74,7 @@ CREATE TABLE page (
 
 CREATE TABLE forum_group (
     internal_id SERIAL PRIMARY KEY,
-    site_id INTEGER NOT NULL REFERENCES site(site_id),
+    site_slug TEXT NOT NULL REFERENCES site(site_slug),
     name TEXT NOT NULL,
     description TEXT NOT NULL
 );
