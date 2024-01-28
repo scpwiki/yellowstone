@@ -72,6 +72,31 @@ CREATE TABLE page (
     UNIQUE (site_slug, page_slug, deleted_at)
 );
 
+CREATE TABLE forum_group (
+    internal_id SERIAL PRIMARY KEY,
+    site_id INTEGER NOT NULL REFERENCES site(site_id),
+    name TEXT NOT NULL,
+    description TEXT NOT NULL,
+
+);
+
+CREATE TABLE forum_category (
+    forum_category_id INTEGER PRIMARY KEY,
+    forum_group_internal_id INTEGER NOT NULL REFERENCES forum_group(internal_id),
+    name TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE forum_category_progress (
+    forum_category_id INTEGER PRIMARY KEY REFERENCES forum_category(forum_category_id),
+    thread_count INTEGER NOT NULL CHECK (thread_count >= 0),
+    post_count INTEGER NOT NULL CHECK (post_count >= 0),
+    last_thread_id INTEGER,
+    last_post_id INTEGER
+);
+
+-- TODO create forum_thread, forum_post, and forum_post_revision columns
+
 CREATE TABLE job (
     job_id SERIAL PRIMARY KEY,
     job_type TEXT NOT NULL,
