@@ -108,8 +108,10 @@ def extract_last_post(source: str, element: Tag) -> Optional[ForumCategoryLastPo
     source = f"{source} last-info"
 
     children = tuple(element.children)
-    if not children:
-        # No posts in this category, thus no "last" post data
+    if all(isinstance(c, str) for c in children):
+        # If there are no HTML element childrens,
+        # there are no posts in this category,
+        # which means there is no "last post" data.
         return None
 
     element_user = find_element(source, element, "a")
