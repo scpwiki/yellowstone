@@ -6,6 +6,7 @@ import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 from bs4 import Tag
 
@@ -28,16 +29,21 @@ class ForumUserData:
 
 
 @dataclass
+class ForumCategoryLastPostData:
+    posted_time: datetime
+    posted_user: ForumUserData
+    thread_id: int
+    post_id: int
+
+
+@dataclass
 class ForumCategoryData:
     id: int
     name: str
     description: str
     thread_count: int
     post_count: int
-    last_posted_time: datetime
-    last_posted_user: ForumUserData
-    last_thread_id: int
-    last_post_id: int
+    last_post: Optional[ForumCategoryLastPostData]
 
 
 @dataclass
@@ -61,14 +67,14 @@ def get(
     )
     soup = make_soup(html)
     source = f"{site_slug} forum"
-    return list(map(lambda group: convert_group(source, group), soup.select(".forum-group")))
+    return list(map(lambda group: extract_group(source, group), soup.select(".forum-group")))
 
 
-def convert_group(source: str, group: Tag) -> ForumGroupData:
+def extract_group(source: str, group: Tag) -> ForumGroupData:
     name = find_element(source, group, ".head .title").text
     source = f"{source} group '{name}'"
     description = find_element(source, group, ".head .description").text
-    categories = list(map(lambda category: convert_category(source, category), group.select("table tr:not(.head)")))
+    categories = list(map(lambda category: extract_category(source, category), group.select("table tr:not(.head)")))
 
     return ForumGroupData(
         name=name,
@@ -77,7 +83,7 @@ def convert_group(source: str, group: Tag) -> ForumGroupData:
     )
 
 
-def convert_category(source: str, category: Tag) -> ForumCategoryData:
+def extract_category(source: str, category: Tag) -> ForumCategoryData:
     element = find_element(source, category, ".title a")
     id = int(regex_extract(source, element.attrs["href"], CATEGORY_ID_REGEX)[1])
     name = element.text
@@ -86,22 +92,7 @@ def convert_category(source: str, category: Tag) -> ForumCategoryData:
     description = find_element(source, category, ".description").text
     thread_count = int(find_element(source, category, ".threads").text)
     post_count = int(find_element(source, category, ".posts").text)
-
-    element_last = find_element(source, category, ".last")
-
-    element_user = find_element(source, element_last, "a")
-    user_id = int(regex_extract(source, element_user.attrs["onclick"], USER_ID_REGEX)[1])
-    user_slug = regex_extract(source, element_user.attrs["href"], USER_SLUG_REGEX)[1]
-    user_name = find_element(source, element_user, "img.small").attrs["alt"]
-
-    element_time = find_element(source, element_last, "span.odate")
-    last_posted_time = get_entity_date(source, element_time)
-
-    element_link = tuple(element_last.children)[-1]
-    assert element_link.name == "a", "Last element in element_last is not an anchor"
-    match = regex_extract(source, element_link.attrs["href"], LAST_THREAD_AND_POST_ID)
-    last_thread_id = int(match[1])
-    last_post_id = int(match[2])
+    last_post = extract_last_post(source, find_element(source, category, ".last"))
 
     return ForumCategoryData(
         id=id,
@@ -109,6 +100,33 @@ def convert_category(source: str, category: Tag) -> ForumCategoryData:
         description=description,
         thread_count=thread_count,
         post_count=post_count,
+        last_post=last_post,
+    )
+
+
+def extract_last_post(source: str, element: Tag) -> Optional[ForumCategoryLastPostData]:
+    source = f"{source} last-info"
+
+    children = tuple(element.children)
+    if not children:
+        # No posts in this category, thus no "last" post data
+        return None
+
+    element_user = find_element(source, element, "a")
+    user_id = int(regex_extract(source, element_user.attrs["onclick"], USER_ID_REGEX)[1])
+    user_slug = regex_extract(source, element_user.attrs["href"], USER_SLUG_REGEX)[1]
+    user_name = find_element(source, element_user, "img.small").attrs["alt"]
+
+    element_time = find_element(source, element, "span.odate")
+    last_posted_time = get_entity_date(source, element_time)
+
+    element_link = children[-1]
+    assert element_link.name == "a", "Last element in element_last is not an anchor"
+    match = regex_extract(source, element_link.attrs["href"], LAST_THREAD_AND_POST_ID)
+    last_thread_id = int(match[1])
+    last_post_id = int(match[2])
+
+    return ForumCategoryLastPostData(
         last_posted_time=last_posted_time,
         last_posted_user=ForumUserData(
             id=user_id,
