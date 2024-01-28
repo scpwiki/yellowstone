@@ -118,21 +118,21 @@ def extract_last_post(source: str, element: Tag) -> Optional[ForumCategoryLastPo
     user_name = find_element(source, element_user, "img.small").attrs["alt"]
 
     element_time = find_element(source, element, "span.odate")
-    last_posted_time = get_entity_date(source, element_time)
+    posted_time = get_entity_date(source, element_time)
 
     element_link = children[-1]
     assert element_link.name == "a", "Last element in element_last is not an anchor"
     match = regex_extract(source, element_link.attrs["href"], LAST_THREAD_AND_POST_ID)
-    last_thread_id = int(match[1])
-    last_post_id = int(match[2])
+    thread_id = int(match[1])
+    post_id = int(match[2])
 
     return ForumCategoryLastPostData(
-        last_posted_time=last_posted_time,
-        last_posted_user=ForumUserData(
+        posted_time=posted_time,
+        posted_user=ForumUserData(
             id=user_id,
             slug=user_slug,
             name=user_name,
         ),
-        last_thread_id=last_thread_id,
-        last_post_id=last_post_id,
+        thread_id=thread_id,
+        post_id=post_id,
     )
