@@ -63,20 +63,40 @@ def get(
     category_last_poster_ids = LAST_POSTER_ID_REGEX.findall(html)
     category_last_poster_usernames = LAST_POST_USERNAME_REGEX.findall(html)
     category_last_thread_ids = LAST_THREAD_ID.findall(html)
+    items = len(category_ids)
 
-    # If we remove this assertions, then you *must* replace zip() with itertools.zip_longest().
+    # If we remove these assertions, then you *must* replace zip() with itertools.zip_longest().
+    assert items == len(
+        category_names
+    ), f"Category names length mismatch {items} != {len(category_names)}"
+
+    assert items == len(
+        category_descriptions
+    ), f"Category descriptions length mismatch {items} != {len(category_descriptions)}"
+
+    assert items == len(
+        category_threads
+    ), f"Category threads length mismatch {items} != {len(category_threads)}"
+
+    assert items == len(
+        category_posts
+    ), f"Category posts length mismatch {items} != {len(category_posts)}"
+
+    assert items == len(
+        category_last_posted
+    ), f"Category last posted length mismatch {items} != {len(category_last_posted)}"
+
     assert (
-        len(category_ids)
-        == len(category_names)
-        == len(category_descriptions)
-        == len(category_threads)
-        == len(category_posts)
-        == len(category_last_posted)
-        == len(category_last_post_ids)
-        == len(category_last_poster_ids)
-        == len(category_last_poster_usernames)
-        == len(category_last_thread_ids)
-    ), "Retrieved forum category fields length mismatch"
+        items == len(category_last_post_ids)
+    ), f"Category last post IDs length mismatch {items} != {len(category_last_post_ids)}"
+
+    assert (
+        items == len(category_last_poster_usernames)
+    ), f"Category last poster usernames length mismatch {items} != {len(category_last_poster_usernames)}"
+
+    assert (
+        items == len(category_last_thread_ids)
+    ), f"Category last thread IDs length mismatch {items} != {len(category_last_thread_ids)}"
 
     categories = []
     for (
