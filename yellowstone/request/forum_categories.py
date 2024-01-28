@@ -6,24 +6,26 @@ import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime
+from functools import partial
 
-from ..scraper import find_element, regex_extract
+from bs4 import Tag
+
+from ..request.site_members import USER_ID_REGEX
+from ..request.user import USER_SLUG_REGEX
+from ..scraper import find_element, make_soup, regex_extract, get_entity_date
 from ..wikidot import Wikidot
 
-CATEGORY_ID_REGEX = re.compile(r'(?:<a href="\/forum\/c-)(\d*)')
-CATEGORY_NAME_REGEX = re.compile(r'(?:<div class="title"><[^>]*>)([^<]*)')
-CATEGORY_DESCRIPTION_REGEX = re.compile(
-    r'(?:<\/a><\/div><div class="description">)([^<]*)'
-)
-CATEGORY_THREAD_COUNT_REGEX = re.compile(r'(?:td class="threads">)(\d*)')
-CATEGORY_POST_COUNT_REGEX = re.compile(r'(?:td class="posts">)(\d*)')
-LAST_POSTED_TIME_REGEX = re.compile(r"(?:time_)(\d*)")
-LAST_POST_ID_REGEX = re.compile(r'(?:#post-)(\d*)(?:">Jump!)')
-LAST_POSTER_ID_REGEX = re.compile(r'(?:userInfo\()(\d*)(?:\); return false;"  )')
-LAST_POST_USERNAME_REGEX = re.compile(r'(?:alt=")([^"]*)')
-LAST_THREAD_ID = re.compile(r"(?:\/forum\/t-)(\d*)(?:#)")
+CATEGORY_ID_REGEX = re.compile(r"\/forum\/c-(\d+)(?:\/.+)?")
+LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)#post-(\d+)")
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class ForumUserData:
+    id: int
+    slug: str
+    name: str
 
 
 @dataclass
@@ -34,17 +36,23 @@ class ForumCategoryData:
     thread_count: int
     post_count: int
     last_posted_time: datetime
-    last_post_id: int
-    last_poster_id: int
-    last_poster_username: str
+    last_posted_user: ForumUserData
     last_thread_id: int
+    last_post_id: int
+
+
+@dataclass
+class ForumGroupData:
+    name: str
+    description: str
+    categories: list[ForumCategoryData]
 
 
 def get(
     site_slug: str,
     *,
     wikidot: Wikidot,
-) -> list[ForumCategoryData]:
+) -> list[ForumGroupData]:
     logger.info("Retrieving forum category data for %s", site_slug)
 
     html = wikidot.ajax_module_connector(
@@ -52,89 +60,61 @@ def get(
         "forum/ForumStartModule",
         {"hidden": True},
     )
+    soup = make_soup(html)
+    source = f"{wikidot.site_url(site_slug)}/forum"
+    convert_group = partial(convert_group, source=source)
+    return list(map(convert_group, soup.select(".forum-group")))
 
-    category_ids = CATEGORY_ID_REGEX.findall(html)
-    category_names = CATEGORY_NAME_REGEX.findall(html)
-    category_descriptions = CATEGORY_DESCRIPTION_REGEX.findall(html)
-    category_threads = CATEGORY_THREAD_COUNT_REGEX.findall(html)
-    category_posts = CATEGORY_POST_COUNT_REGEX.findall(html)
-    category_last_posted = LAST_POSTED_TIME_REGEX.findall(html)
-    category_last_post_ids = LAST_POST_ID_REGEX.findall(html)
-    category_last_poster_ids = LAST_POSTER_ID_REGEX.findall(html)
-    category_last_poster_usernames = LAST_POST_USERNAME_REGEX.findall(html)
-    category_last_thread_ids = LAST_THREAD_ID.findall(html)
-    items = len(category_ids)
 
-    # If we remove these assertions, then you *must* replace zip() with itertools.zip_longest().
-    assert items == len(
-        category_names
-    ), f"Category names length mismatch {items} != {len(category_names)}"
+def convert_group(source: str, group: Tag) -> ForumGroupData:
+    name = find_element(source, group, ".head .title").text
+    description = find_element(source, group, ".head .description").text
+    convert_category = partial(convert_category, source=source)
+    categories = list(map(convert_category, group.select("table tr:not(.head)")))
 
-    assert items == len(
-        category_descriptions
-    ), f"Category descriptions length mismatch {items} != {len(category_descriptions)}"
+    return ForumGroupData(
+        name=name,
+        description=description,
+        categories=categories,
+    )
 
-    assert items == len(
-        category_threads
-    ), f"Category threads length mismatch {items} != {len(category_threads)}"
 
-    assert items == len(
-        category_posts
-    ), f"Category posts length mismatch {items} != {len(category_posts)}"
+def convert_category(source: str, category: Tag) -> ForumCategoryData:
+    element = find_element(source, category, ".title a")
+    id = int(regex_extract(source, element.attrs["href"], CATEGORY_ID_REGEX)[1])
+    name = element.text
 
-    assert items == len(
-        category_last_posted
-    ), f"Category last posted length mismatch {items} != {len(category_last_posted)}"
+    description = find_element(source, category, ".description").text
+    thread_count = int(find_element(source, category, ".threads").text)
+    post_count = int(find_element(source, category, ".posts").text)
 
-    assert (
-        items == len(category_last_post_ids)
-    ), f"Category last post IDs length mismatch {items} != {len(category_last_post_ids)}"
+    element_last = find_element(source, category, ".last")
 
-    assert (
-        items == len(category_last_poster_usernames)
-    ), f"Category last poster usernames length mismatch {items} != {len(category_last_poster_usernames)}"
+    element_user = find_element(source, element_last, "a")
+    user_id = int(regex_extract(source, element_user.attrs["onclick"], USER_ID_REGEX)[1])
+    user_slug = regex_extract(source, element_user.attrs["href"], USER_SLUG_REGEX)[1]
+    user_name = find_element(source, element_user, "img.class").attrs["alt"]
 
-    assert (
-        items == len(category_last_thread_ids)
-    ), f"Category last thread IDs length mismatch {items} != {len(category_last_thread_ids)}"
+    element_time = find_element(source, element_last, "span.odate")
+    last_posted_time = get_entity_date(source, element_time)
 
-    categories = []
-    for (
-        id,
-        name,
-        description,
-        thread_count,
-        post_count,
-        last_posted_time,
-        last_post_id,
-        last_poster_id,
-        last_poster_username,
-        last_thread_id,
-    ) in zip(
-        category_ids,
-        category_names,
-        category_descriptions,
-        category_threads,
-        category_posts,
-        category_last_posted,
-        category_last_post_ids,
-        category_last_poster_ids,
-        category_last_poster_usernames,
-        category_last_thread_ids,
-    ):
-        categories.append(
-            ForumCategoryData(
-                id=int(id),
-                name=name,
-                description=description,
-                thread_count=int(thread_count),
-                post_count=int(post_count),
-                last_posted_time=datetime.fromtimestamp(int(last_posted_time)),
-                last_post_id=int(last_post_id),
-                last_poster_id=int(last_poster_id),
-                last_poster_username=last_poster_username,
-                last_thread_id=int(last_thread_id),
-            )
-        )
+    element_link = find_element(source, element_last, "a[href=/forum/*]")
+    match = regex_extract(source, element_link.attrs["href"], LAST_THREAD_AND_POST_ID)
+    last_thread_id = int(match[1])
+    last_post_id = int(match[2])
 
-    return categories
+    return ForumCategoryData(
+        id=id,
+        name=name,
+        description=description,
+        thread_count=thread_count,
+        post_count=post_count,
+        last_posted_time=last_posted_time,
+        last_posted_user=ForumUserData(
+            id=user_id,
+            slug=user_slug,
+            name=user_name,
+        ),
+        last_thread_id=last_thread_id,
+        last_post_id=last_post_id,
+    )
