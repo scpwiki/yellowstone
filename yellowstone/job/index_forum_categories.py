@@ -5,7 +5,7 @@ This then queues each forum category for thread indexing.
 """
 
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -13,7 +13,20 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-def run(core: "BackupDispatcher", *, site_slug: str) -> None:
+class ForumCategoriesJob(TypedDict):
+    site_slug: str
+
+
+class ForumCategoryProgressRow(TypedDict):
+    thread_count: int
+    post_count: int
+    last_thread_id: Optional[int]
+    last_post_id: Optional[int]
+
+
+def run(core: "BackupDispatcher", *, data: ForumCategoriesJob) -> None:
+    site_slug = data["site_slug"]
+
     # Clear out previous forum groups
     core.database.delete_forum_groups(site_slug=site_slug)
 
@@ -24,15 +37,22 @@ def run(core: "BackupDispatcher", *, site_slug: str) -> None:
             site_slug=site_slug,
             name=group.name,
             description=group.description,
-            )
+        )
 
-        # Upsert forum categories, associating internal forum group IDs
         for category in group.categories:
+            logger.info("Indexing forum category '%s' (%d)", category.name, category.id)
+
+            # Upsert forum categories, associating internal forum group IDs
             core.database.add_forum_category(
                 group_id=group_internal_id,
                 category_id=category.id,
                 name=category.name,
                 description=category.description,
+            )
+
+            # Update progress, and if needed, queue
+            progress = core.database.get_forum_category_progress(
+                category_id=category.id,
             )
             core.database.set_forum_category_progress(
                 category_id=category.id,
@@ -41,3 +61,55 @@ def run(core: "BackupDispatcher", *, site_slug: str) -> None:
                 last_thread_id=getattr(category.last_post, "thread_id", None),
                 last_post_id=getattr(category.last_post, "post_id", None),
             )
+
+            if needs_update(progress, category):
+                core.job.index_forum_threads(
+                    {"site_slug": site_slug, "category_id": category.id}
+                )
+
+
+def needs_update(
+    last_progress: ForumCategoryProgressRow,
+    category: ForumCategoryData,
+) -> bool:
+    if category.thread_count > last_progress["thread_count"]:
+        logger.debug(
+            "Forum category %d has more threads (%d > %d)",
+            category.id,
+            category.thread_count,
+            last_progress["thread_count"],
+        )
+        return True
+
+    if category.post_count > last_progress["post_count"]:
+        logger.debug(
+            "Forum category %d has more posts (%d > %d)",
+            category.id,
+            category.post_count,
+            last_progress["post_count"],
+        )
+        return True
+
+    if category.last_post is not None:
+        last_thread_id = last_progress["last_thread_id"] or 0
+        if category.last_post.thread_id > last_thread_id:
+            logger.debug(
+                "Forum category %d has a new thread ID (%d > %d)",
+                category.id,
+                category.last_post.thread_id,
+                last_thread_id,
+            )
+            return True
+
+        last_post_id = last_progress["last_post_id"] or 0
+        if category.last_post.post_id > last_post_id:
+            logger.debug(
+                "Forum category %d has a new post ID (%d > %d)",
+                category.id,
+                category.last_post.post_id,
+                last_post_id,
+            )
+            return True
+
+    logger.debug("Forum category %d has nothing new to index", category.id)
+    return False
