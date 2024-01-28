@@ -60,12 +60,13 @@ def get(
         {"hidden": True},
     )
     soup = make_soup(html)
-    source = f"{wikidot.site_url(site_slug)}/forum"
+    source = f"{site_slug} forum"
     return list(map(lambda group: convert_group(source, group), soup.select(".forum-group")))
 
 
 def convert_group(source: str, group: Tag) -> ForumGroupData:
     name = find_element(source, group, ".head .title").text
+    source = f"{source} group '{name}'"
     description = find_element(source, group, ".head .description").text
     categories = list(map(lambda category: convert_category(source, category), group.select("table tr:not(.head)")))
 
@@ -80,6 +81,7 @@ def convert_category(source: str, category: Tag) -> ForumCategoryData:
     element = find_element(source, category, ".title a")
     id = int(regex_extract(source, element.attrs["href"], CATEGORY_ID_REGEX)[1])
     name = element.text
+    source = f"{source} category '{name}'"
 
     description = find_element(source, category, ".description").text
     thread_count = int(find_element(source, category, ".threads").text)
