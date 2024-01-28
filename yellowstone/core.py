@@ -67,7 +67,7 @@ class BackupDispatcher:
         for site_slug in self.config.site_slugs:
             logger.info("Queueing site start jobs for '%s'", site_slug)
             # XXX add_index_site_pages_job(site_slug)
-            # XXX add_index_site_forums_job(site_slug)
+            self.job.index_forum_categories(site_slug)
             self.job.index_site_members_continue(site_slug)
 
     def process_all_jobs(self) -> None:
