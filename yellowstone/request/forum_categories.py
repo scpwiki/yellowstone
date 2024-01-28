@@ -95,7 +95,8 @@ def convert_category(source: str, category: Tag) -> ForumCategoryData:
     element_time = find_element(source, element_last, "span.odate")
     last_posted_time = get_entity_date(source, element_time)
 
-    element_link = find_element(source, element_last, "a[href=\"/forum/*\"]")
+    element_link = tuple(element_last.children)[-1]
+    assert element_link.name == "a", "Last element in element_last is not an anchor"
     match = regex_extract(source, element_link.attrs["href"], LAST_THREAD_AND_POST_ID)
     last_thread_id = int(match[1])
     last_post_id = int(match[2])
