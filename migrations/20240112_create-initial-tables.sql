@@ -94,7 +94,7 @@ CREATE TABLE forum_category_progress (
     last_post_id INTEGER
 );
 
--- TODO create forum_thread, forum_post, and forum_post_revision columns
+-- TODO create forum_thread, forum_post, and forum_post_revision tables
 
 CREATE TABLE job (
     job_id SERIAL PRIMARY KEY,
