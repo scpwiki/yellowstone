@@ -17,6 +17,8 @@ from ..types import Json
 from . import get_user, get_user_avatar, index_site_members
 from .get_user import GetUserJob
 from .get_user_avatar import GetUserAvatarJob
+from .index_forum_threads import ForumThreadsJob
+from .index_forum_categories import ForumCategoriesJob
 from .index_site_members import SiteMemberJob
 
 if TYPE_CHECKING:
@@ -32,6 +34,8 @@ class JobType(Enum):
     INDEX_SITE_PAGES = "index-site-pages"
     INDEX_SITE_FORUMS = "index-site-forums"
     INDEX_SITE_MEMBERS = "index-site-members"
+    INDEX_FORUM_CATEGORIES = "index-forum-categories"
+    INDEX_FORUM_THREADS = "index-forum-threads"
     FETCH_USER = "fetch-user"
     FETCH_USER_AVATAR = "fetch-user-avatar"
 
@@ -79,6 +83,12 @@ class JobManager:
                 "offset": result["last_member_offset"],
             },
         )
+
+    def index_forum_categories(self, data: ForumCategoriesJob) -> None:
+        self.add_raw(JobType.INDEX_FORUM_CATEGORIES, cast(Json, data))
+
+    def index_forum_threads(self, data: ForumThreadsJob) -> None:
+        self.add_raw(JobType.INDEX_FORUM_THREADS, cast(Jons, data))
 
     def fetch_user(self, data: GetUserJob) -> None:
         self.add_raw(JobType.FETCH_USER, cast(Json, data))
