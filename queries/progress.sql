@@ -12,3 +12,18 @@ SELECT last_member_offset FROM site_progress
 UPDATE site_progress
     SET last_member_offset = GREATEST(last_member_offset, :last_offset)
     WHERE site_slug = :site_slug;
+
+-- :name add_forum_category_progress :insert
+INSERT INTO forum_category_progress (forum_category_id)
+    VALUES (:category_id)
+    ON CONFLICT (forum_category_id)
+    DO NOTHING;
+
+-- :name get_forum_category_progress :one
+SELECT
+    thread_count,
+    post_count,
+    last_thread_id,
+    last_post_id,
+FROM forum_category_progress
+    WHERE forum_category_id = :category_id;
