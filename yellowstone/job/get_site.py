@@ -28,7 +28,7 @@ def run(core: "BackupDispatcher", *, site_slug: str) -> None:
         if site_row is None:
             return True
 
-        core.site_id_cache[site_slug] = site_row["wikidot_id"]
+        core.site_id_cache[site_slug] = site_row["site_id"]
         return False
 
     if should_fetch():

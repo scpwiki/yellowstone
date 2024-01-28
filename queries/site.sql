@@ -1,5 +1,5 @@
 -- :name add_site :insert
-INSERT INTO site (site_slug, wikidot_id, home_slug, name, tagline, language)
+INSERT INTO site (site_slug, site_id, home_slug, name, tagline, language)
     VALUES (:site_slug, :site_id, :home_slug, :name, :tagline, :language)
     ON CONFLICT (site_slug)
     DO UPDATE

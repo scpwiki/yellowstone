@@ -2,7 +2,7 @@
 INSERT INTO "user" (
     user_slug,
     user_name,
-    wikidot_id,
+    user_id,
     created_at,
     real_name,
     gender,
@@ -26,7 +26,7 @@ INSERT INTO "user" (
     :wikidot_pro,
     :karma
 )
-    ON CONFLICT (wikidot_id)
+    ON CONFLICT (user_id)
     DO UPDATE
         SET user_slug = :user_slug,
             user_name = :user_name,
@@ -42,7 +42,7 @@ INSERT INTO "user" (
 
 -- :name get_user_by_id :one
 SELECT * FROM "user"
-    WHERE wikidot_id = :user_id;
+    WHERE user_id = :user_id;
 
 -- :name get_user_by_slug :one
 SELECT * FROM "user"

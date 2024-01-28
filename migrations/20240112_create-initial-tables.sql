@@ -5,7 +5,7 @@ SET default_toast_compression=lz4;
 
 CREATE TABLE site (
     site_slug TEXT PRIMARY KEY,
-    wikidot_id INTEGER NOT NULL UNIQUE,
+    site_id INTEGER NOT NULL UNIQUE,
     home_slug TEXT NOT NULL,
     name TEXT,
     tagline TEXT,
@@ -20,7 +20,7 @@ CREATE TABLE site_progress (
 CREATE TABLE "user" (
     user_slug TEXT PRIMARY KEY,
     user_name TEXT NOT NULL,
-    wikidot_id INTEGER NOT NULL UNIQUE,
+    user_id INTEGER NOT NULL UNIQUE,
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     deleted_at TIMESTAMP WITH TIME ZONE,
     real_name TEXT,
@@ -57,8 +57,8 @@ CREATE TABLE page (
     created_at TIMESTAMP WITH TIME ZONE NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE,
     deleted_at TIMESTAMP WITH TIME ZONE,
-    created_by INTEGER NOT NULL REFERENCES "user"(wikidot_id),
-    updated_by INTEGER REFERENCES "user"(wikidot_id),
+    created_by INTEGER NOT NULL REFERENCES "user"(user_id),
+    updated_by INTEGER REFERENCES "user"(user_id),
     title TEXT NOT NULL,
     parent_page_slug TEXT,
     tags TEXT[] NOT NULL,
