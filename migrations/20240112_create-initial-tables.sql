@@ -81,7 +81,7 @@ CREATE TABLE forum_group (
 
 CREATE TABLE forum_category (
     forum_category_id INTEGER PRIMARY KEY,
-    forum_group_internal_id INTEGER NOT NULL REFERENCES forum_group(internal_id),
+    forum_group_internal_id INTEGER REFERENCES forum_group(internal_id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     description TEXT NOT NULL
 );
