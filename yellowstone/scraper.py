@@ -41,7 +41,7 @@ def find_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) ->
     logging.debug("Selecting %s from %s", selector, source)
     element = soup.select_one(selector)
     if element is None:
-        raise ScrapingError(f"No {selector} found for {source}")
+        raise ScrapingError(f"No '{selector}' found for {source}")
 
     return element
 
