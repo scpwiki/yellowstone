@@ -26,7 +26,7 @@ class ForumCategoryProgressRow(TypedDict):
     last_post_id: Optional[int]
 
 
-def run(core: "BackupDispatcher", *, data: ForumCategoriesJob) -> None:
+def run(core: "BackupDispatcher", data: ForumCategoriesJob) -> None:
     site_slug = data["site_slug"]
 
     # Clear out previous forum groups

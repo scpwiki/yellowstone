@@ -14,7 +14,13 @@ from typing import TYPE_CHECKING, TypedDict, cast
 
 from ..exception import UnknownJobError
 from ..types import Json
-from . import get_user, get_user_avatar, index_site_members
+from . import (
+    get_user,
+    get_user_avatar,
+    index_forum_categories,
+    index_forum_threads,
+    index_site_members,
+)
 from .get_user import GetUserJob
 from .get_user_avatar import GetUserAvatarJob
 from .index_forum_threads import ForumThreadsJob
@@ -115,6 +121,16 @@ class JobManager:
                     index_site_members.run(
                         core,
                         cast(index_site_members.SiteMemberJob, data),
+                    )
+                case JobType.INDEX_FORUM_CATEGORIES:
+                    index_forum_categories.run(
+                        core,
+                        cast(index_forum_categories.ForumCategoriesJob, data),
+                    )
+                case JobType.INDEX_FORUM_THREADS:
+                    index_forum_threads.run(
+                        core,
+                        cast(index_forum_threads.ForumThreadsJob, data),
                     )
                 case JobType.FETCH_USER:
                     get_user.run(

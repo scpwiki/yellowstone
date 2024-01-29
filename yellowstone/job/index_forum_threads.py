@@ -19,6 +19,6 @@ class ForumThreadsJob(TypedDict):
     category_id: int
 
 
-def run(core: "BackupDispatcher", *, data: ForumThreadsJob) -> None:
+def run(core: "BackupDispatcher", data: ForumThreadsJob) -> None:
     # TODO
     pass
