@@ -37,7 +37,6 @@ MAX_RETRIES = 4
 @unique
 class JobType(Enum):
     INDEX_SITE_PAGES = "index-site-pages"
-    INDEX_SITE_FORUMS = "index-site-forums"
     INDEX_SITE_MEMBERS = "index-site-members"
     INDEX_FORUM_CATEGORIES = "index-forum-categories"
     INDEX_FORUM_THREADS = "index-forum-threads"
@@ -66,9 +65,6 @@ class JobManager:
 
     def index_site_pages(self, data: None) -> None:
         self.add_raw(JobType.INDEX_SITE_PAGES, data)
-
-    def index_site_forums(self, data: None) -> None:
-        self.add_raw(JobType.INDEX_SITE_FORUMS, data)
 
     def index_site_members(self, data: SiteMemberJob) -> None:
         self.add_raw(JobType.INDEX_SITE_MEMBERS, cast(Json, data))
@@ -114,8 +110,6 @@ class JobManager:
         try:
             match job_type:
                 case JobType.INDEX_SITE_PAGES:
-                    raise NotImplementedError
-                case JobType.INDEX_SITE_FORUMS:
                     raise NotImplementedError
                 case JobType.INDEX_SITE_MEMBERS:
                     index_site_members.run(
