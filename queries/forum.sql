@@ -7,10 +7,11 @@ DELETE FROM forum_group
     WHERE site_slug = :site_slug;
 
 -- :name add_forum_category :insert
-INSERT INTO forum_category (forum_category_id, name, description)
-    VALUES (:category_id, :name, :description)
+INSERT INTO forum_category (forum_category_id, site_slug, name, description)
+    VALUES (:category_id, :site_slug, :name, :description)
     ON CONFLICT (forum_category_id)
     DO UPDATE
     SET
+        site_slug = :site_slug,
         name = :name,
         description = :description;

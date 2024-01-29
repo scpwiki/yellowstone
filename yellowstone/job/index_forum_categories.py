@@ -36,7 +36,7 @@ def run(core: "BackupDispatcher", data: ForumCategoriesJob) -> None:
 
     groups = forum_categories.get(site_slug, wikidot=core.wikidot)
     for group in groups:
-        group_internal_id = core.database.add_forum_group(
+        core.database.add_forum_group(
             site_slug=site_slug,
             name=group.name,
             description=group.description,
@@ -48,8 +48,8 @@ def run(core: "BackupDispatcher", data: ForumCategoriesJob) -> None:
 
             # Upsert forum categories, associating internal forum group IDs
             core.database.add_forum_category(
-                group_id=group_internal_id,
                 category_id=category.id,
+                site_slug=site_slug,
                 name=category.name,
                 description=category.description,
             )

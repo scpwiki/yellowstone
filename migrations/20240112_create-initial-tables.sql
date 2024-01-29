@@ -87,6 +87,7 @@ CREATE TABLE forum_category (
 
 CREATE TABLE forum_category_progress (
     forum_category_id INTEGER PRIMARY KEY REFERENCES forum_category(forum_category_id),
+    site_slug TEXT NOT NULL REFERENCES site(site_slug),
     thread_count INTEGER NOT NULL DEFAULT 0 CHECK (thread_count >= 0),
     post_count INTEGER NOT NULL DEFAULT 0 CHECK (post_count >= 0),
     last_thread_id INTEGER,
