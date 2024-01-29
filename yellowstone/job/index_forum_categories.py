@@ -15,10 +15,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class ForumCategoriesJob(TypedDict):
-    site_slug: str
-
-
 class ForumCategoryProgressRow(TypedDict):
     thread_count: int
     post_count: int
@@ -26,9 +22,7 @@ class ForumCategoryProgressRow(TypedDict):
     last_post_id: Optional[int]
 
 
-def run(core: "BackupDispatcher", data: ForumCategoriesJob) -> None:
-    site_slug = data["site_slug"]
-
+def run(core: "BackupDispatcher", *, site_slug: str) -> None:
     # Clear out previous forum groups
     core.database.delete_forum_groups(site_slug=site_slug)
 
