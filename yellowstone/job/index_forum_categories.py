@@ -2,6 +2,7 @@
 Retrieves all forum groups and categories for this site.
 
 This then queues each forum category for thread indexing.
+This is the top-level job for forums in a site.
 """
 
 import logging
