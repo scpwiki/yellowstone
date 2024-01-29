@@ -23,7 +23,6 @@ from . import (
 )
 from .get_user import GetUserJob
 from .get_user_avatar import GetUserAvatarJob
-from .index_forum_categories import ForumCategoriesJob
 from .index_forum_threads import ForumThreadsJob
 from .index_site_members import SiteMemberJob
 
