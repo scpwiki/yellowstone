@@ -1,6 +1,7 @@
 -- :name add_forum_group :insert
 INSERT INTO forum_group (site_slug, name, description)
-    VALUES (:site_slug, :name, :description);
+    VALUES (:site_slug, :name, :description)
+    RETURNING internal_id;
 
 -- :name delete_forum_groups :affected
 DELETE FROM forum_group
