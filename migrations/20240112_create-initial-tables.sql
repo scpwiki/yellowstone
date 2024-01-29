@@ -73,15 +73,14 @@ CREATE TABLE page (
 );
 
 CREATE TABLE forum_group (
-    internal_id SERIAL PRIMARY KEY,
     site_slug TEXT NOT NULL REFERENCES site(site_slug),
     name TEXT NOT NULL,
-    description TEXT NOT NULL
+    description TEXT NOT NULL,
+    forum_category_ids INTEGER[] NOT NULL
 );
 
 CREATE TABLE forum_category (
     forum_category_id INTEGER PRIMARY KEY,
-    forum_group_internal_id INTEGER REFERENCES forum_group(internal_id) ON DELETE SET NULL,
     name TEXT NOT NULL,
     description TEXT NOT NULL
 );

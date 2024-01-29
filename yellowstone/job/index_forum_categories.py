@@ -24,16 +24,16 @@ class ForumCategoryProgressRow(TypedDict):
 
 
 def run(core: "BackupDispatcher", *, site_slug: str) -> None:
-    # Clear out previous forum groups
+    # Clear out and re-insert forum groups
     core.database.delete_forum_groups(site_slug=site_slug)
 
     groups = forum_categories.get(site_slug, wikidot=core.wikidot)
     for group in groups:
-        # Re-insert forum groups, get our IDs for them
         group_internal_id = core.database.add_forum_group(
             site_slug=site_slug,
             name=group.name,
             description=group.description,
+            category_ids=[category.id for category in group.categories],
         )
 
         for category in group.categories:
