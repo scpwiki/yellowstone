@@ -21,8 +21,8 @@ INSERT INTO forum_category_progress (forum_category_id, thread_count, post_count
     SET
         thread_count = :thread_count,
         post_count = :post_count,
-        last_thread_id = GREATEST(last_thread_id, :last_thread_id),
-        last_post_id = GREATEST(last_post_id, :last_post_id);
+        last_thread_id = GREATEST(forum_category_progress.last_thread_id, :last_thread_id),
+        last_post_id = GREATEST(forum_category_progress.last_post_id, :last_post_id);
 
 -- :name get_forum_category_progress :one
 SELECT
