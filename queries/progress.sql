@@ -29,6 +29,6 @@ SELECT
     thread_count,
     post_count,
     last_thread_id,
-    last_post_id,
+    last_post_id
 FROM forum_category_progress
     WHERE forum_category_id = :category_id;
