@@ -9,6 +9,7 @@ import logging
 from typing import TYPE_CHECKING, Optional, TypedDict
 
 from ..request import forum_categories
+from ..utils import sql_array
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -33,7 +34,7 @@ def run(core: "BackupDispatcher", *, site_slug: str) -> None:
             site_slug=site_slug,
             name=group.name,
             description=group.description,
-            category_ids=[category.id for category in group.categories],
+            category_ids=sql_array(category.id for category in group.categories),
         )
 
         for category in group.categories:
