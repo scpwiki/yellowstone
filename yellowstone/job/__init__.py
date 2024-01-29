@@ -23,6 +23,7 @@ from . import (
 )
 from .get_user import GetUserJob
 from .get_user_avatar import GetUserAvatarJob
+from .index_forum_categories import ForumCategoriesJob
 from .index_forum_threads import ForumThreadsJob
 from .index_site_members import SiteMemberJob
 
@@ -86,7 +87,7 @@ class JobManager:
         )
 
     def index_forum_categories(self, site_slug: str) -> None:
-        self.add_raw(JobType.INDEX_FORUM_CATEGORIES, site_slug=site_slug)
+        self.add_raw(JobType.INDEX_FORUM_CATEGORIES, {"site_slug": site_slug})
 
     def index_forum_threads(self, data: ForumThreadsJob) -> None:
         self.add_raw(JobType.INDEX_FORUM_THREADS, cast(Json, data))
