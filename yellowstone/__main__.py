@@ -12,5 +12,5 @@ if __name__ == "__main__":
     set_up_logging()
     load_dotenv()
     config = Config.parse_args()
-    dispatch = BackupDispatcher(config)
-    dispatch.run()
+    core = BackupDispatcher(config)
+    core.run()
