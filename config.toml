@@ -102,6 +102,7 @@ sites = [
     "kaktuskontainer",
     "scpdsandbox",
     "scptestwiki",
+    "scpedia",
     "techcheck",
     "co-team",
     "mast-team",

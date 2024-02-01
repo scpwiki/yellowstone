@@ -5,6 +5,7 @@ bucket = "wikidot-backup"
 sites = [
     "scp-wiki",
     "scptestwiki",
+    "scpedia",
     "techcheck",
 ]
 
