@@ -13,19 +13,13 @@ from bs4 import Tag
 from ..request.site_members import USER_ID_REGEX
 from ..request.user import USER_SLUG_REGEX
 from ..scraper import find_element, get_entity_date, make_soup, regex_extract
+from ..types import ForumUserData
 from ..wikidot import Wikidot
 
 CATEGORY_ID_REGEX = re.compile(r"\/forum\/c-(\d+)(?:\/.+)?")
 LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)#post-(\d+)")
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class ForumUserData:
-    id: int
-    slug: str
-    name: str
 
 
 @dataclass
