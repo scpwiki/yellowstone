@@ -94,6 +94,21 @@ CREATE TABLE forum_category_progress (
     last_post_id INTEGER
 );
 
+CREATE TABLE forum_thread (
+    forum_thread_id INTEGER PRIMARY KEY,
+    title TEXT NOT NULL,
+    sticky BOOLEAN NOT NULL,
+    created_by INTEGER NOT NULL REFERENCES "user"(user_id),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE TABLE forum_thread_progress (
+    forum_thread_id INTEGER PRIMARY KEY REFERENCES forum_thread(forum_thread_id),
+    site_slug TEXT NOT NULL REFERENCES site(site_slug),
+    post_count INTEGER NOT NULL DEFAULT 0 CHECK (post_count >= 0),
+    last_post_id INTEGER
+);
+
 -- TODO create forum_thread, forum_post, and forum_post_revision tables
 
 CREATE TABLE job (
