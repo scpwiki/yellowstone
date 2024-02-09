@@ -12,7 +12,7 @@ from bs4 import Tag
 
 from ..request.site_members import USER_ID_REGEX
 from ..request.user import USER_SLUG_REGEX
-from ..scraper import find_element, get_entity_date, make_soup, regex_extract
+from ..scraper import find_element, get_entity_date, get_entity_user, make_soup, regex_extract
 from ..types import ForumUserData
 from ..wikidot import Wikidot
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class ForumCategoryLastPostData:
+class ForumLastPostData:
     posted_time: datetime
     posted_user: ForumUserData
     thread_id: int
@@ -105,7 +105,7 @@ def extract_category(source: str, category: Tag) -> ForumCategoryData:
     )
 
 
-def extract_last_post(source: str, element: Tag) -> Optional[ForumCategoryLastPostData]:
+def extract_last_post(source: str, element: Tag) -> Optional[ForumLastPostData]:
     source = f"{source} last-info"
 
     children = tuple(element.children)
@@ -115,15 +115,8 @@ def extract_last_post(source: str, element: Tag) -> Optional[ForumCategoryLastPo
         # which means there is no "last post" data.
         return None
 
-    element_user = find_element(source, element, "a")
-    user_id = int(
-        regex_extract(source, element_user.attrs["onclick"], USER_ID_REGEX)[1],
-    )
-    user_slug = regex_extract(source, element_user.attrs["href"], USER_SLUG_REGEX)[1]
-    user_name = find_element(source, element_user, "img.small").attrs["alt"]
-
-    element_time = find_element(source, element, "span.odate")
-    posted_time = get_entity_date(source, element_time)
+    posted_user = get_entity_user(source, find_element(source, element, "a"))
+    posted_time = get_entity_date(source, find_element(source, element, "span.odate"))
 
     element_link = children[-1]
     assert isinstance(element_link, Tag), "Last child in last_info is not an element"
@@ -134,11 +127,7 @@ def extract_last_post(source: str, element: Tag) -> Optional[ForumCategoryLastPo
 
     return ForumCategoryLastPostData(
         posted_time=posted_time,
-        posted_user=ForumUserData(
-            id=user_id,
-            slug=user_slug,
-            name=user_name,
-        ),
+        posted_user=posted_user,
         thread_id=thread_id,
         post_id=post_id,
     )

@@ -9,7 +9,7 @@ Json = Union[None, int, float, str, list["Json"], dict[str, "Json"]]
 
 
 @dataclass
-class ForumUserData:
+class UserModuleData:
     id: int
     slug: str
     name: str
