@@ -10,9 +10,13 @@ from typing import Optional
 
 from bs4 import Tag
 
-from ..request.site_members import USER_ID_REGEX
-from ..request.user import USER_SLUG_REGEX
-from ..scraper import find_element, get_entity_date, get_entity_user, make_soup, regex_extract
+from ..scraper import (
+    find_element,
+    get_entity_date,
+    get_entity_user,
+    make_soup,
+    regex_extract,
+)
 from ..types import ForumUserData
 from ..wikidot import Wikidot
 

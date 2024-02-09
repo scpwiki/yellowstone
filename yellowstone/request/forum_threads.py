@@ -10,10 +10,16 @@ from typing import Optional
 
 from bs4 import Tag
 
-from .forum_categories import ForumLastPostData, extract_last_post
-from ..scraper import find_element, get_entity_date, get_entity_forum_user, make_soup, regex_extract
+from ..scraper import (
+    find_element,
+    get_entity_date,
+    get_entity_forum_user,
+    make_soup,
+    regex_extract,
+)
 from ..types import ForumUserData
 from ..wikidot import Wikidot
+from .forum_categories import extract_last_post
 
 LAST_THREAD_ID = re.compile(r"/forum/t-(\d+)(?:\/.*)?")
 
@@ -88,7 +94,9 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
             sticky = True
         elif isinstance(child, Tag) and child.name == "a":
             # Anchor, with thread data
-            thread_id = int(regex_extract(source, child.attrs["href"], LAST_THREAD_ID)[1])
+            thread_id = int(
+                regex_extract(source, child.attrs["href"], LAST_THREAD_ID)[1],
+            )
             title = child.text
             source = f"{source} thread '{title}'"
 
@@ -98,7 +106,10 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
     # Thread origin
     started = find_element(source, row, ".started")
     started_at = get_entity_date(source, find_element(source, started, "span.odate"))
-    started_by = get_entity_forum_user(source, find_element(source, started, ".printuser a"))
+    started_by = get_entity_forum_user(
+        source,
+        find_element(source, started, ".printuser a"),
+    )
 
     # Thread's last post
     last_post = extract_last_post(source, find_element(source, category, ".last"))
