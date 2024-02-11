@@ -5,7 +5,7 @@ Utilities to assist with scraping.
 import logging
 import re
 from datetime import datetime
-from typing import Optional, Union
+from typing import Optional, Iterable, Union
 
 import requests
 from bs4 import BeautifulSoup, Tag
@@ -112,10 +112,9 @@ def extract_last_forum_post(source: str, parent: Tag) -> Optional[ForumLastPostD
 
     posted_user = get_entity_user(source, find_element(source, element, "a"))
     posted_time = get_entity_date(source, find_element(source, element, "span.odate"))
+    element_link = _get_last_anchor(source, children)
 
-    element_link = children[-1]
     assert isinstance(element_link, Tag), "Last child in last_info is not an element"
-    assert element_link.name == "a", "Last child in last_info is not an anchor"
     match = regex_extract(source, element_link.attrs["href"], LAST_THREAD_AND_POST_ID)
     thread_id = int(match[1])
     post_id = int(match[2])
@@ -126,3 +125,11 @@ def extract_last_forum_post(source: str, parent: Tag) -> Optional[ForumLastPostD
         thread_id=thread_id,
         post_id=post_id,
     )
+
+
+def _get_last_anchor(source: str, children: Iterable[Tag]) -> Tag:
+    for child in reversed(children):
+        if isinstance(child, Tag) and child.name == "a" and "href" in child.attrs:
+            return child
+
+    raise ScrapingError(f"No 'a.href' in {source}")
