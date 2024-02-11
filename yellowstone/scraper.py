@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup, PageElement, Tag
 from .exception import ScrapingError
 from .types import ForumLastPostData, UserModuleData
 
-LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)#post-(\d+)")
+LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)(?:/[^/]*)?#post-(\d+)")
 TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
