@@ -17,7 +17,7 @@ from ..scraper import (
     get_entity_date,
     get_entity_user,
     make_soup,
-    regex_extract,
+    regex_extract_int,
 )
 from ..types import ForumLastPostData, UserModuleData
 from ..wikidot import Wikidot
@@ -87,9 +87,7 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
             sticky = True
         elif isinstance(child, Tag) and child.name == "a":
             # Anchor, with thread data
-            thread_id = int(
-                regex_extract(source, child.attrs["href"], LAST_THREAD_ID)[1],
-            )
+            thread_id = regex_extract_int(source, child.attrs["href"], LAST_THREAD_ID)
             title = child.text
             source = f"{source} thread '{title}'"
 

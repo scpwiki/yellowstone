@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Optional
 
 from bs4 import BeautifulSoup
 
-from ..scraper import download_html, find_element, make_soup, regex_extract
+from ..scraper import download_html, find_element, make_soup, regex_extract_int, regex_extract_str
 from ..wikidot import Wikidot
 
 if TYPE_CHECKING:
@@ -45,12 +45,12 @@ def get(site_slug: str, *, wikidot: Wikidot) -> SiteHomeData:
     source = url = wikidot.site_url(site_slug)
     html = download_html(url)
 
-    language = regex_extract(url, html, LANGUAGE_REGEX)[1]
-    site_id = int(regex_extract(url, html, SITE_ID_REGEX)[1])
-    site_slug_ex = regex_extract(url, html, SITE_SLUG_REGEX)[1]
-    page_id = int(regex_extract(url, html, PAGE_ID_REGEX)[1])
-    page_slug = regex_extract(url, html, PAGE_SLUG_REGEX)[1]
-    page_category_id = int(regex_extract(url, html, PAGE_CATEGORY_ID_REGEX)[1])
+    language = regex_extract_str(url, html, LANGUAGE_REGEX)
+    site_id = regex_extract_int(url, html, SITE_ID_REGEX)
+    site_slug_ex = regex_extract_str(url, html, SITE_SLUG_REGEX)
+    page_id = regex_extract_int(url, html, PAGE_ID_REGEX)
+    page_slug = regex_extract_str(url, html, PAGE_SLUG_REGEX)
+    page_category_id = regex_extract_int(url, html, PAGE_CATEGORY_ID_REGEX)
     assert site_slug == site_slug_ex, "site slug in scraped page doesn't match"
 
     soup = make_soup(html)

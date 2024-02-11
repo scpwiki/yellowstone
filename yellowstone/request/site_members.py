@@ -14,7 +14,7 @@ from ..scraper import (
     get_entity_date,
     get_user_slug,
     make_soup,
-    regex_extract,
+    regex_extract_int,
 )
 from ..wikidot import Wikidot
 
@@ -63,7 +63,7 @@ def process_row(row: Tag) -> SiteMemberData:
     element = row.find_all("a")[1]
     name = element.text
     slug = get_user_slug(source, element)
-    id = int(regex_extract(source, element["onclick"], USER_ID_REGEX)[1])
+    id = regex_extract_int(source, element["onclick"], USER_ID_REGEX)
 
     # Extract membership join date
     element = find_element(source, row, "span.odate")

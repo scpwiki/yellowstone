@@ -13,7 +13,7 @@ from ..scraper import (
     extract_last_forum_post,
     find_element,
     make_soup,
-    regex_extract,
+    regex_extract_int,
 )
 from ..types import ForumLastPostData
 from ..wikidot import Wikidot
@@ -79,7 +79,7 @@ def extract_group(source: str, group: Tag) -> ForumGroupData:
 
 def extract_category(source: str, category: Tag) -> ForumCategoryData:
     element = find_element(source, category, ".title a")
-    id = int(regex_extract(source, element.attrs["href"], CATEGORY_ID_REGEX)[1])
+    id = regex_extract_int(source, element.attrs["href"], CATEGORY_ID_REGEX)
     name = element.text
     source = f"{source} category '{name}'"
 
