@@ -99,6 +99,8 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
     started = find_element(source, row, class_="started")
     started_at = get_entity_date(source, find_element(source, started, "span", class_="odate"))
     started_by = get_entity_user(source, select_element(source, started, ".printuser a"))
+    # TODO support created by: Wikidot
+    # find("span", class_="printuser") -> ~"Wikidot"
 
     # Thread's last post
     last_post = extract_last_forum_post(source, row)
