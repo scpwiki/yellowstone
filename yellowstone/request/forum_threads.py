@@ -12,7 +12,7 @@ from bs4 import Tag
 
 from ..scraper import (
     ScrapingError,
-    extract_last_post,
+    extract_last_forum_post,
     find_element,
     get_entity_date,
     get_entity_user,
@@ -75,7 +75,7 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
     description = find_element(source, row, ".description").text.strip()
 
     header = find_element(source, row, ".name")
-    post_count = int(find_element(source, header, ".posts").text.strip())
+    post_count = int(find_element(source, row, ".posts").text.strip())
 
     # Thread title
     sticky = False
@@ -101,7 +101,7 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
     started_by = get_entity_user(source, find_element(source, started, ".printuser a"))
 
     # Thread's last post
-    last_post = extract_last_post(source, find_element(source, row, ".last"))
+    last_post = extract_last_forum_post(source, row)
 
     return ForumThreadData(
         id=thread_id,

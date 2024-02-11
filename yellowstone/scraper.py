@@ -100,9 +100,9 @@ def get_user_slug(source: str, element: Tag) -> str:
     return match[1]
 
 
-def extract_last_post(source: str, element: Tag) -> Optional[ForumLastPostData]:
+def extract_last_forum_post(source: str, parent: Tag) -> Optional[ForumLastPostData]:
     source = f"{source} last-info"
-
+    element = find_element(source, parent, ".last")
     children = tuple(element.children)
     if all(isinstance(c, str) for c in children):
         # If there are no HTML element childrens,

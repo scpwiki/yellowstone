@@ -10,7 +10,7 @@ from typing import Optional
 from bs4 import Tag
 
 from ..scraper import (
-    extract_last_post,
+    extract_last_forum_post,
     find_element,
     make_soup,
     regex_extract,
@@ -86,7 +86,7 @@ def extract_category(source: str, category: Tag) -> ForumCategoryData:
     description = find_element(source, category, ".description").text
     thread_count = int(find_element(source, category, ".threads").text)
     post_count = int(find_element(source, category, ".posts").text)
-    last_post = extract_last_post(source, find_element(source, category, ".last"))
+    last_post = extract_last_forum_post(source, category)
 
     return ForumCategoryData(
         id=id,
