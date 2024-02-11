@@ -11,27 +11,19 @@ from typing import Optional
 from bs4 import Tag
 
 from ..scraper import (
+    ScrapingError,
     find_element,
     get_entity_date,
-    get_entity_forum_user,
+    get_entity_user,
     make_soup,
     regex_extract,
 )
-from ..types import ForumUserData
 from ..wikidot import Wikidot
-from .forum_categories import extract_last_post
+from .common import ForumLastPostData, UserModuleData, extract_last_post
 
 LAST_THREAD_ID = re.compile(r"/forum/t-(\d+)(?:\/.*)?")
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class ForumThreadLastPostData:
-    posted_time: datetime
-    posted_user: ForumUserData
-    thread_id: int
-    post_id: int
 
 
 @dataclass
@@ -40,10 +32,10 @@ class ForumThreadData:
     title: str
     description: str
     sticky: bool
-    created_by: int
+    created_by: UserModuleData
     created_at: datetime
     post_count: int
-    last_post: Optional[ForumThreadLastPostData]
+    last_post: Optional[ForumLastPostData]
 
 
 def get(
@@ -69,7 +61,6 @@ def get(
         },
     )
     soup = make_soup(html)
-    rows = soup.find_all("tr")
     source = f"forum category {forum_category_id}"
     return list(
         map(
@@ -106,21 +97,18 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
     # Thread origin
     started = find_element(source, row, ".started")
     started_at = get_entity_date(source, find_element(source, started, "span.odate"))
-    started_by = get_entity_forum_user(
-        source,
-        find_element(source, started, ".printuser a"),
-    )
+    started_by = get_entity_user(source, find_element(source, started, ".printuser a"))
 
     # Thread's last post
-    last_post = extract_last_post(source, find_element(source, category, ".last"))
+    last_post = extract_last_post(source, find_element(source, row, ".last"))
 
     return ForumThreadData(
         id=thread_id,
         title=title,
-        descriptoin=description,
+        description=description,
         sticky=sticky,
         created_by=started_by,
-        creatd_at=started_at,
+        created_at=started_at,
         post_count=post_count,
         last_post=last_post,
     )

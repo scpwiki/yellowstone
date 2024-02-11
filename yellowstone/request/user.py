@@ -19,10 +19,10 @@ from ..scraper import (
 )
 from ..utils import chunks
 from ..wikidot import Wikidot
+from .common import get_user_slug
 
 KARMA_LEVEL_STRIP_REGEX = re.compile(r"([\w ]+?) *\t.*?")
 DATE_REGEX = re.compile(r"(\d+) (\w+) (\d+)")
-USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
 
 logger = logging.getLogger(__name__)
 
@@ -133,14 +133,6 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
         wikidot_pro=wikidot_pro,
         karma=karma,
     )
-
-
-def get_user_slug(source: str, element: Tag) -> str:
-    href = element["href"]
-    assert isinstance(href, str), "multiple href attributes found"
-    match = regex_extract(source, href, USER_SLUG_REGEX)
-    assert isinstance(match[1], str), "match group is not a string"
-    return match[1]
 
 
 def split_user_detail(columns: tuple[Tag, Tag]) -> tuple[str, str, Tag]:

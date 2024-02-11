@@ -11,7 +11,7 @@ import requests
 from bs4 import BeautifulSoup, Tag
 
 from .exception import ScrapingError
-from .types import ForumUserData
+from .request.common import USER_ID_REGEX, USER_SLUG_REGEX, UserModuleData
 
 TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
 
@@ -55,7 +55,7 @@ def get_entity_date(source: str, tag: Tag) -> datetime:
     ```html
     <span class="odate time_1707320977 format_%25e%20%25b%20%25Y%2C%20%25H%3A%25M%7Cagohover">07 Feb 2024 15:49</span>
     ```
-    """
+    """  # noqa: E501
 
     assert tag.name == "span", "HTML date entity is not span"
     for klass in tag.attrs["class"]:
@@ -66,7 +66,7 @@ def get_entity_date(source: str, tag: Tag) -> datetime:
     raise ScrapingError(f"Could not find date timestamp from {source}")
 
 
-def get_entity_user(source: str, tag: Tag) -> ForumUserData:
+def get_entity_user(source: str, tag: Tag) -> UserModuleData:
     """
     Parses out a user module entity.
 
@@ -74,15 +74,15 @@ def get_entity_user(source: str, tag: Tag) -> ForumUserData:
     ```html
     <a href="http://www.wikidot.com/user:info/aismallard" onclick="WIKIDOT.page.listeners.userInfo(4598089); return false;"><img alt="aismallard" class="small" src="https://www.wikidot.com/avatar.php?userid=4598089&amp;amp;size=small&amp;amp;timestamp=1707451824" style="background-image:url(https://www.wikidot.com/userkarma.php?u=4598089)"/></a>
     ```
-    """
+    """  # noqa: E501
 
     assert tag.name == "a", "HTML user entity is not a"
     user_id = int(
-        regex_extract(source, element_user.attrs["onclick"], USER_ID_REGEX)[1],
+        regex_extract(source, tag.attrs["onclick"], USER_ID_REGEX)[1],
     )
-    user_slug = regex_extract(source, element_user.attrs["href"], USER_SLUG_REGEX)[1]
-    user_name = find_element(source, element_user, "img.small").attrs["alt"]
-    return ForumUserData(
+    user_slug = regex_extract(source, tag.attrs["href"], USER_SLUG_REGEX)[1]
+    user_name = find_element(source, tag, "img.small").attrs["alt"]
+    return UserModuleData(
         id=user_id,
         slug=user_slug,
         name=user_name,

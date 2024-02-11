@@ -5,33 +5,21 @@ Retrieve forum category data for a site.
 import logging
 import re
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Optional
 
 from bs4 import Tag
 
 from ..scraper import (
     find_element,
-    get_entity_date,
-    get_entity_user,
     make_soup,
     regex_extract,
 )
-from ..types import ForumUserData
 from ..wikidot import Wikidot
+from .common import ForumLastPostData, extract_last_post
 
 CATEGORY_ID_REGEX = re.compile(r"\/forum\/c-(\d+)(?:\/.+)?")
-LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)#post-(\d+)")
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class ForumLastPostData:
-    posted_time: datetime
-    posted_user: ForumUserData
-    thread_id: int
-    post_id: int
 
 
 @dataclass
@@ -41,7 +29,7 @@ class ForumCategoryData:
     description: str
     thread_count: int
     post_count: int
-    last_post: Optional[ForumCategoryLastPostData]
+    last_post: Optional[ForumLastPostData]
 
 
 @dataclass
@@ -106,32 +94,4 @@ def extract_category(source: str, category: Tag) -> ForumCategoryData:
         thread_count=thread_count,
         post_count=post_count,
         last_post=last_post,
-    )
-
-
-def extract_last_post(source: str, element: Tag) -> Optional[ForumLastPostData]:
-    source = f"{source} last-info"
-
-    children = tuple(element.children)
-    if all(isinstance(c, str) for c in children):
-        # If there are no HTML element childrens,
-        # there are no posts in this category,
-        # which means there is no "last post" data.
-        return None
-
-    posted_user = get_entity_user(source, find_element(source, element, "a"))
-    posted_time = get_entity_date(source, find_element(source, element, "span.odate"))
-
-    element_link = children[-1]
-    assert isinstance(element_link, Tag), "Last child in last_info is not an element"
-    assert element_link.name == "a", "Last child in last_info is not an anchor"
-    match = regex_extract(source, element_link.attrs["href"], LAST_THREAD_AND_POST_ID)
-    thread_id = int(match[1])
-    post_id = int(match[2])
-
-    return ForumCategoryLastPostData(
-        posted_time=posted_time,
-        posted_user=posted_user,
-        thread_id=thread_id,
-        post_id=post_id,
     )

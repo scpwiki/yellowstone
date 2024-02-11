@@ -3,7 +3,6 @@ Retrieve groups of site members by page.
 """
 
 import logging
-import re
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -11,11 +10,10 @@ from bs4 import Tag
 
 from ..scraper import find_element, get_entity_date, make_soup, regex_extract
 from ..wikidot import Wikidot
-from .user import get_user_slug
+from .common import USER_ID_REGEX, get_user_slug
 
 ADMIN_MEMBER_MODULE = "managesite/members/ManageSiteMembersListModule"
 REGULAR_MEMBER_MODULE = "membership/MembersListModule"
-USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
 
 logger = logging.getLogger(__name__)
 
