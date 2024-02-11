@@ -46,6 +46,7 @@ def get(
     *,
     wikidot: Wikidot,
 ) -> list[ForumThreadData]:
+    assert offset >= 1, "Offset cannot be zero or negative"
     logger.info(
         "Retrieving forum thread data for site %s category %d (offset %d)",
         site_slug,
