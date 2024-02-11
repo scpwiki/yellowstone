@@ -41,6 +41,16 @@ def regex_extract(source: str, body: str, regex: re.Pattern) -> re.Match:
     return match
 
 
+def regex_extract_str(source: str, body: str, regex: re.Pattern) -> str:
+    match = regex_extract(source, body, regex)
+    assert len(match.groups()) == 1, "Extracting single value from regex with multiple groups"
+    return match[1]
+
+
+def regex_extract_int(source: str, body: str, regex: re.Pattern) -> int:
+    return int(regex_extract_str(source, body, regex))
+
+
 def find_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) -> Tag:
     logging.debug("Selecting %s from %s", selector, source)
     element = soup.select_one(selector)
