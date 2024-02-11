@@ -5,10 +5,10 @@ Utilities to assist with scraping.
 import logging
 import re
 from datetime import datetime
-from typing import Optional, Iterable, Union
+from typing import Optional, Reversible, Union
 
 import requests
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup, PageElement, Tag
 
 from .exception import ScrapingError
 from .types import ForumLastPostData, UserModuleData
@@ -127,7 +127,7 @@ def extract_last_forum_post(source: str, parent: Tag) -> Optional[ForumLastPostD
     )
 
 
-def _get_last_anchor(source: str, children: Iterable[Tag]) -> Tag:
+def _get_last_anchor(source: str, children: Reversible[PageElement]) -> Tag:
     for child in reversed(children):
         if isinstance(child, Tag) and child.name == "a" and "href" in child.attrs:
             return child
