@@ -41,16 +41,16 @@ class ForumThreadData:
 
 def get(
     site_slug: str,
-    forum_category_id: int,
-    offset: int,
     *,
+    category_id: int,
+    offset: int,
     wikidot: Wikidot,
 ) -> list[ForumThreadData]:
     assert offset >= 1, "Offset cannot be zero or negative"
     logger.info(
         "Retrieving forum thread data for site %s category %d (offset %d)",
         site_slug,
-        forum_category_id,
+        category_id,
         offset,
     )
 
@@ -58,7 +58,7 @@ def get(
         site_slug,
         "forum/ForumViewCategoryModule",
         {
-            "c": forum_category_id,
+            "c": category_id,
             "p": offset,
         },
     )
