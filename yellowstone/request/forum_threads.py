@@ -64,7 +64,7 @@ def get(
         },
     )
     soup = make_soup(html)
-    source = f"forum category {forum_category_id}"
+    source = f"forum category {category_id}"
     return list(
         map(
             lambda category: process_row(source, category),
