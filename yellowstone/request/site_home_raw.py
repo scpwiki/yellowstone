@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Optional
 
 from bs4 import BeautifulSoup
 
-from ..scraper import download_html, find_element, make_soup, regex_extract_int, regex_extract_str
+from ..scraper import download_html, select_element, make_soup, regex_extract_int, regex_extract_str
 from ..wikidot import Wikidot
 
 if TYPE_CHECKING:
@@ -75,13 +75,13 @@ def get_site_titles(
     soup: BeautifulSoup,
 ) -> tuple[Optional[str], Optional[str]]:
     logger.debug("Extracting page title and subtitle from %s", source)
-    header = soup.select_one("div#header")
+    header = soup.find("div", id="header")
     if header is None:
         logger.warning("No div#header found in %s", source)
         return None, None
 
-    name = find_element(source, header, "h1 span").text
-    tagline = find_element(source, header, "h2 span").text
+    name = select_element(source, header, "h1 span").text
+    tagline = select_element(source, header, "h2 span").text
     return name, tagline
 
 
@@ -90,7 +90,7 @@ def get_discussion_thread_id(
     soup: BeautifulSoup,
 ) -> Optional[int]:
     logger.debug("Extracting discussion thread ID (if any) from %s", source)
-    element = soup.select_one("a#discuss-button")
+    element = soup.find("a", id="discuss-button")
     if element is None:
         logger.info("Site has discussion threads disabled")
         return None

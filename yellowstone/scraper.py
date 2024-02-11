@@ -51,11 +51,20 @@ def regex_extract_int(source: str, body: str, regex: re.Pattern) -> int:
     return int(regex_extract_str(source, body, regex))
 
 
-def find_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) -> Tag:
+def find_element(source: str, soup: Union[BeautifulSoup, Tag], *args, **kwargs) -> Tag:
+    logging.debug("Finding %s %s from %s", args, kwargs, source)
+    element = soup.find(*args, **kwargs)
+    if element is None:
+        raise ScrapingError(f"No '{args} {kwargs}' found for {source}")
+
+    return element
+
+
+def select_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) -> Tag:
     logging.debug("Selecting %s from %s", selector, source)
     element = soup.select_one(selector)
     if element is None:
-        raise ScrapingError(f"No '{selector}' found for {source}")
+        raise ScrapingError(f"No '{selector} found for {source}")
 
     return element
 
@@ -94,7 +103,7 @@ def get_entity_user(source: str, tag: Tag) -> UserModuleData:
         regex_extract(source, tag.attrs["onclick"], USER_ID_REGEX)[1],
     )
     user_slug = regex_extract(source, tag.attrs["href"], USER_SLUG_REGEX)[1]
-    user_name = find_element(source, tag, "img.small").attrs["alt"]
+    user_name = find_element(source, tag, "img", class_="small").attrs["alt"]
     return UserModuleData(
         id=user_id,
         slug=user_slug,
@@ -121,7 +130,7 @@ def extract_last_forum_post(source: str, parent: Tag) -> Optional[ForumLastPostD
         return None
 
     posted_user = get_entity_user(source, find_element(source, element, "a"))
-    posted_time = get_entity_date(source, find_element(source, element, "span.odate"))
+    posted_time = get_entity_date(source, find_element(source, element, "span", class_="odate"))
     element_link = _get_last_anchor(source, children)
 
     assert isinstance(element_link, Tag), "Last child in last_info is not an element"

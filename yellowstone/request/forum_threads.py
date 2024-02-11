@@ -14,6 +14,7 @@ from ..scraper import (
     ScrapingError,
     extract_last_forum_post,
     find_element,
+    select_element,
     get_entity_date,
     get_entity_user,
     make_soup,
@@ -73,15 +74,15 @@ def get(
 
 
 def process_row(source: str, row: Tag) -> ForumThreadData:
-    description = find_element(source, row, ".description").text.strip()
+    description = find_element(source, row, class_="description").text.strip()
 
-    header = find_element(source, row, ".name")
-    post_count = int(find_element(source, row, ".posts").text.strip())
+    header = find_element(source, row, class_="name")
+    post_count = int(find_element(source, row, class_="posts").text.strip())
 
     # Thread title
     sticky = False
     title = None
-    for child in find_element(source, header, ".title").children:
+    for child in find_element(source, header, class_="title").children:
         if isinstance(child, str) and child.strip():
             # Copy text for "sticky"
             sticky = True
@@ -95,9 +96,9 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
         raise ScrapingError(f"Could not find anchor in {source}")
 
     # Thread origin
-    started = find_element(source, row, ".started")
-    started_at = get_entity_date(source, find_element(source, started, "span.odate"))
-    started_by = get_entity_user(source, find_element(source, started, ".printuser a"))
+    started = find_element(source, row, class_="started")
+    started_at = get_entity_date(source, find_element(source, started, "span", class_="odate"))
+    started_by = get_entity_user(source, select_element(source, started, ".printuser a"))
 
     # Thread's last post
     last_post = extract_last_forum_post(source, row)

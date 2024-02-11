@@ -56,7 +56,7 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
 
     # Get name-like fields
     name = find_element(source, soup, "h1").text
-    element = find_element(source, soup, "a.btn-primary")
+    element = find_element(source, soup, "a", class_="btn-primary")
     slug = get_user_slug(source, element)
 
     # Process user details
@@ -89,7 +89,7 @@ def get(user_id: int, *, wikidot: Wikidot) -> UserData:
             case "Website":
                 website = value
             case "Wikidot.com User since:":
-                element = find_element(source, element, "span.odate")
+                element = find_element(source, element, "span", class_="odate")
                 created_at = get_entity_date(source, element)
             case "About":
                 bio = value

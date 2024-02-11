@@ -12,6 +12,7 @@ from bs4 import Tag
 from ..scraper import (
     extract_last_forum_post,
     find_element,
+    select_element,
     make_soup,
     regex_extract_int,
 )
@@ -55,14 +56,14 @@ def get(
     soup = make_soup(html)
     source = f"{site_slug} forum"
     return list(
-        map(lambda group: extract_group(source, group), soup.select(".forum-group")),
+        map(lambda group: extract_group(source, group), soup.find_all(class_="forum-group")),
     )
 
 
 def extract_group(source: str, group: Tag) -> ForumGroupData:
-    name = find_element(source, group, ".head .title").text
+    name = select_element(source, group, ".head .title").text
     source = f"{source} group '{name}'"
-    description = find_element(source, group, ".head .description").text
+    description = select_element(source, group, ".head .description").text
     categories = list(
         map(
             lambda category: extract_category(source, category),
@@ -78,14 +79,14 @@ def extract_group(source: str, group: Tag) -> ForumGroupData:
 
 
 def extract_category(source: str, category: Tag) -> ForumCategoryData:
-    element = find_element(source, category, ".title a")
+    element = select_element(source, category, ".title a")
     id = regex_extract_int(source, element.attrs["href"], CATEGORY_ID_REGEX)
     name = element.text
     source = f"{source} category '{name}'"
 
-    description = find_element(source, category, ".description").text
-    thread_count = int(find_element(source, category, ".threads").text)
-    post_count = int(find_element(source, category, ".posts").text)
+    description = find_element(source, category, class_="description").text
+    thread_count = int(find_element(source, category, class_="threads").text)
+    post_count = int(find_element(source, category, class_="posts").text)
     last_post = extract_last_forum_post(source, category)
 
     return ForumCategoryData(

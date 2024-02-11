@@ -66,7 +66,7 @@ def process_row(row: Tag) -> SiteMemberData:
     id = regex_extract_int(source, element["onclick"], USER_ID_REGEX)
 
     # Extract membership join date
-    element = find_element(source, row, "span.odate")
+    element = find_element(source, row, "span", class_="odate")
     joined_at = get_entity_date(source, element)
 
     return SiteMemberData(
