@@ -10,12 +10,13 @@ from typing import Optional
 from bs4 import Tag
 
 from ..scraper import (
+    extract_last_post,
     find_element,
     make_soup,
     regex_extract,
 )
+from ..types import ForumLastPostData
 from ..wikidot import Wikidot
-from .common import ForumLastPostData, extract_last_post
 
 CATEGORY_ID_REGEX = re.compile(r"\/forum\/c-(\d+)(?:\/.+)?")
 

@@ -12,14 +12,15 @@ from bs4 import Tag
 
 from ..scraper import (
     ScrapingError,
+    extract_last_post,
     find_element,
     get_entity_date,
     get_entity_user,
     make_soup,
     regex_extract,
 )
+from ..types import ForumLastPostData, UserModuleData
 from ..wikidot import Wikidot
-from .common import ForumLastPostData, UserModuleData, extract_last_post
 
 LAST_THREAD_ID = re.compile(r"/forum/t-(\d+)(?:\/.*)?")
 

@@ -8,9 +8,15 @@ from datetime import datetime
 
 from bs4 import Tag
 
-from ..scraper import find_element, get_entity_date, make_soup, regex_extract
+from ..scraper import (
+    USER_ID_REGEX,
+    find_element,
+    get_entity_date,
+    get_user_slug,
+    make_soup,
+    regex_extract,
+)
 from ..wikidot import Wikidot
-from .common import USER_ID_REGEX, get_user_slug
 
 ADMIN_MEMBER_MODULE = "managesite/members/ManageSiteMembersListModule"
 REGULAR_MEMBER_MODULE = "membership/MembersListModule"

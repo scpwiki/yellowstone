@@ -14,12 +14,12 @@ from ..scraper import (
     ScrapingError,
     find_element,
     get_entity_date,
+    get_user_slug,
     make_soup,
     regex_extract,
 )
 from ..utils import chunks
 from ..wikidot import Wikidot
-from .common import get_user_slug
 
 KARMA_LEVEL_STRIP_REGEX = re.compile(r"([\w ]+?) *\t.*?")
 DATE_REGEX = re.compile(r"(\d+) (\w+) (\d+)")
