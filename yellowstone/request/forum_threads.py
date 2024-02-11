@@ -97,8 +97,8 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
 
     # Thread origin
     started = find_element(source, row, class_="started")
-    started_at = get_entity_date(source, find_element(source, started, "span", class_="odate"))
-    started_by = get_entity_user(source, select_element(source, started, ".printuser a"))
+    created_at = get_entity_date(source, find_element(source, started, "span", class_="odate"))
+    created_by = get_entity_user(source, select_element(source, started, ".printuser a"))
     # TODO support created by: Wikidot
     # find("span", class_="printuser") -> ~"Wikidot"
 
@@ -110,8 +110,8 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
         title=title,
         description=description,
         sticky=sticky,
-        created_by=started_by,
-        created_at=started_at,
+        created_by=created_by,
+        created_at=created_at,
         post_count=post_count,
         last_post=last_post,
     )
