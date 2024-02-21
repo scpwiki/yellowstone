@@ -14,11 +14,11 @@ from ..scraper import (
     ScrapingError,
     extract_last_forum_post,
     find_element,
-    select_element,
     get_entity_date,
     get_entity_user,
     make_soup,
     regex_extract_int,
+    select_element,
 )
 from ..types import ForumLastPostData, UserModuleData
 from ..wikidot import Wikidot
@@ -97,8 +97,14 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
 
     # Thread origin
     started = find_element(source, row, class_="started")
-    created_at = get_entity_date(source, find_element(source, started, "span", class_="odate"))
-    created_by = get_entity_user(source, select_element(source, started, ".printuser a"))
+    created_at = get_entity_date(
+        source,
+        find_element(source, started, "span", class_="odate"),
+    )
+    created_by = get_entity_user(
+        source,
+        select_element(source, started, ".printuser a"),
+    )
     # TODO support created by: Wikidot
     # find("span", class_="printuser") -> ~"Wikidot"
 

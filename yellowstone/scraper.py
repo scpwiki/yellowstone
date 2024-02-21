@@ -43,7 +43,9 @@ def regex_extract(source: str, body: str, regex: re.Pattern) -> re.Match:
 
 def regex_extract_str(source: str, body: str, regex: re.Pattern) -> str:
     match = regex_extract(source, body, regex)
-    assert len(match.groups()) == 1, "Extracting single value from regex with multiple groups"
+    assert (
+        len(match.groups()) == 1
+    ), "Extracting single value from regex with multiple groups"
     return match[1]
 
 
@@ -130,7 +132,10 @@ def extract_last_forum_post(source: str, parent: Tag) -> Optional[ForumLastPostD
         return None
 
     posted_user = get_entity_user(source, find_element(source, element, "a"))
-    posted_time = get_entity_date(source, find_element(source, element, "span", class_="odate"))
+    posted_time = get_entity_date(
+        source,
+        find_element(source, element, "span", class_="odate"),
+    )
     element_link = _get_last_anchor(source, children)
 
     assert isinstance(element_link, Tag), "Last child in last_info is not an element"

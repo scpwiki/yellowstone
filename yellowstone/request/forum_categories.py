@@ -12,9 +12,9 @@ from bs4 import Tag
 from ..scraper import (
     extract_last_forum_post,
     find_element,
-    select_element,
     make_soup,
     regex_extract_int,
+    select_element,
 )
 from ..types import ForumLastPostData
 from ..wikidot import Wikidot
@@ -56,7 +56,10 @@ def get(
     soup = make_soup(html)
     source = f"{site_slug} forum"
     return list(
-        map(lambda group: extract_group(source, group), soup.find_all(class_="forum-group")),
+        map(
+            lambda group: extract_group(source, group),
+            soup.find_all(class_="forum-group"),
+        ),
     )
 
 

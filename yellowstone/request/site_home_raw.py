@@ -9,7 +9,13 @@ from typing import TYPE_CHECKING, Optional
 
 from bs4 import BeautifulSoup
 
-from ..scraper import download_html, select_element, make_soup, regex_extract_int, regex_extract_str
+from ..scraper import (
+    download_html,
+    make_soup,
+    regex_extract_int,
+    regex_extract_str,
+    select_element,
+)
 from ..wikidot import Wikidot
 
 if TYPE_CHECKING:
