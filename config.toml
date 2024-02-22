@@ -4,27 +4,27 @@ bucket = "wikidot-backup"
 [wikidot]
 sites = [
     "scp-int",
-    "scp-en",
-    "wl-en",
-    "scp-zh-cn",
-    "scp-fr",
+    "scp-wiki", # scp-en
+    "wanderers-library", # wl-en
+    "scp-wiki-cn", # scp-zh-cn
+    "fondationscp", # scp-fr
     "scp-ru",
     "scp-pl",
-    "scp-es",
+    "lafundacionscp", # scp-es
     "scp-jp",
-    "scp-ko",
+    "scpko", # scp-ko
     "scp-th",
-    "scp-de",
-    "scp-it",
-    "scp-uk",
-    "scp-pt",
+    "scp-wiki-de", # scp-de
+    "fondazionescp", # scp-it
+    "scp-ukrainian", # scp-uk
+    "scp-pt-br", # scp-pt
     "scp-cs",
-    "scp-zh-tw",
+    "scp-zh-tr", # scp-zh-tw
     "scp-vn",
     "scp-el",
-    "scp-id",
+    "scp-idn", # scp-id
     "scp-nd",
-    "scp-tr",
+    "scpvakfi", # scp-tr
     "scp-ar",
     "scp-cy",
     "scp-et",
@@ -32,43 +32,43 @@ sites = [
     "scp-hu",
     "scp-jbo",
     "scp-nl",
-    "scp-ro",
+    "scp-romanian", # scp-ro
     "scp-sh",
-    "scp-sl",
+    "scp-slovenija", # scp-sl
     "scp-la",
-    "wl-pl",
-    "wl-ja",
-    "wl-cs",
-    "wl-ko",
-    "wl-vi",
-    "o5-int",
-    "o5-en",
-    "o5-cn",
-    "o5-fr",
-    "o5-pl",
-    "o5-es",
-    "o5-th",
-    "o5-jp",
-    "o5-de",
-    "o5-pt",
-    "o5-cs",
-    "o5-vn",
-    "o5-el",
-    "o5-nl",
-    "o5-sl",
-    "o5-wl-en",
-    "backrooms-en",
+    "wanderers-library-pl", # wl-pl
+    "wanderers-library-jp", # wl-ja
+    "wanderers-library-cs", # wl-cs
+    "wanderers-library-ko", # wl-ko
+    "wanderers-library-vn", # wl-vi
+    "o5command-int", # o5-int
+    "05command", # o5-en
+    "05command-cn", # o5-cn
+    "commandemento5", # o5-fr
+    "dowodztwo", # o5-pl
+    "cuarteldelo5", # o5-es
+    "o5command-th", # o5-th
+    "05command-ja", # o5-jp
+    "scp-wiki-de", # o5-de
+    "comando05ptbr", # o5-pt
+    "o5command-cs", # o5-cs
+    "05command-vn", # o5-vn
+    "commado5-el", # o5-el
+    "o5commissie", # o5-nl
+    "ukaz-o5", # o5-sl
+    "librarians-desk", # o5-wl-en
+    "backrooms-wiki", # backrooms-en
     "backrooms-vn",
-    "backrooms-pl",
-    "backrooms-cn",
-    "backrooms-fr",
-    "backrooms-ru",
-    "backrooms-pt",
-    "backrooms-es",
-    "backrooms-jp",
+    "pl-backrooms-wiki", # backrooms-pl
+    "backrooms-wiki-cn", # backrooms-cn
+    "fr-backrooms-wiki", # backrooms-fr
+    "ru-backrooms-wiki", # backrooms-ru
+    "pt-br-backrooms-wiki", # backrooms-pt
+    "es-backrooms-wiki", # backrooms-es
+    "japan-backrooms-wiki", # backrooms-jp
     "scp-int-sandbox",
-    "scp-sandbox-1",
-    "scp-sandbox-2",
+    "scpsandboxwiki", # scp-sandbox-1
+    "scpsandbox2", # scp-sandbox-2
     "scp-sandbox-3",
     "scpkrsandbox",
     "scpsandboxcn",
