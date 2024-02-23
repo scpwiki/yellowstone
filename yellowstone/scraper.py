@@ -11,12 +11,13 @@ import requests
 from bs4 import BeautifulSoup, PageElement, Tag
 
 from .exception import ScrapingError
-from .types import ForumLastPostData, UserModuleData
+from .types import CustomUserData, DeletedUserData, ForumLastPostData, UserModuleData
 
 LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)(?:/[^/]*)?#post-(\d+)")
 TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
+USER_GUEST_REGEX = re.compile(r"\s*(.+?) \(.+\)\s*")
 
 logger = logging.getLogger(__name__)
 
@@ -90,9 +91,54 @@ def get_entity_date(source: str, tag: Tag) -> datetime:
     raise ScrapingError(f"Could not find date timestamp from {source}")
 
 
-def get_entity_user(source: str, tag: Tag) -> UserModuleData:
+def get_entity_user(source: str, tag: Tag) -> Union[UserModuleData, DeletedUserData, CustomUserData]:
     """
-    Parses out a user module entity.
+    Parses out a user module entity, including unusual cases.
+    Requires being focused on .printuser
+
+    It can output one of:
+    * Regular user (current)
+    * Deleted user (ID only)
+    * Anonymous user (IP)
+    * Created by Wikidot (for forum threads)
+    """
+
+    assert "printuser" in tag.attrs["class"]
+
+    # If this has the "deleted" class, it's a deleted user
+    if "deleted" in tag.attrs["class"]:
+        return DeletedUserData(int(tag.attrs["data-id"]))
+
+    # If there is a ".printuser a", it's either a regular user or a guest
+    entity = tag.find("a")
+    if entity is not None:
+        # Anonymous users have an IP address
+        ip_entity = entity.find(class_="ip")
+        if ip_entity is not None:
+            ip = ip_entity.text
+            if ip.startswith("(") and ip.endswith(")"):
+                ip = ip[1:-1]
+            return AnonymousUserData(ip)
+
+        # Guests don't have profile links
+        if entity.attrs["href"] == "javascript:;":
+            guest_name = regex_extract_str(source, entity.text.strip(), USER_GUEST_REGEX)
+            return CustomUserData(guest_name)
+
+        # Regular users
+        return get_entity_user_exists(source, entity)
+
+    # Created by Wikidot
+    if tag.text.strip() == "Wikidot":
+        return CustomUserData("wikidot")
+
+    import pdb; pdb.set_trace()
+
+
+def get_entity_user_exists(source: str, tag: Tag) -> UserModuleData:
+    """
+    Parses out a user module entity, when it is known to be "real" (e.g. not anonymous, deleted, etc).
+    Requires being focused on the ".printuser a" element.
 
     Example
     ```html

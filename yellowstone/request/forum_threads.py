@@ -103,10 +103,8 @@ def process_row(source: str, row: Tag) -> ForumThreadData:
     )
     created_by = get_entity_user(
         source,
-        select_element(source, started, ".printuser a"),
+        find_element(source, started, class_="printuser"),
     )
-    # TODO support created by: Wikidot
-    # find("span", class_="printuser") -> ~"Wikidot"
 
     # Thread's last post
     last_post = extract_last_forum_post(source, row)

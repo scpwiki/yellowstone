@@ -109,10 +109,9 @@ def process_post(source: str, post: Tag) -> ForumPostData:
     )
     created_by = get_entity_user(
         source,
-        select_element(source, started, ".printuser a"),
+        find_element(source, started, class_="printuser"),
     )
-    created_by = 0
-    html = str(find_element(source, post, class_="content"))
+    html = find_element(source, post, class_="content").decode_contents().strip()
 
     # NOTE: basic list of revisions can be seen in
     #       changes = post.find(class_="changes")
