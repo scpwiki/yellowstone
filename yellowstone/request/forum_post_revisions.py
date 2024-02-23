@@ -45,3 +45,4 @@ def get(
     soup = make_soup(html)
     # TODO
     _ = soup
+    raise NotImplementedError

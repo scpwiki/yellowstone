@@ -41,4 +41,6 @@ def get(
         "forum/sub/ForumPostRevisionModule",
         {"revisionId": revision_id},
     )
-    return html.strip()
+    _ = html
+    # TODO
+    raise NotImplementedError

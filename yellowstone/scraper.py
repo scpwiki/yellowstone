@@ -16,6 +16,7 @@ from .types import (
     CustomUserData,
     DeletedUserData,
     ForumLastPostData,
+    ForumPostUser,
     UserModuleData,
 )
 
@@ -53,7 +54,9 @@ def regex_extract_str(source: str, body: str, regex: re.Pattern) -> str:
     assert (
         len(match.groups()) == 1
     ), "Extracting single value from regex with multiple groups"
-    return match[1]
+    string = match[1]
+    assert isinstance(string, str), "Group 1 from regex is not a string"
+    return string
 
 
 def regex_extract_int(source: str, body: str, regex: re.Pattern) -> int:
@@ -65,7 +68,6 @@ def find_element(source: str, soup: Union[BeautifulSoup, Tag], *args, **kwargs) 
     element = soup.find(*args, **kwargs)
     if element is None:
         raise ScrapingError(f"No '{args} {kwargs}' found for {source}")
-
     return element
 
 
@@ -74,7 +76,6 @@ def select_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) 
     element = soup.select_one(selector)
     if element is None:
         raise ScrapingError(f"No '{selector} found for {source}")
-
     return element
 
 
@@ -97,10 +98,7 @@ def get_entity_date(source: str, tag: Tag) -> datetime:
     raise ScrapingError(f"Could not find date timestamp from {source}")
 
 
-def get_entity_user(
-    source: str,
-    tag: Tag,
-) -> Union[UserModuleData, DeletedUserData, CustomUserData]:
+def get_entity_user(source: str, tag: Tag) -> ForumPostUser:
     """
     Parses out a user module entity, including unusual cases.
     Requires being focused on .printuser
@@ -121,9 +119,12 @@ def get_entity_user(
     # If there is a ".printuser a", it's either a regular user or a guest
     entity = tag.find("a")
     if entity is not None:
+        assert isinstance(entity, Tag), ".printuser a is not an HTML entity"
+
         # Anonymous users have an IP address
-        ip_entity = entity.find(class_="ip")
+        ip_entity = entity.find("span", class_="ip")
         if ip_entity is not None:
+            assert isinstance(ip_entity, Tag), "span.ip is not an HTML entity"
             ip = ip_entity.text
             if ip.startswith("(") and ip.endswith(")"):
                 ip = ip[1:-1]

@@ -6,8 +6,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Union
 
-Json = Union[None, int, float, str, list["Json"], dict[str, "Json"]]
-
 
 @dataclass
 class UserModuleData:
@@ -46,3 +44,12 @@ class ForumLastPostData:
     posted_user: UserModuleData
     thread_id: int
     post_id: int
+
+
+Json = Union[None, int, float, str, list["Json"], dict[str, "Json"]]
+ForumPostUser = Union[
+    UserModuleData,
+    DeletedUserData,
+    AnonymousUserData,
+    CustomUserData,
+]

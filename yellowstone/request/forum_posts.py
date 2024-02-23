@@ -18,7 +18,7 @@ from ..scraper import (
     regex_extract_int,
     regex_extract_str,
 )
-from ..types import UserModuleData
+from ..types import ForumPostUser
 from ..wikidot import Wikidot
 from .forum_categories import CATEGORY_ID_REGEX
 
@@ -33,7 +33,7 @@ class ForumPostData:
     id: int
     parent: Optional[int]
     title: str
-    created_by: UserModuleData
+    created_by: ForumPostUser
     created_at: datetime
     html: str
 
