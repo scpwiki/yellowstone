@@ -122,7 +122,7 @@ def get_entity_user(source: str, tag: Tag) -> Union[UserModuleData, DeletedUserD
 
         # Guests don't have profile links
         if entity.attrs["href"] == "javascript:;":
-            guest_name = regex_extract_str(source, entity.text.strip(), USER_GUEST_REGEX)
+            guest_name = regex_extract_str(source, tag.text.strip(), USER_GUEST_REGEX)
             return CustomUserData(guest_name)
 
         # Regular users
