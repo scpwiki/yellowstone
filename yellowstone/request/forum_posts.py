@@ -88,7 +88,7 @@ def get(
     return list(
         map(
             lambda post: process_post(source, post),
-            soup.find_all(class_="post"),
+            container.find_all(class_="post"),
         )
     )
     # TODO queue per-post jobs into batches of at most 10
