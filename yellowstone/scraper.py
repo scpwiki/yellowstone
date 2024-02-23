@@ -11,7 +11,13 @@ import requests
 from bs4 import BeautifulSoup, PageElement, Tag
 
 from .exception import ScrapingError
-from .types import CustomUserData, DeletedUserData, ForumLastPostData, UserModuleData
+from .types import (
+    AnonymousUserData,
+    CustomUserData,
+    DeletedUserData,
+    ForumLastPostData,
+    UserModuleData,
+)
 
 LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)(?:/[^/]*)?#post-(\d+)")
 TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
@@ -91,7 +97,10 @@ def get_entity_date(source: str, tag: Tag) -> datetime:
     raise ScrapingError(f"Could not find date timestamp from {source}")
 
 
-def get_entity_user(source: str, tag: Tag) -> Union[UserModuleData, DeletedUserData, CustomUserData]:
+def get_entity_user(
+    source: str,
+    tag: Tag,
+) -> Union[UserModuleData, DeletedUserData, CustomUserData]:
     """
     Parses out a user module entity, including unusual cases.
     Requires being focused on .printuser
@@ -136,7 +145,10 @@ def get_entity_user(source: str, tag: Tag) -> Union[UserModuleData, DeletedUserD
     raise ScrapingError("Cannot determine user data from {source}")
 
 
-def get_entity_user_exists(source: str, tag: Tag) -> UserModuleData:
+def get_entity_user_exists(
+    source: str,
+    tag: Tag,
+) -> UserModuleData:
     """
     Parses out a user module entity, when it is known to be "real" (e.g. not anonymous, deleted, etc).
     Requires being focused on the ".printuser a" element.

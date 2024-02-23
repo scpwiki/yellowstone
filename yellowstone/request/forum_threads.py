@@ -18,7 +18,6 @@ from ..scraper import (
     get_entity_user,
     make_soup,
     regex_extract_int,
-    select_element,
 )
 from ..types import ForumLastPostData, UserModuleData
 from ..wikidot import Wikidot

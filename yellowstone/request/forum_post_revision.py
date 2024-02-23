@@ -25,7 +25,10 @@ def get(
     ...
 
     logger.info(
-        "Retrieving forum post revision HTML for site %s category %d thread %d post %d revision %d",
+        (
+            "Retrieving forum post revision HTML for "
+            "site %s category %d thread %d post %d revision %d"
+        ),
         site_slug,
         category_id,
         thread_id,

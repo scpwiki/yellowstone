@@ -4,7 +4,7 @@ Contains common classes and type definitions.
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional, Union
+from typing import Union
 
 Json = Union[None, int, float, str, list["Json"], dict[str, "Json"]]
 

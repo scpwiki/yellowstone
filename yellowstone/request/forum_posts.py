@@ -17,7 +17,6 @@ from ..scraper import (
     make_soup,
     regex_extract_int,
     regex_extract_str,
-    select_element,
 )
 from ..types import UserModuleData
 from ..wikidot import Wikidot

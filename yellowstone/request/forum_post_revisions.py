@@ -3,6 +3,7 @@ Retrieve a listing of revisions within a forum post.
 """
 
 import logging
+from dataclasses import dataclass
 
 from ..scraper import (
     make_soup,
@@ -10,6 +11,12 @@ from ..scraper import (
 from ..wikidot import Wikidot
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class ForumPostRevisionData:
+    # TODO
+    ...
 
 
 def get(
@@ -37,3 +44,4 @@ def get(
     )
     soup = make_soup(html)
     # TODO
+    _ = soup
