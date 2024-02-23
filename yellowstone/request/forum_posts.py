@@ -58,7 +58,7 @@ def get(
     html = wikidot.ajax_module_connector(
         site_slug,
         "forum/ForumViewThreadModule",
-        {"t": thread_id},
+        {"t": thread_id, "pageNo": offset},
     )
     soup = make_soup(html)
     source = f"forum category {category_id} thread {thread_id}"
