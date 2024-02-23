@@ -103,7 +103,7 @@ def get_entity_user(source: str, tag: Tag) -> Union[UserModuleData, DeletedUserD
     * Created by Wikidot (for forum threads)
     """
 
-    assert "printuser" in tag.attrs["class"]
+    assert "printuser" in tag.attrs["class"], "HTML entity is not a .printuser"
 
     # If this has the "deleted" class, it's a deleted user
     if "deleted" in tag.attrs["class"]:
