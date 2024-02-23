@@ -132,7 +132,8 @@ def get_entity_user(source: str, tag: Tag) -> Union[UserModuleData, DeletedUserD
     if tag.text.strip() == "Wikidot":
         return CustomUserData("wikidot")
 
-    import pdb; pdb.set_trace()
+    # Cannot figure out what this is, yield an error
+    raise ScrapingError("Cannot determine user data from {source}")
 
 
 def get_entity_user_exists(source: str, tag: Tag) -> UserModuleData:
