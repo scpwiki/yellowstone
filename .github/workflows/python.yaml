@@ -22,11 +22,28 @@ jobs:
       - name: MyPy
         run: mypy yellowstone test
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt && pip install -r requirements.dev.txt
+
+      - name: Run unit tests
+        run: python -m unittest
+
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Ruff
         uses: chartboost/ruff-action@v1
