@@ -28,7 +28,7 @@ Then when doing development, install the development dependencies and then run l
 $ pip install -r requirements.dev.txt
 $ ruff check -n yellowstone test  # -n here and below means --no-cache
 $ ruff format -n yellowstone test
-$ mypy yellowstone
+$ mypy yellowstone test
 ```
 
 Then, to run a local instance, create a `config.toml` file (see `config.example.toml` as an example) and run:

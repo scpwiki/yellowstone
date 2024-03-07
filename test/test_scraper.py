@@ -70,7 +70,7 @@ class TestScraperBasics(unittest.TestCase):
 
     def test_select_element(self):
         soup = make_soup(
-            '<ol class="list">' "<li>ONE</li> <li>TWO</li> <li>THREE</li>" "</ol>"
+            '<ol class="list">' "<li>ONE</li> <li>TWO</li> <li>THREE</li>" "</ol>",
         )
 
         element = select_element(TEST_SOURCE, soup, "ol.list li:nth-child(2)")
