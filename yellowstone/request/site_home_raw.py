@@ -7,7 +7,7 @@ import re
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Optional
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from ..scraper import (
     download_html,
@@ -16,6 +16,7 @@ from ..scraper import (
     regex_extract_str,
     select_element,
 )
+from ..types import assert_is_tag
 from ..wikidot import Wikidot
 
 if TYPE_CHECKING:
@@ -86,6 +87,7 @@ def get_site_titles(
         logger.warning("No div#header found in %s", source)
         return None, None
 
+    header = assert_is_tag(header, "header element")
     name = select_element(source, header, "h1 span").text
     tagline = select_element(source, header, "h2 span").text
     return name, tagline
@@ -101,6 +103,7 @@ def get_discussion_thread_id(
         logger.info("Site has discussion threads disabled")
         return None
 
+    element = assert_is_tag(element, "discussion element")
     assert isinstance(element["href"], str), "element href is not a string"
     match = FORUM_POST_ID_REGEX.fullmatch(element["href"])
     if match is None:

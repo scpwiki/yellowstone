@@ -18,7 +18,7 @@ from ..scraper import (
     regex_extract_int,
     regex_extract_str,
 )
-from ..types import ForumPostUser
+from ..types import ForumPostUser, assert_is_tag
 from ..wikidot import Wikidot
 from .forum_categories import CATEGORY_ID_REGEX
 
@@ -63,7 +63,7 @@ def get(
     source = f"forum category {category_id} thread {thread_id}"
 
     # Get header information
-    breadcrumbs = soup.find("div", class_="forum-breadcrumbs")
+    breadcrumbs = assert_is_tag(soup.find("div", class_="forum-breadcrumbs"), "breadcrumbs")
     _, category_anchor = breadcrumbs.find_all("a")
     category_id_ex = regex_extract_int(
         source,
@@ -72,18 +72,18 @@ def get(
     )
     assert category_id == category_id_ex, "category ID in scraped thread doesn't match"
 
-    thread_title = tuple(breadcrumbs.children)[-1]
+    thread_title_child = tuple(breadcrumbs.children)[-1]
     assert isinstance(
-        thread_title,
+        thread_title_child,
         str,
     ), "last element in forum breadcrumbs is not text"
-    thread_title = regex_extract_str(source, thread_title, THREAD_TITLE)
+    thread_title = regex_extract_str(source, thread_title_child, THREAD_TITLE)
 
     # Here, we could get the forum thread's creator, created time, and description.
     # However we already got that above so it's not necessary here.
 
     # Iterate through posts
-    container = soup.find(id="thread-container-posts")
+    container = assert_is_tag(soup.find(id="thread-container-posts"), "thread container")
     return list(
         map(
             lambda post: process_post(source, post),

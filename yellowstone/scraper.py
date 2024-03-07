@@ -18,6 +18,7 @@ from .types import (
     ForumLastPostData,
     ForumPostUser,
     UserModuleData,
+    assert_is_tag,
 )
 
 LAST_THREAD_AND_POST_ID = re.compile(r"/forum/t-(\d+)(?:/[^/]*)?#post-(\d+)")
@@ -68,7 +69,7 @@ def find_element(source: str, soup: Union[BeautifulSoup, Tag], *args, **kwargs) 
     element = soup.find(*args, **kwargs)
     if element is None:
         raise ScrapingError(f"No '{args} {kwargs}' found for {source}")
-    return element
+    return assert_is_tag(element, "Element")
 
 
 def select_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) -> Tag:
@@ -76,7 +77,7 @@ def select_element(source: str, soup: Union[BeautifulSoup, Tag], selector: str) 
     element = soup.select_one(selector)
     if element is None:
         raise ScrapingError(f"No '{selector} found for {source}")
-    return element
+    return assert_is_tag(element, "Element")
 
 
 def get_entity_date(source: str, tag: Tag) -> datetime:

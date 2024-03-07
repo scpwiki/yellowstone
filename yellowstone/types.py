@@ -4,7 +4,9 @@ Contains common classes and type definitions.
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Union
+from typing import Any, TypeVar, Union
+
+from bs4 import Tag
 
 
 @dataclass
@@ -41,7 +43,7 @@ class CustomUserData:
 @dataclass
 class ForumLastPostData:
     posted_time: datetime
-    posted_user: UserModuleData
+    posted_user: ForumPostUser
     thread_id: int
     post_id: int
 
@@ -53,3 +55,8 @@ ForumPostUser = Union[
     AnonymousUserData,
     CustomUserData,
 ]
+
+
+def assert_is_tag(object: Any, name: str = "Object") -> Tag:
+    assert isinstance(object, Tag), f"{name} is not an HTML entity"
+    return object
