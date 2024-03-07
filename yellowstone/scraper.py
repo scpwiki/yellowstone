@@ -136,7 +136,7 @@ def get_entity_user(source: str, tag: Tag) -> ForumPostUser:
             return CustomUserData(guest_name)
 
         # Regular users
-        return get_entity_user_exists(source, entity)
+        return get_entity_user_regular(source, entity)
 
     # Created by Wikidot
     if tag.text.strip() == "Wikidot":
@@ -146,7 +146,7 @@ def get_entity_user(source: str, tag: Tag) -> ForumPostUser:
     raise ScrapingError(f"Cannot determine user data from {source}")
 
 
-def get_entity_user_exists(
+def get_entity_user_regular(
     source: str,
     tag: Tag,
 ) -> UserModuleData:

@@ -8,7 +8,7 @@ from yellowstone.scraper import (
     find_element,
     get_entity_date,
     get_entity_user,
-    get_entity_user_exists,
+    get_entity_user_regular,
     make_soup,
     regex_extract,
     regex_extract_int,
@@ -105,10 +105,10 @@ class TestEntity(unittest.TestCase):
         self.assertEqual(user.slug, "aismallard")
         self.assertEqual(user.name, "aismallard")
 
-        # Also test that get_entity_user_exists() returns the same thing
+        # Also test that get_entity_user_regular() returns the same thing
         # (though this function is not normally used directly)
         entity2 = entity.find("a")
-        user2 = get_entity_user_exists(TEST_SOURCE, entity2)
+        user2 = get_entity_user_regular(TEST_SOURCE, entity2)
         self.assertEqual(user, user2)
 
     def test_deleted_user(self):
