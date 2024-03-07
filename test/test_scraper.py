@@ -133,6 +133,12 @@ class TestEntity(unittest.TestCase):
         self.assertIsInstance(user, AnonymousUserData)
         self.assertEqual(user.ip, "185.220.101.20")
 
+    def test_wikidot_user(self):
+        entity = self.get_entity('<span class="printuser">Wikidot</span>')
+        user = get_entity_user(TEST_SOURCE, entity)
+        self.assertIsInstance(user, CustomUserData)
+        self.assertTrue(user.is_system)
+
     def get_entity(self, html) -> Tag:
         soup = make_soup(html)
         entity = soup.find("span", class_="printuser")
