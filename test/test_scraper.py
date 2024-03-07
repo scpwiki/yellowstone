@@ -1,7 +1,7 @@
 import re
 import unittest
 from datetime import datetime
-from typing import cast, Iterator
+from typing import Iterator, cast
 
 from bs4 import Tag
 
