@@ -26,7 +26,9 @@ TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
 USER_GUEST_REGEX = re.compile(r"\s*(.+?) \(.+\)\s*")
-USER_IP_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.anonymousUserInfo\('([^']+)'\).*")
+USER_IP_REGEX = re.compile(
+    r"WIKIDOT\.page\.listeners\.anonymousUserInfo\('([^']+)'\).*",
+)
 
 logger = logging.getLogger(__name__)
 
