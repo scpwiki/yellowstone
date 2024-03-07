@@ -114,8 +114,7 @@ class TestEntity(unittest.TestCase):
         self.assertIsInstance(user, DeletedUserData)
         self.assertEqual(user.id, 2826145)
 
-    @staticmethod
-    def get_entity(html) -> Tag:
+    def get_entity(self, html) -> Tag:
         soup = make_soup(html)
         entity = soup.find("span", class_="printuser")
         self.assertIsInstance(entity, Tag)
