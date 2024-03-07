@@ -1,16 +1,20 @@
-from datetime import datetime
 import re
 import unittest
+from datetime import datetime
 
 from yellowstone.scraper import (
     find_element,
+    get_entity_date,
+    get_entity_user,
     make_soup,
     regex_extract,
     regex_extract_int,
     regex_extract_str,
     select_element,
-    get_entity_date,
-    get_entity_user,
+)
+from yellowstone.types import (
+    DeletedUserData,
+    UserModuleData,
 )
 
 from .helpers import TEST_SOURCE
@@ -78,7 +82,6 @@ class TestEntity(unittest.TestCase):
         timestamp = get_entity_date(TEST_SOURCE, entity)
         self.assertEqual(timestamp, datetime(2024, 2, 7, 10, 49, 37))
 
-
     def test_regular_user(self):
         soup = make_soup(
             '<span class="printuser avatarhover">'
@@ -93,6 +96,20 @@ class TestEntity(unittest.TestCase):
 
         entity = soup.find("span", class_="printuser")
         user = get_entity_user(TEST_SOURCE, entity)
+        self.assertIsInstance(user, UserModuleData)
         self.assertEqual(user.id, 4598089)
         self.assertEqual(user.slug, "aismallard")
         self.assertEqual(user.name, "aismallard")
+
+    def test_deleted_user(self):
+        soup = make_soup(
+            '<span class="printuser deleted" data-id="2826145">'
+            '<img class="small" src="https://www.wikidot.com/common--images/avatars/default/a16.png" alt="">'
+            "(account deleted)"
+            "</span>"
+        )
+
+        entity = soup.find("span", class_="printuser")
+        user = get_entity_user(TEST_SOURCE, entity)
+        self.assertIsInstance(user, DeletedUserData)
+        self.assertEqual(user.id, 2826145)
