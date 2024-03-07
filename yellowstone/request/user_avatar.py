@@ -16,7 +16,7 @@ def get(user_id: int) -> bytes:
         "https://www.wikidot.com/avatar.php",
         params={
             "userid": user_id,
-            "timestamp": int(datetime.now().timestamp()),
+            "timestamp": int(datetime.utcnow().timestamp()),
         },
     )
     r.raise_for_status()

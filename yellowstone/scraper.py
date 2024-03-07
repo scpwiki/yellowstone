@@ -97,7 +97,7 @@ def get_entity_date(source: str, tag: Tag) -> datetime:
     for klass in tag.attrs["class"]:
         match = TIMESTAMP_REGEX.fullmatch(klass)
         if match is not None:
-            return datetime.fromtimestamp(int(match[1]))
+            return datetime.utcfromtimestamp(int(match[1]))
 
     raise ScrapingError(f"Could not find date timestamp from {source}")
 
