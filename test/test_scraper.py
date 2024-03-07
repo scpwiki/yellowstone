@@ -10,6 +10,7 @@ from yellowstone.scraper import (
     regex_extract_str,
     select_element,
     get_entity_date,
+    get_entity_user,
 )
 
 from .helpers import TEST_SOURCE
@@ -61,7 +62,9 @@ class TestScraper(unittest.TestCase):
         self.assertEqual(element.name, "li")
         self.assertEqual(element.text, "TWO")
 
-    def test_entity_date(self):
+
+class TestEntity(unittest.TestCase):
+    def test_date(self):
         soup = make_soup(
             '<span class="odate time_1707320977 format_%25e%20%25b%20%25Y%2C%20%25H%3A%25M%7Cagohover">'
             "07 Feb 2024 15:49</span>"
@@ -70,3 +73,22 @@ class TestScraper(unittest.TestCase):
         entity = soup.find("span", class_="odate")
         timestamp = get_entity_date(TEST_SOURCE, entity)
         self.assertEqual(timestamp, datetime(2024, 2, 7, 10, 49, 37))
+
+
+    def test_regular_user(self):
+        soup = make_soup(
+            '<span class="printuser avatarhover">'
+            '<a href="http://www.wikidot.com/user:info/aismallard" '
+            'onclick="WIKIDOT.page.listeners.userInfo(4598089); return false;">'
+            '<img alt="aismallard" class="small" '
+            'src="https://www.wikidot.com/avatar.php?userid=4598089&amp;amp;size=small&amp;amp;timestamp=1707451824" '
+            'style="background-image:url(https://www.wikidot.com/userkarma.php?u=4598089)"/>'
+            "</a>"
+            "</span>"
+        )
+
+        entity = soup.find("span", class_="printuser")
+        user = get_entity_user(TEST_SOURCE, entity)
+        self.assertEqual(user.id, 4598089)
+        self.assertEqual(user.slug, "aismallard")
+        self.assertEqual(user.name, "aismallard")
