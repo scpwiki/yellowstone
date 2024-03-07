@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 import unittest
 
@@ -8,6 +9,7 @@ from yellowstone.scraper import (
     regex_extract_int,
     regex_extract_str,
     select_element,
+    get_entity_date,
 )
 
 from .helpers import TEST_SOURCE
@@ -58,3 +60,13 @@ class TestScraper(unittest.TestCase):
         element = select_element(TEST_SOURCE, soup, "ol.list li:nth-child(2)")
         self.assertEqual(element.name, "li")
         self.assertEqual(element.text, "TWO")
+
+    def test_entity_date(self):
+        soup = make_soup(
+            '<span class="odate time_1707320977 format_%25e%20%25b%20%25Y%2C%20%25H%3A%25M%7Cagohover">'
+            "07 Feb 2024 15:49</span>"
+        )
+
+        entity = soup.find("span", class_="odate")
+        timestamp = get_entity_date(TEST_SOURCE, entity)
+        self.assertEqual(timestamp, datetime(2024, 2, 7, 10, 49, 37))
