@@ -26,8 +26,8 @@ Then when doing development, install the development dependencies and then run l
 
 ```bash
 $ pip install -r requirements.dev.txt
-$ ruff check -n yellowstone  # -n here and below means --no-cache
-$ ruff format -n yellowstone
+$ ruff check -n yellowstone test  # -n here and below means --no-cache
+$ ruff format -n yellowstone test
 $ mypy yellowstone
 ```
 
@@ -41,6 +41,20 @@ If you are packaging for a production deployment, the easiest method is to build
 
 ```bash
 $ docker build -t scpwiki/yellowstone:latest .
+```
+
+### Testing
+
+You can run the unit test suite:
+
+```bash
+$ python -m unittest
+```
+
+It is also possible to run specific test files if you wish:
+
+```bash
+$ python -m unittest test.test_scraper
 ```
 
 ### License and Naming
