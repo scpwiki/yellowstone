@@ -77,6 +77,12 @@ class TestScraper(unittest.TestCase):
 
 
 class TestEntity(unittest.TestCase):
+    def get_entity(self, html) -> Tag:
+        soup = make_soup(html)
+        entity = soup.find("span", class_="printuser")
+        self.assertIsInstance(entity, Tag)
+        return entity
+
     def test_date(self):
         soup = make_soup(
             '<span class="odate time_1707320977 format_%25e%20%25b%20%25Y%2C%20%25H%3A%25M%7Cagohover">'
@@ -159,9 +165,3 @@ class TestEntity(unittest.TestCase):
         user = get_entity_user(TEST_SOURCE, entity)
         self.assertIsInstance(user, CustomUserData)
         self.assertEqual(user.name, "Dr Thomas")
-
-    def get_entity(self, html) -> Tag:
-        soup = make_soup(html)
-        entity = soup.find("span", class_="printuser")
-        self.assertIsInstance(entity, Tag)
-        return entity
