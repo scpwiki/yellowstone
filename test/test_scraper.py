@@ -1,6 +1,7 @@
 import re
 import unittest
 from datetime import datetime
+from typing import cast, Iterator
 
 from bs4 import Tag
 
@@ -81,7 +82,7 @@ class TestScraperBasics(unittest.TestCase):
 class TestEntity(unittest.TestCase):
     def get_entity(self, html) -> Tag:
         soup = make_soup(html)
-        entity = next(soup.children)
+        entity = next(cast(Iterator[Tag], soup.children))
         self.assertIsInstance(entity, Tag)
         return entity
 
