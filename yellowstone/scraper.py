@@ -124,10 +124,11 @@ def get_entity_user(source: str, tag: Tag) -> ForumPostUser:
         assert isinstance(entity, Tag), ".printuser a is not an HTML entity"
 
         # Anonymous users have an IP address
-        match = USER_IP_REGEX.fullmatch(entity.attrs["onclick"])
-        if match is not None:
-            ip = match[1]
-            return AnonymousUserData(ip)
+        if "onclick" in entity.attrs:
+            match = USER_IP_REGEX.fullmatch(entity.attrs["onclick"])
+            if match is not None:
+                ip = match[1]
+                return AnonymousUserData(ip)
 
         # Guests don't have profile links
         if entity.attrs["href"] == "javascript:;":
