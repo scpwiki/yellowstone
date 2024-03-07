@@ -5,6 +5,7 @@ from datetime import datetime
 from bs4 import Tag
 
 from yellowstone.scraper import (
+    extract_last_forum_post,
     find_element,
     get_entity_date,
     get_entity_user,
@@ -174,3 +175,47 @@ class TestEntity(unittest.TestCase):
 
         slug = get_user_slug(TEST_SOURCE, entity)
         self.assertEqual(slug, "aismallard")
+
+    def test_last_forum_post(self):
+        entity = self.get_entity(
+            '<tr><td class="name"><div class="title">'
+            '<a href="/forum/c-1113520/sitewide-announcements">Sitewide Announcements</a>'
+            "</div>"
+            '<div class="description">Announcement of any sitewide changes or events. For usage by both staff and non-staff.</div>'
+            "</td>"
+            '<td class="threads">190</td>'
+            '<td class="posts">6091</td>'
+            '<td class="last">by <span class="printuser avatarhover">'
+            '<a href="http://www.wikidot.com/user:info/heckker" onclick="WIKIDOT.page.listeners.userInfo(9050655); return false;">'
+            '<img alt="Heckker" class="small" src="https://www.wikidot.com/avatar.php?userid=9050655&amp;amp;size=small&amp;amp;timestamp=1709807965" style="background-image:url(https://www.wikidot.com/userkarma.php?u=9050655)"/>'
+            "</a>"
+            '<a href="http://www.wikidot.com/user:info/heckker" onclick="WIKIDOT.page.listeners.userInfo(9050655); return false;">Heckker</a>'
+            "</span><br/>"
+            '<span class="odate time_1709691717 format_%28%25O%20ago%29">06 Mar 2024 02:21</span>'
+            '<a href="/forum/t-16102888#post-6450010">Jump!</a>'
+            "</td></tr>"
+        )
+
+        post = extract_last_forum_post(TEST_SOURCE, entity)
+        self.assertIsNotNone(post)
+        self.assertEqual(post.posted_time, datetime(2024, 3, 5, 21, 21, 57))
+        self.assertEqual(post.thread_id, 16102888)
+        self.assertEqual(post.post_id, 6450010)
+
+        self.assertIsInstance(post.posted_user, UserModuleData)
+        self.assertEqual(post.posted_user.name, "Heckker")
+        self.assertEqual(post.posted_user.slug, "heckker")
+
+    def test_last_forum_post_none(self):
+        entity = self.get_entity(
+            '<tr><td class="name"><div class="title">'
+            '<a href="/forum/c-6188516/deleted-threads">Deleted threads</a>'
+            "</div>"
+            '<div class="description">Deleted forum discussions should go here.</div>'
+            "</td>"
+            '<td class="threads">0</td><td class="posts">0</td><td class="last">&nbsp;</td>'
+            "</tr>"
+        )
+
+        post = extract_last_forum_post(TEST_SOURCE, entity)
+        self.assertIsNone(post)
