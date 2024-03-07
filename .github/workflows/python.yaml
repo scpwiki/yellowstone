@@ -1,4 +1,4 @@
-name: Python Build
+name: Yellowstone
 
 on: [push]
 
@@ -20,7 +20,7 @@ jobs:
         run: pip install -r requirements.txt && pip install -r requirements.dev.txt
 
       - name: MyPy
-        run: mypy yellowstone
+        run: mypy yellowstone test
 
   lint:
     runs-on: ubuntu-latest
