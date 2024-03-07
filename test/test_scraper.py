@@ -94,7 +94,7 @@ class TestEntity(unittest.TestCase):
 
         entity = soup.find("span", class_="odate")
         timestamp = get_entity_date(TEST_SOURCE, entity)
-        self.assertEqual(timestamp, datetime(2024, 2, 7, 10, 49, 37))
+        self.assertEqual(timestamp, datetime(2024, 2, 7, 15, 49, 37))
 
     def test_regular_user(self):
         entity = self.get_entity(
@@ -199,7 +199,7 @@ class TestEntity(unittest.TestCase):
 
         post = extract_last_forum_post(TEST_SOURCE, entity)
         self.assertIsNotNone(post)
-        self.assertEqual(post.posted_time, datetime(2024, 3, 5, 21, 21, 57))
+        self.assertEqual(post.posted_time, datetime(2024, 3, 6, 2, 21, 57))
         self.assertEqual(post.thread_id, 16102888)
         self.assertEqual(post.post_id, 6450010)
 
