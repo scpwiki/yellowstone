@@ -50,6 +50,6 @@ class Config:
 
 def getenv(var_name) -> str:
     value = os.getenv(var_name)
-    if not value:
+    if value is None:
         raise RuntimeError(f"No value for environment variable {var_name}")
     return value
