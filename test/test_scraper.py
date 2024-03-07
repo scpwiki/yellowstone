@@ -15,6 +15,8 @@ from yellowstone.scraper import (
     select_element,
 )
 from yellowstone.types import (
+    AnonymousUserData,
+    CustomUserData,
     DeletedUserData,
     UserModuleData,
 )
@@ -113,6 +115,23 @@ class TestEntity(unittest.TestCase):
         user = get_entity_user(TEST_SOURCE, entity)
         self.assertIsInstance(user, DeletedUserData)
         self.assertEqual(user.id, 2826145)
+
+    def test_anonymous_user(self):
+        entity = self.get_entity(
+            '<span class="printuser anonymous">'
+            """<a href="javascript:;" onclick="WIKIDOT.page.listeners.anonymousUserInfo('185.220.101.20'); return false;">"""
+            '<img class="small" src="http://www.wikidot.com/common--images/avatars/default/a16.png" alt="">'
+            "</a>"
+            """<a href="javascript:;" onclick="WIKIDOT.page.listeners.anonymousUserInfo('185.220.101.20'); return false;">"""
+            "Anonymous "
+            '<span class="ip">(185.220.101.x)</span>'
+            "</a>"
+            "</span>"
+        )
+
+        user = get_entity_user(TEST_SOURCE, entity)
+        self.assertIsInstance(user, AnonymousUserData)
+        self.assertEqual(user.ip, "185.220.101.20")
 
     def get_entity(self, html) -> Tag:
         soup = make_soup(html)
