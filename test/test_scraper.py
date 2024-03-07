@@ -15,7 +15,3 @@ class TestScraper(unittest.TestCase):
         match = regex_extract("test", "SCP-371-J", regex)
         self.assertEqual(match[1], "371")
         self.assertEqual(match[2], "J")
-
-
-if __name__ == "__main__":
-    unittest.main()
