@@ -30,7 +30,7 @@ from .helpers import TEST_SOURCE
 # flake8: noqa: E501
 
 
-class TestScraper(unittest.TestCase):
+class TestScraperBasics(unittest.TestCase):
     def test_regex_extract(self):
         regex = re.compile(r"SCP-(\d+)(?:-(\w+))?")
 
