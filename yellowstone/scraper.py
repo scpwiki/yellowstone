@@ -26,6 +26,7 @@ TIMESTAMP_REGEX = re.compile(r"time_(\d+)")
 USER_ID_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.userInfo\((\d+)\).*")
 USER_SLUG_REGEX = re.compile(r"https?://www\.wikidot\.com/user:info/([^/]+)")
 USER_GUEST_REGEX = re.compile(r"\s*(.+?) \(.+\)\s*")
+USER_IP_REGEX = re.compile(r"WIKIDOT\.page\.listeners\.anonymousUserInfo\('([^']+)'\).*")
 
 logger = logging.getLogger(__name__)
 
@@ -123,12 +124,9 @@ def get_entity_user(source: str, tag: Tag) -> ForumPostUser:
         assert isinstance(entity, Tag), ".printuser a is not an HTML entity"
 
         # Anonymous users have an IP address
-        ip_entity = entity.find("span", class_="ip")
-        if ip_entity is not None:
-            assert isinstance(ip_entity, Tag), "span.ip is not an HTML entity"
-            ip = ip_entity.text
-            if ip.startswith("(") and ip.endswith(")"):
-                ip = ip[1:-1]
+        match = USER_IP_REGEX.fullmatch(entity.attrs["onclick"])
+        if match is not None:
+            ip = match[1]
             return AnonymousUserData(ip)
 
         # Guests don't have profile links
