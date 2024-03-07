@@ -193,7 +193,10 @@ def extract_last_forum_post(source: str, parent: Tag) -> Optional[ForumLastPostD
         # which means there is no "last post" data.
         return None
 
-    posted_user = get_entity_user(source, find_element(source, element, class_="printuser"))
+    posted_user = get_entity_user(
+        source,
+        find_element(source, element, class_="printuser"),
+    )
     posted_time = get_entity_date(
         source,
         find_element(source, element, "span", class_="odate"),
