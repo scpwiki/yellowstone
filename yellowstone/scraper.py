@@ -144,7 +144,7 @@ def get_entity_user(source: str, tag: Tag) -> ForumPostUser:
         return CustomUserData("wikidot")
 
     # Cannot figure out what this is, yield an error
-    raise ScrapingError("Cannot determine user data from {source}")
+    raise ScrapingError(f"Cannot determine user data from {source}")
 
 
 def get_entity_user_exists(
