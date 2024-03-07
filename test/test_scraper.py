@@ -9,6 +9,7 @@ from yellowstone.scraper import (
     get_entity_date,
     get_entity_user,
     get_entity_user_regular,
+    get_user_slug,
     make_soup,
     regex_extract,
     regex_extract_int,
@@ -165,3 +166,11 @@ class TestEntity(unittest.TestCase):
         user = get_entity_user(TEST_SOURCE, entity)
         self.assertIsInstance(user, CustomUserData)
         self.assertEqual(user.name, "Dr Thomas")
+
+    def test_user_slug(self):
+        entity = self.get_entity(
+            '<a class="btn btn-primary" href="http://www.wikidot.com/user:info/aismallard">Profile page</a>',
+        )
+
+        slug = get_user_slug(TEST_SOURCE, entity)
+        self.assertEqual(slug, "aismallard")
