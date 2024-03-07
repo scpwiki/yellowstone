@@ -79,7 +79,7 @@ class TestScraper(unittest.TestCase):
 class TestEntity(unittest.TestCase):
     def get_entity(self, html) -> Tag:
         soup = make_soup(html)
-        entity = soup.find("span", class_="printuser")
+        entity = next(soup.children)
         self.assertIsInstance(entity, Tag)
         return entity
 
