@@ -63,7 +63,10 @@ def get(
     source = f"forum category {category_id} thread {thread_id}"
 
     # Get header information
-    breadcrumbs = assert_is_tag(soup.find("div", class_="forum-breadcrumbs"), "breadcrumbs")
+    breadcrumbs = assert_is_tag(
+        soup.find("div", class_="forum-breadcrumbs"),
+        "breadcrumbs",
+    )
     _, category_anchor = breadcrumbs.find_all("a")
     category_id_ex = regex_extract_int(
         source,
@@ -83,7 +86,10 @@ def get(
     # However we already got that above so it's not necessary here.
 
     # Iterate through posts
-    container = assert_is_tag(soup.find(id="thread-container-posts"), "thread container")
+    container = assert_is_tag(
+        soup.find(id="thread-container-posts"),
+        "thread container",
+    )
     return list(
         map(
             lambda post: process_post(source, post),
@@ -94,6 +100,7 @@ def get(
     #      we don't need to be *that* efficient, just group
     #      by thread, so if a thread has < 10 posts just put
     #      them in one request and that's that
+    _ = thread_title
 
 
 def process_post(source: str, post: Tag) -> ForumPostData:

@@ -19,7 +19,7 @@ from ..scraper import (
     make_soup,
     regex_extract_int,
 )
-from ..types import ForumLastPostData, ForumPostUser, UserModuleData
+from ..types import ForumLastPostData, ForumPostUser
 from ..wikidot import Wikidot
 
 LAST_THREAD_ID = re.compile(r"/forum/t-(\d+)(?:\/.*)?")

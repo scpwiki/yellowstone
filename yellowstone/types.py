@@ -4,7 +4,7 @@ Contains common classes and type definitions.
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, TypeVar, Union
+from typing import Any, Union
 
 from bs4 import Tag
 
@@ -40,14 +40,6 @@ class CustomUserData:
         return self.name.casefold() == "wikidot"
 
 
-@dataclass
-class ForumLastPostData:
-    posted_time: datetime
-    posted_user: ForumPostUser
-    thread_id: int
-    post_id: int
-
-
 Json = Union[None, int, float, str, list["Json"], dict[str, "Json"]]
 ForumPostUser = Union[
     UserModuleData,
@@ -55,6 +47,14 @@ ForumPostUser = Union[
     AnonymousUserData,
     CustomUserData,
 ]
+
+
+@dataclass
+class ForumLastPostData:
+    posted_time: datetime
+    posted_user: ForumPostUser
+    thread_id: int
+    post_id: int
 
 
 def assert_is_tag(object: Any, name: str = "Object") -> Tag:
