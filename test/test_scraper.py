@@ -146,6 +146,20 @@ class TestEntity(unittest.TestCase):
         self.assertIsInstance(user, CustomUserData)
         self.assertTrue(user.is_system)
 
+    def test_guest_user(self):
+        entity = self.get_entity(
+            '<span class="printuser avatarhover">'
+            '<a href="javascript:;">'
+            '<img class="small" src="https://secure.gravatar.com/avatar.php?gravatar_id=b804142d40e0801797a7a7616c31d351&amp;default=https://www.wikidot.com/common--images/avatars/default/a16.png&amp;size=16" alt="">'
+            "</a>"
+            "Dr Thomas (guest)"
+            "</span>"
+        )
+
+        user = get_entity_user(TEST_SOURCE, entity)
+        self.assertIsInstance(user, CustomUserData)
+        self.assertEqual(user.name, "Dr Thomas")
+
     def get_entity(self, html) -> Tag:
         soup = make_soup(html)
         entity = soup.find("span", class_="printuser")
