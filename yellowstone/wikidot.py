@@ -22,9 +22,9 @@ class Wikidot:
     config: Config
     proxy: ServerProxy
 
-    def __init__(self, config) -> None:
-        username = getenv("WIKIDOT_USERNAME")
-        api_key = getenv("WIKIDOT_API_KEY")
+    def __init__(self, config, *, username=None, api_key=None) -> None:
+        username = username or getenv("WIKIDOT_USERNAME")
+        api_key = api_key or getenv("WIKIDOT_API_KEY")
         self.config = config
         self.proxy = ServerProxy(
             f"https://{username}:{api_key}@www.wikidot.com/xml-rpc-api.php",

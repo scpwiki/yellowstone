@@ -19,16 +19,19 @@ class Config:
     sites_use_admin_members: list[str]
     always_fetch_site: bool
 
-    def __init__(self, path: str) -> None:
+    @staticmethod
+    def from_file(path: str) -> "Config":
         with open(path, "rb") as file:
             logger.info("Reading configuration file from %s", path)
             data = tomllib.load(file)
 
-        self.s3_bucket = data["s3"]["bucket"]
-        self.site_slugs = data["wikidot"]["sites"]
-        self.sites_use_tls = data["wikidot"]["use-tls"]
-        self.sites_use_admin_members = data["wikidot"]["use-admin-members-list"]
-        self.always_fetch_site = data["wikidot"]["always-fetch-site"]
+        return Config(
+            s3_bucket=data["s3"]["bucket"],
+            site_slugs=data["wikidot"]["sites"],
+            sites_use_tls=data["wikidot"]["use-tls"],
+            sites_use_admin_members=data["wikidot"]["use-admin-members-list"],
+            always_fetch_site=data["wikidot"]["always-fetch-site"],
+        )
 
     @staticmethod
     def parse_args() -> "Config":
@@ -39,7 +42,7 @@ class Config:
             help="The path to the configuration file to use",
         )
         args = parser.parse_args()
-        return Config(args.config)
+        return Config.from_file(args.config)
 
     def uses_tls(self, site_slug: str) -> bool:
         return site_slug in self.sites_use_tls
