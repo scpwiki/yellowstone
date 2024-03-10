@@ -4,6 +4,7 @@ Helpers and utilities for the Yellowstone unit tests.
 
 import os
 from dataclasses import dataclass
+from typing import Union
 
 from yellowstone.config import Config
 from yellowstone.wikidot import Wikidot
@@ -13,7 +14,7 @@ TEST_SOURCE = "[test_source]"
 
 @dataclass
 class FakeResponse:
-    data: dict
+    data: Union[dict, bytes, str]
 
     @staticmethod
     def from_file(filename: str) -> "FakeResponse":
@@ -35,7 +36,13 @@ class FakeResponse:
     def raise_for_status(self):
         pass
 
+    @property
+    def content(self) -> Union[bytes, str]:
+        assert isinstance(self.data, (bytes, str))
+        return self.data
+
     def json(self) -> dict:
+        assert isinstance(self.data, dict)
         return self.data
 
 

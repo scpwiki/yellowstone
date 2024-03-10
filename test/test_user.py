@@ -14,14 +14,14 @@ class TestUser(unittest.TestCase):
         self.wikidot = make_wikidot()
 
     def test_user(self):
-        """Test that user data can be parsed from Wikidot HTML"""
-
+        user_id = 4598089
         http_response = FakeResponse.from_file("user_info_win")
-        with patch.object(requests, "post", return_value=http_response):
-            model = user.get(4598089, wikidot=self.wikidot)
+        with patch.object(requests, "post", return_value=http_response) as mock:
+            model = user.get(user_id, wikidot=self.wikidot)
+            mock.assert_called_once()
 
         self.assertIsInstance(model, UserData)
-        self.assertEqual(model.id, 4598089)
+        self.assertEqual(model.id, user_id)
         self.assertEqual(model.slug, "aismallard")
         self.assertEqual(model.name, "aismallard")
         self.assertEqual(model.gender, "female")
