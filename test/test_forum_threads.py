@@ -34,7 +34,7 @@ class TestForumThreads(unittest.TestCase):
         self.assertEqual(models[0].created_by.name, "Zyn")
         self.assertEqual(models[0].post_count, 1123)
 
-        self.assertEqual(models[2].id, 561911)
+        self.assertEqual(models[2].id, 561991)
         self.assertEqual(models[2].title, "The Leak")
         self.assertEqual(models[2].description, "In-universe spoilers/info leaks")
         self.assertTrue(models[2].sticky)
