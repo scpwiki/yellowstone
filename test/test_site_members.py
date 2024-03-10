@@ -15,14 +15,14 @@ class TestSiteMembers(unittest.TestCase):
 
     def test_site_members_regular(self):
         http_response = FakeResponse.ajax_from_file("site_members_regular")
-        with patch.object(requests, "post", return_value=http_response) as mock_1:
+        with patch.object(requests, "post", return_value=http_response) as mock:
             models = site_members.get(
                 "scp-wiki",
                 1,
                 wikidot=self.wikidot,
                 use_admin=False,
             )
-            mock_1.assert_called_once()
+            mock.assert_called_once()
 
         self.assertIsInstance(models, list)
         self.assertEquals(len(models), 6)
