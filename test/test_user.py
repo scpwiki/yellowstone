@@ -15,7 +15,7 @@ class TestUser(unittest.TestCase):
 
     def test_user(self):
         user_id = 4598089
-        http_response = FakeResponse.from_file("user_info_win")
+        http_response = FakeResponse.ajax_from_file("user_info_win")
         with patch.object(requests, "post", return_value=http_response) as mock:
             model = user.get(user_id, wikidot=self.wikidot)
             mock.assert_called_once()

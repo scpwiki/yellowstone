@@ -18,6 +18,10 @@ class FakeResponse:
 
     @staticmethod
     def from_file(filename: str) -> "FakeResponse":
+        return FakeResponse(get_test_data(filename))
+
+    @staticmethod
+    def ajax_from_file(filename: str) -> "FakeResponse":
         return FakeResponse(
             {
                 "status": "ok",

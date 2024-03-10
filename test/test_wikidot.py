@@ -11,7 +11,7 @@ class TestWikidotClass(unittest.TestCase):
         self.wikidot = make_wikidot()
 
     def test_ajax_module_connector(self):
-        http_response = FakeResponse.from_file("user_info_win")
+        http_response = FakeResponse.ajax_from_file("user_info_win")
         with patch.object(requests, "post", return_value=http_response):
             html = self.wikidot.ajax_module_connector(
                 "www",
