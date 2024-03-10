@@ -41,6 +41,11 @@ class FakeResponse:
         assert isinstance(self.data, (bytes, str))
         return self.data
 
+    @property
+    def text(self) -> str:
+        assert isinstance(self.data, str)
+        return self.data
+
     def json(self) -> dict:
         assert isinstance(self.data, dict)
         return self.data
