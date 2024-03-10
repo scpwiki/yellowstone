@@ -3,22 +3,12 @@ from unittest.mock import patch
 
 import requests
 
-from yellowstone.config import Config
-from yellowstone.wikidot import Wikidot
-
-from .helpers import FakeResponse
+from .helpers import FakeResponse, make_wikidot
 
 
 class TestWikidotClass(unittest.TestCase):
     def setUp(self):
-        self.config = Config(
-            s3_bucket="test",
-            site_slugs=["test", "test-tls"],
-            sites_use_tls=["test-tls"],
-            sites_use_admin_members=[],
-            always_fetch_site=True,
-        )
-        self.wikidot = Wikidot(self.config, username="test", api_key="test")
+        self.wikidot = make_wikidot()
 
     def test_ajax_module_connector(self):
         http_response = FakeResponse.from_file("user_info_win")

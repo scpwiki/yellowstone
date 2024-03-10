@@ -5,6 +5,9 @@ Helpers and utilities for the Yellowstone unit tests.
 import os
 from dataclasses import dataclass
 
+from yellowstone.config import Config
+from yellowstone.wikidot import Wikidot
+
 TEST_SOURCE = "[test_source]"
 
 
@@ -34,3 +37,14 @@ class FakeResponse:
 
     def json(self) -> dict:
         return self.data
+
+
+def make_wikidot():
+    config = Config(
+        s3_bucket="test",
+        site_slugs=["test", "test-tls"],
+        sites_use_tls=["test-tls"],
+        sites_use_admin_members=[],
+        always_fetch_site=True,
+    )
+    return Wikidot(config, username="test", api_key="test")
