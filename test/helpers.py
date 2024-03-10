@@ -18,15 +18,11 @@ class FakeResponse:
 
     @staticmethod
     def from_file(filename: str) -> "FakeResponse":
-        path = os.path.join(os.path.dirname(__file__), "data", f"{filename}.html")
-        with open(path) as file:
-            body = file.read()
-
         return FakeResponse(
             {
                 "status": "ok",
                 "CURRENT_TIMESTAMP": 1710000000,
-                "body": body,
+                "body": get_test_data(filename),
                 "jsInclude": [],
                 "cssInclude": [],
                 "callbackIndex": 1,
@@ -44,6 +40,12 @@ class FakeResponse:
     def json(self) -> dict:
         assert isinstance(self.data, dict)
         return self.data
+
+
+def get_test_data(filename: str, extension: str = "html") -> str:
+    path = os.path.join(os.path.dirname(__file__), "data", f"{filename}.{extension}")
+    with open(path) as file:
+        return file.read()
 
 
 def make_wikidot():
