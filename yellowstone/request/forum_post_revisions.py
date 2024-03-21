@@ -26,8 +26,6 @@ def get(
     post_id: int,
     wikidot: Wikidot,
 ) -> list[int]:
-    ...
-
     logger.info(
         "Retrieving forum post revision data for site %s category %d thread %d post %d",
         site_slug,
