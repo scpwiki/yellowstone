@@ -7,10 +7,17 @@ are stored as NULL in the database.
 """
 
 import logging
+from dataclasses import dataclass
 
 from ..wikidot import Wikidot
 
 logger = logging.getLogger(__name__)
+
+
+@dataclass
+class ForumPostRevisionData:
+    # TODO
+    ...
 
 
 def get(
