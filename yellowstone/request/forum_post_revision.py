@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ForumPostRevisionData:
-    # TODO
-    ...
+    title: str
+    content: str
 
 
 def get(
@@ -28,9 +28,7 @@ def get(
     post_id: int,
     revision_id: int,
     wikidot: Wikidot,
-) -> list[str]:
-    ...
-
+) -> ForumPostRevisionData:
     logger.info(
         (
             "Retrieving forum post revision HTML for "
@@ -43,11 +41,14 @@ def get(
         revision_id,
     )
 
-    html = wikidot.ajax_module_connector(
+    response = wikidot.ajax_module_connector_json(
         site_slug,
         "forum/sub/ForumPostRevisionModule",
         {"revisionId": revision_id},
     )
-    _ = html
-    # TODO
-    raise NotImplementedError
+    assert response["body"] == "ok", "Response body not 'ok'"
+    assert response["postId"] == post_id, "Post ID does not match response"
+    return ForumPostRevisionData(
+        title=response["title"],
+        content=response["content"],
+    )
