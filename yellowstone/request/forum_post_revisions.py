@@ -50,4 +50,5 @@ def get(
             regex_extract_int(source, element.attrs["onclick"], REVISION_ID_REGEX),
         )
 
+    revision_ids.reverse()
     return revision_ids
