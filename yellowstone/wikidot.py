@@ -38,6 +38,18 @@ class Wikidot:
         module_name: str,
         data: dict,
     ) -> str:
+        data = self.ajax_module_connector_json(site_slug, module_name, data)
+        assert "body" in data, "No body field in AJAX module response"
+        body = data["body"]
+        assert isinstance(body, str), "Body field in AJAX module response not string"
+        return body
+
+    def ajax_module_connector_json(
+        self,
+        site_slug: str,
+        module_name: str,
+        data: dict,
+    ) -> dict:
         logger.debug("Making AJAX call for site '%s': %r", site_slug, data)
 
         # Set token7
@@ -58,9 +70,8 @@ class Wikidot:
         # Process body
         match response["status"]:
             case "ok":
-                body = response["body"]
-                assert isinstance(body, str)
-                return body
+                assert isinstance(response, dict)
+                return response
             case "wrong_token7":
                 raise WikidotTokenError
             case "not_ok":
