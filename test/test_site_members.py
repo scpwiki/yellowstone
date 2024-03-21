@@ -25,7 +25,7 @@ class TestSiteMembers(unittest.TestCase):
             mock.assert_called_once()
 
         self.assertIsInstance(models, list)
-        self.assertEquals(len(models), 6)
+        self.assertEqual(len(models), 6)
         self.assertIsInstance(models[0], SiteMemberData)
         self.assertEqual(models[0].name, "The Administrator")
         self.assertEqual(models[1].name, "Dr Gears")
