@@ -13,11 +13,9 @@ from bs4 import Tag
 
 from ..scraper import (
     find_element,
-    get_entity_date,
     get_entity_user,
     make_soup,
     regex_extract_int,
-    regex_extract_str,
 )
 from ..types import ForumPostUser, assert_is_tag
 from ..utils import chunks
@@ -80,13 +78,6 @@ def get(
     )
     assert category_id == category_id_ex, "category ID in scraped thread doesn't match"
 
-    thread_title_child = tuple(breadcrumbs.children)[-1]
-    assert isinstance(
-        thread_title_child,
-        str,
-    ), "last element in forum breadcrumbs is not text"
-    thread_title = regex_extract_str(source, thread_title_child, THREAD_TITLE)
-
     # Here, we could get the forum thread's creator, created time, and description.
     # However we already got that above so it's not necessary here.
 
@@ -95,35 +86,44 @@ def get(
         soup.find(id="thread-container-posts"),
         "thread container",
     )
-    posts = list(
+    partial_posts = tuple(
         map(
-            lambda post: process_post(source, post),
+            lambda post: process_post_partial(source, post),
             container.find_all(class_="post"),
         )
     )
 
     # Then do batch post fetches until everything is populated.
     # Wikidot allows at most 10 posts to be fetched per request.
-    for chunk in chunks(posts, 10):
-        results = wikidot.proxy.posts.get({"site": site_slug, "posts": [str(post.id) for post in chunk]})
-        for post in chunk:
-            assert isinstance(post, dict)
-            data = results[str(post.id)]
-            assert post.id == data["id"]
-            post.parent = data["reply_to"]
-            post.title = data["title"]
-            post.wikitext = data["content"]
-            post.html = data["html"].strip()
-            post.created_at = datetime.fromisoformat(data["created_at"])
+    posts = []
+    for chunk in chunks(partial_posts, 10):
+        results = wikidot.proxy.posts.get(
+            {
+                "site": site_slug,
+                "posts": [str(post.id) for post in chunk],
+            }
+        )
+        for partial in chunk:
+            assert isinstance(partial, dict)
+            data = results[str(partial.id)]
 
-    # TODO queue per-post jobs into batches of at most 10
-    #      we don't need to be *that* efficient, just group
-    #      by thread, so if a thread has < 10 posts just put
-    #      them in one request and that's that
-    _ = thread_title
+            assert partial.id == data["id"]
+            posts.append(
+                ForumPostData(
+                    id=partial.id,
+                    parent=data["reply_to"],
+                    title=data["title"],
+                    created_by=partial.created_by,
+                    created_at=datetime.fromisoformat(data["created_at"]),
+                    wikitext=data["content"],
+                    html=data["html"].strip(),
+                )
+            )
+
+    return posts
 
 
-def process_post(source: str, post: Tag) -> ForumPostDataPartial:
+def process_post_partial(source: str, post: Tag) -> ForumPostDataPartial:
     post_id = regex_extract_int(source, post.attrs["id"], POST_ID)
     source = f"{source} post {post_id}"
 
