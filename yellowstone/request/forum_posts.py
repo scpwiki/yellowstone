@@ -4,6 +4,7 @@ Retrieve posts in a forum thread by page.
 
 import logging
 import re
+from collections import namedtuple
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
@@ -19,6 +20,7 @@ from ..scraper import (
     regex_extract_str,
 )
 from ..types import ForumPostUser, assert_is_tag
+from ..utils import chunks
 from ..wikidot import Wikidot
 from .forum_categories import CATEGORY_ID_REGEX
 
@@ -26,6 +28,8 @@ logger = logging.getLogger(__name__)
 
 THREAD_TITLE = re.compile(r"\s*» (.+?)\s*")
 POST_ID = re.compile(r"(?:post|fpc)-(\d+)")
+
+ForumPostDataPartial = namedtuple("ForumPostDataPartial", ("id", "created_by"))
 
 
 @dataclass
@@ -35,6 +39,7 @@ class ForumPostData:
     title: str
     created_by: ForumPostUser
     created_at: datetime
+    wikitext: str
     html: str
 
 
@@ -85,17 +90,32 @@ def get(
     # Here, we could get the forum thread's creator, created time, and description.
     # However we already got that above so it's not necessary here.
 
-    # Iterate through posts
+    # Iterate through posts, build most of the data
     container = assert_is_tag(
         soup.find(id="thread-container-posts"),
         "thread container",
     )
-    return list(
+    posts = list(
         map(
             lambda post: process_post(source, post),
             container.find_all(class_="post"),
         )
     )
+
+    # Then do batch post fetches until everything is populated.
+    # Wikidot allows at most 10 posts to be fetched per request.
+    for chunk in chunks(posts, 10):
+        results = wikidot.proxy.posts.get({"site": site_slug, "posts": [str(post.id) for post in chunk]})
+        for post in chunk:
+            assert isinstance(post, dict)
+            data = results[str(post.id)]
+            assert post.id == data["id"]
+            post.parent = data["reply_to"]
+            post.title = data["title"]
+            post.wikitext = data["content"]
+            post.html = data["html"].strip()
+            post.created_at = datetime.fromisoformat(data["created_at"])
+
     # TODO queue per-post jobs into batches of at most 10
     #      we don't need to be *that* efficient, just group
     #      by thread, so if a thread has < 10 posts just put
@@ -103,25 +123,22 @@ def get(
     _ = thread_title
 
 
-def process_post(source: str, post: Tag) -> ForumPostData:
+def process_post(source: str, post: Tag) -> ForumPostDataPartial:
     post_id = regex_extract_int(source, post.attrs["id"], POST_ID)
     source = f"{source} post {post_id}"
 
-    title = find_element(source, post, class_="title").text.strip()
     started = find_element(source, post, class_="info")
-    created_at = get_entity_date(
-        source,
-        find_element(source, started, "span", class_="odate"),
-    )
     created_by = get_entity_user(
         source,
         find_element(source, started, class_="printuser"),
     )
-    html = find_element(source, post, class_="content").decode_contents().strip()
 
-    # NOTE: basic list of revisions can be seen in
+    # NOTE: Basic list of revisions can be seen in
     #       changes = post.find(class_="changes")
 
+    # NOTE: You can get a list of the parentage with
+    #       parents = tuple(post.find_parents("div", class_="post-container"))
+    #
     # Process parents to determine inheritance
     # Structure is: [child (this post), parent, grandparent, etc.]
     # In other words:
@@ -129,21 +146,8 @@ def process_post(source: str, post: Tag) -> ForumPostData:
     # * A level-1 post looks like [1000, 2000]
     # * A level-2 post looks like [1000, 2000, 3000]
     # * etc
-    parents = tuple(post.find_parents("div", class_="post-container"))
-    match len(parents):
-        case 1:
-            # post is orphan
-            parent = None
-        case _:
-            # post has a parent
-            element = parents[1]
-            parent = regex_extract_int(source, element.attrs["id"], POST_ID)
 
-    return ForumPostData(
+    return ForumPostDataPartial(
         id=post_id,
-        parent=parent,
-        title=title,
-        created_at=created_at,
         created_by=created_by,
-        html=html,
     )
