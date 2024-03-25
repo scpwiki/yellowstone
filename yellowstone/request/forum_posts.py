@@ -95,7 +95,7 @@ def get(
 
     # Then do batch post fetches until everything is populated.
     # Wikidot allows at most 10 posts to be fetched per request.
-    posts = []
+    posts: list[ForumPostData] = []
     for chunk in chunks(partial_posts, 10):
         results = wikidot.proxy.posts.get(
             {
