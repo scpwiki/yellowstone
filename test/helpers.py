@@ -63,7 +63,7 @@ def get_test_json(filename: str, extension: str = "json") -> Json:
     return json.loads(get_test_data(filename, extension))  # type: ignore
 
 
-def make_wikidot():
+def make_wikidot() -> Wikidot:
     config = Config(
         s3_bucket="test",
         site_slugs=["test", "test-tls"],
