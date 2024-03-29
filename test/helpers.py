@@ -2,11 +2,13 @@
 Helpers and utilities for the Yellowstone unit tests.
 """
 
+import json
 import os
 from dataclasses import dataclass
 from typing import Union
 
 from yellowstone.config import Config
+from yellowstone.types import Json
 from yellowstone.wikidot import Wikidot
 
 TEST_SOURCE = "[test_source]"
@@ -55,6 +57,10 @@ def get_test_data(filename: str, extension: str = "html") -> str:
     path = os.path.join(os.path.dirname(__file__), "data", f"{filename}.{extension}")
     with open(path) as file:
         return file.read()
+
+
+def get_test_json(filename: str, extension: str = "json") -> Json:
+    return json.loads(get_test_data(filename, extension))  # type: ignore
 
 
 def make_wikidot():
