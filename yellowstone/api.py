@@ -20,10 +20,10 @@ class WikidotApi:
             use_datetime=True,
         )
 
-    def posts_get(self, *, site_slug: str, posts: list[str]) -> dict[str, dict]:
+    def posts_get(self, *, site: str, posts: list[str]) -> dict[str, dict]:
         return self.proxy.posts.get(
             {
-                "site": site_slug,
+                "site": site,
                 "posts": posts,
             }
         )

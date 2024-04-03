@@ -98,7 +98,7 @@ def get(
     posts: list[ForumPostData] = []
     for chunk in chunks(partial_posts, 10):
         results = wikidot.api.posts_get(
-            site_slug=site_slug,
+            site=site_slug,
             posts=[str(post.id) for post in chunk],
         )
         for partial in chunk:
