@@ -6,31 +6,25 @@ import logging
 import random
 import string
 from functools import cache
-from xmlrpc.client import ServerProxy
 
 import requests
 
-from .config import Config, getenv
+from .api import WikidotApi
+from .config import Config
 from .exception import WikidotError, WikidotTokenError
 
 logger = logging.getLogger(__name__)
 
 
 class Wikidot:
-    __slots__ = ("proxy", "config")
+    __slots__ = ("config", "api")
 
     config: Config
-    proxy: ServerProxy
+    api: WikidotApi
 
     def __init__(self, config, *, username=None, api_key=None) -> None:
-        username = username or getenv("WIKIDOT_USERNAME")
-        api_key = api_key or getenv("WIKIDOT_API_KEY")
         self.config = config
-        self.proxy = ServerProxy(
-            f"https://{username}:{api_key}@www.wikidot.com/xml-rpc-api.php",
-            use_builtin_types=True,
-            use_datetime=True,
-        )
+        self.api = WikidotApi(username, api_key)
 
     def ajax_module_connector(
         self,

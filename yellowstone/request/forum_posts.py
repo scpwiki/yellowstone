@@ -97,11 +97,9 @@ def get(
     # Wikidot allows at most 10 posts to be fetched per request.
     posts: list[ForumPostData] = []
     for chunk in chunks(partial_posts, 10):
-        results = wikidot.proxy.posts.get(
-            {
-                "site": site_slug,
-                "posts": [str(post.id) for post in chunk],
-            }
+        results = wikidot.api.posts_get(
+            site_slug=site_slug,
+            posts=[str(post.id) for post in chunk],
         )
         for partial in chunk:
             assert isinstance(partial, dict)
