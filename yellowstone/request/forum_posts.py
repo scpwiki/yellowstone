@@ -102,10 +102,10 @@ def get(
             posts=[str(post.id) for post in chunk],
         )
         for partial in chunk:
-            assert isinstance(partial, dict)
             data = results[str(partial.id)]
-
+            assert isinstance(data, dict)
             assert partial.id == data["id"]
+
             posts.append(
                 ForumPostData(
                     id=partial.id,

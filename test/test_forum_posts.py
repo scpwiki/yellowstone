@@ -1,12 +1,12 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import call, patch
 
 import requests
 
 from yellowstone.request import forum_posts
 from yellowstone.request.forum_posts import ForumPostData
 
-from .helpers import FakeResponse, make_wikidot
+from .helpers import FakeResponse, get_test_json, make_wikidot
 
 
 class TestForumPosts(unittest.TestCase):
@@ -15,17 +15,64 @@ class TestForumPosts(unittest.TestCase):
 
     def test_forum_posts(self):
         http_response = FakeResponse.ajax_from_file("forum_posts")
-        with patch.object(requests, "post", return_value=http_response) as mock:
-            models = forum_posts.get(
-                "scp-wiki",
-                category_id=50742,
-                thread_id=76692,
-                offset=1,
-                wikidot=self.wikidot,
-            )
-            mock.assert_called_once()
+        api_response_1 = get_test_json("forum_posts_1")
+        api_response_2 = get_test_json("forum_posts_2")
 
-        self.assertEqual(len(models), 122)
+        with patch.object(requests, "post", return_value=http_response) as ajax_mock:
+            with patch.object(
+                self.wikidot.api,
+                "posts_get",
+                side_effect=[api_response_1, api_response_2],
+            ) as api_mock:
+                models = forum_posts.get(
+                    "scp-wiki",
+                    category_id=50742,
+                    thread_id=76692,
+                    offset=1,
+                    wikidot=self.wikidot,
+                )
+
+                # calls once for the whole HTML
+                ajax_mock.assert_called_once()
+
+                # calls twice for each group of posts (chunks of 10)
+                api_mock.assert_has_calls(
+                    [
+                        call(
+                            site="scp-wiki",
+                            posts=[
+                                "326022",
+                                "328393",
+                                "1930722",
+                                "2240448",
+                                "2514445",
+                                "2777373",
+                                "3651072",
+                                "3651085",
+                                "6259068",
+                                "4288597",
+                            ],
+                        ),
+                    ],
+                    [
+                        call(
+                            site="scp-wiki",
+                            posts=[
+                                "4688320",
+                                "4725042",
+                                "4767904",
+                                "4783580",
+                                "4809182",
+                                "5089080",
+                                "5159793",
+                                "6144934",
+                                "5520725",
+                            ],
+                        ),
+                    ],
+                )
+
+        self.assertEqual(len(models), 19)
         self.assertIsInstance(models[0], ForumPostData)
 
         self.assertEqual(models[0].id, 326022)
