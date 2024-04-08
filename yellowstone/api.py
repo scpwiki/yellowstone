@@ -3,7 +3,7 @@ Wrapper for the XML-RPC Wikidot API.
 """
 
 import logging
-from typing import Any
+from typing import Any, cast
 from xmlrpc.client import ServerProxy
 
 from .config import getenv
@@ -24,9 +24,10 @@ class WikidotApi:
         )
 
     def posts_get(self, *, site: str, posts: list[str]) -> dict[str, dict[str, Any]]:
-        return self.proxy.posts.get(
+        data = self.proxy.posts.get(
             {
                 "site": site,
                 "posts": posts,
             }
         )
+        return cast(dict[str, dict[str, Any]], data)
