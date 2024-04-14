@@ -44,3 +44,5 @@ class TestForumPostRevision(unittest.TestCase):
             data = get_revision(7841565)
             self.assertEqual(data.title, "test with many revisions")
             self.assertEqual(data.content, "<p><em>3</em></p>")
+
+            mock.assert_called()
