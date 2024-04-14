@@ -50,5 +50,5 @@ def get(
     assert response["postId"] == post_id, "Post ID does not match response"
     return ForumPostRevisionData(
         title=response["title"],
-        content=response["content"],
+        content=response["content"].strip(),
     )
