@@ -19,16 +19,16 @@ class FakeResponse:
     data: Union[dict, bytes, str]
 
     @staticmethod
-    def from_file(filename: str) -> "FakeResponse":
-        return FakeResponse(get_test_data(filename))
+    def from_file(filename: str, extension: str = "html") -> "FakeResponse":
+        return FakeResponse(get_test_data(filename, extension))
 
     @staticmethod
-    def ajax_from_file(filename: str) -> "FakeResponse":
+    def ajax_from_file(filename: str, extension: str = "html") -> "FakeResponse":
         return FakeResponse(
             {
                 "status": "ok",
                 "CURRENT_TIMESTAMP": 1710000000,
-                "body": get_test_data(filename),
+                "body": get_test_data(filename, extension),
                 "jsInclude": [],
                 "cssInclude": [],
                 "callbackIndex": 1,
