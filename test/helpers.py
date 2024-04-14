@@ -24,7 +24,9 @@ class FakeResponse:
 
     @staticmethod
     def from_json(filename: str, extension: str = "json") -> "FakeResponse":
-        return FakeResponse(get_test_json(filename, extension))
+        data = get_test_json(filename, extension)
+        assert isinstance(data, dict)
+        return FakeResponse(data)
 
     @staticmethod
     def ajax_from_file(filename: str, extension: str = "html") -> "FakeResponse":
