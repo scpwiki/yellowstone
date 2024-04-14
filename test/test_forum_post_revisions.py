@@ -16,10 +16,10 @@ class TestForumPostRevisions(unittest.TestCase):
         http_response = FakeResponse.ajax_from_file("forum_post_revisions")
         with patch.object(requests, "post", return_value=http_response) as mock:
             revision_ids = forum_post_revisions.get(
-                site_slug="scp-wiki",
-                category_id=88827,
-                thread_id=561991,
-                post_id=1782850,
+                site_slug="scptestwiki",
+                category_id=6196661,
+                thread_id=12639175,
+                post_id=6462360,
                 wikidot=self.wikidot,
             )
             mock.assert_called_once()
