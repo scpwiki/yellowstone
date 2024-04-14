@@ -22,6 +22,7 @@ class TestForumPostRevision(unittest.TestCase):
             "post",
             side_effect=[http_response_1, http_response_2, http_response_3],
         ) as mock:
+
             def get_revision(revision_id):
                 return forum_post_revision.get(
                     site_slug="scptestwiki",
