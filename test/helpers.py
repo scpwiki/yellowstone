@@ -23,6 +23,10 @@ class FakeResponse:
         return FakeResponse(get_test_data(filename, extension))
 
     @staticmethod
+    def from_json(filename: str, extension: str = "json") -> "FakeResponse":
+        return FakeResponse(get_test_json(filename, extension))
+
+    @staticmethod
     def ajax_from_file(filename: str, extension: str = "html") -> "FakeResponse":
         return FakeResponse(
             {
