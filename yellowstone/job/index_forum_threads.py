@@ -6,7 +6,9 @@ as the next page of the list.
 """
 
 import logging
-from typing import TYPE_CHECKING, TypedDict
+from typing import TYPE_CHECKING, Optional, TypedDict
+
+from ..request import forum_threads
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -33,7 +35,7 @@ def needs_update(
     last_progress: ForumThreadProgressRow,
     thread: forum_threads.ForumThreadData,
 ) -> bool:
-    if thread.post_count > last_progress["last_post_id"]:
+    if thread.post_count > last_progress["post_count"]:
         logger.debug(
             "Forum thread %d has more posts (%d > %d)",
             thread.id,
