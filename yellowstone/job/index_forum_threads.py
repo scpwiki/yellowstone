@@ -19,6 +19,38 @@ class ForumThreadsJob(TypedDict):
     category_id: int
 
 
+class ForumThreadProgressRow(TypedDict):
+    post_count: int
+    last_post_id: Optional[int]
+
+
 def run(core: "BackupDispatcher", data: ForumThreadsJob) -> None:
     # TODO
     pass
+
+
+def needs_update(
+    last_progress: ForumThreadProgressRow,
+    thread: forum_threads.ForumThreadData,
+) -> bool:
+    if thread.post_count > last_progress["last_post_id"]:
+        logger.debug(
+            "Forum thread %d has more posts (%d > %d)",
+            thread.id,
+            thread.post_count,
+            last_progress["post_count"],
+        )
+        return True
+
+    if thread.last_post is not None:
+        last_post_id = last_progress["last_post_id"] or 0
+        if thread.last_post.post_id > last_post_id:
+            logger.debug(
+                "Forum thread %d has a new post ID (%d > %d)",
+                thread.id,
+                last_post_id,
+            )
+            return True
+
+    logger.debug("Forum thread %d has nothing new to index", thread.id)
+    return False
