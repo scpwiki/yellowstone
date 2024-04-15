@@ -18,17 +18,28 @@ logger = logging.getLogger(__name__)
 
 class ForumThreadsJob(TypedDict):
     site_slug: str
+    offset: Optional[int]
     category_id: int
 
 
 class ForumThreadProgressRow(TypedDict):
     post_count: int
+    last_offset: Optional[int]
     last_post_id: Optional[int]
 
 
 def run(core: "BackupDispatcher", data: ForumThreadsJob) -> None:
-    # TODO
-    pass
+    site_slug = data["site_slug"]
+    category_id = data["category_id"]
+
+    # Fetch posts from each offset of this thread until it is exhausted
+    offset = data["offset"] or 1
+    threads = True
+
+    while threads:
+        threads = forum_threads.get(site_slug, category_id=category_id, offset=offset, wikidot=core.wikidot)
+        offset += 1
+        # TODO save threads
 
 
 def needs_update(
