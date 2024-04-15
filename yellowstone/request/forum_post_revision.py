@@ -16,8 +16,10 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class ForumPostRevisionData:
+    revision_id: int
+    post_id: int
     title: str
-    content: str
+    html: str
 
 
 def get(
@@ -49,6 +51,8 @@ def get(
     assert response["body"] == "ok", "Response body not 'ok'"
     assert response["postId"] == post_id, "Post ID does not match response"
     return ForumPostRevisionData(
+        revision_id=revision_id,
+        post_id=post_id,
         title=response["title"],
-        content=response["content"].strip(),
+        html=response["content"].strip(),
     )
