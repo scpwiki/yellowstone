@@ -68,7 +68,7 @@ def run(core: "BackupDispatcher", data: ForumCategoriesJob) -> None:
 
             if progress is None or needs_update(progress, category):
                 core.job.index_forum_threads(
-                    {"site_slug": site_slug, "category_id": category.id},
+                    {"site_slug": site_slug, "category_id": category.id, "offset": None},
                 )
 
 

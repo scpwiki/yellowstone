@@ -6,9 +6,10 @@ as the next page of the list.
 """
 
 import logging
-from typing import TYPE_CHECKING, Optional, TypedDict
+from typing import TYPE_CHECKING, Optional, TypedDict, Union
 
 from ..request import forum_threads
+from ..request.forum_threads import ForumThreadData
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -34,10 +35,15 @@ def run(core: "BackupDispatcher", data: ForumThreadsJob) -> None:
 
     # Fetch posts from each offset of this thread until it is exhausted
     offset = data["offset"] or 1
-    threads = True
+    threads: Union[list[ForumThreadData], bool] = True
 
     while threads:
-        threads = forum_threads.get(site_slug, category_id=category_id, offset=offset, wikidot=core.wikidot)
+        threads = forum_threads.get(
+            site_slug,
+            category_id=category_id,
+            offset=offset,
+            wikidot=core.wikidot,
+        )
         offset += 1
         # TODO save threads
 
