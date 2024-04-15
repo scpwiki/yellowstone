@@ -35,17 +35,14 @@ def run(core: "BackupDispatcher", data: ForumThreadsJob) -> None:
 
     # Fetch posts from each offset of this thread until it is exhausted
     offset = data["offset"] or 1
-    threads: Union[list[ForumThreadData], bool] = True
-
-    while threads:
-        threads = forum_threads.get(
-            site_slug,
-            category_id=category_id,
-            offset=offset,
-            wikidot=core.wikidot,
-        )
-        offset += 1
-        # TODO save threads
+    threads = forum_threads.get(
+        site_slug,
+        category_id=category_id,
+        offset=offset,
+        wikidot=core.wikidot,
+    )
+    # TODO save data
+    # TODO queue index_forum_threads (offset+1)
 
 
 def needs_update(
