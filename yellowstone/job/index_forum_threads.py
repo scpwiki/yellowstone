@@ -42,7 +42,9 @@ def run(core: "BackupDispatcher", data: ForumThreadsJob) -> None:
         wikidot=core.wikidot,
     )
     # TODO save data
-    # TODO queue index_forum_threads (offset+1)
+    core.job.index_forum_threads(
+        {"site_slug": site_slug, "category_id": category.id, "offset": offset + 1},
+    )
 
 
 def needs_update(
