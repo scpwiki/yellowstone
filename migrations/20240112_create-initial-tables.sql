@@ -109,7 +109,22 @@ CREATE TABLE forum_thread_progress (
     last_post_id INTEGER
 );
 
--- TODO create forum_thread, forum_post, and forum_post_revision tables
+CREATE TABLE forum_post (
+    forum_post_id INTEGER PRIMARY KEY,
+    parent_post_id INTEGER,
+    title TEXT NOT NULL,
+    created_by INTEGER NOT NULL REFERENCES "user"(user_id),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    wikitext TEXT NOT NULL,
+    html TEXT NOT NULL
+);
+
+CREATE TABLE forum_post_revision (
+    forum_revision_id INTEGER PRIMARY KEY,
+    forum_post_id INTEGER NOT NULL REFERENCES forum_post(forum_post_id),
+    title TEXT NOT NULL,
+    html TEXT NOT NULL
+);
 
 CREATE TABLE job (
     job_id SERIAL PRIMARY KEY,
