@@ -6,10 +6,9 @@ as the next page of the list.
 """
 
 import logging
-from typing import TYPE_CHECKING, Optional, TypedDict, Union
+from typing import TYPE_CHECKING, Optional, TypedDict
 
 from ..request import forum_threads
-from ..request.forum_threads import ForumThreadData
 
 if TYPE_CHECKING:
     from ..core import BackupDispatcher
@@ -42,8 +41,9 @@ def run(core: "BackupDispatcher", data: ForumThreadsJob) -> None:
         wikidot=core.wikidot,
     )
     # TODO save data
+    _ = threads
     core.job.index_forum_threads(
-        {"site_slug": site_slug, "category_id": category.id, "offset": offset + 1},
+        {"site_slug": site_slug, "category_id": category_id, "offset": offset + 1},
     )
 
 
