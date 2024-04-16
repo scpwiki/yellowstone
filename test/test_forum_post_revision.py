@@ -35,14 +35,14 @@ class TestForumPostRevision(unittest.TestCase):
 
             data = get_revision(7841563)
             self.assertEqual(data.title, "test with many revisions")
-            self.assertEqual(data.content, "<p>1</p>")
+            self.assertEqual(data.html, "<p>1</p>")
 
             data = get_revision(7841564)
             self.assertEqual(data.title, "test with many revisions")
-            self.assertEqual(data.content, "<p><strong>2</strong></p>")
+            self.assertEqual(data.html, "<p><strong>2</strong></p>")
 
             data = get_revision(7841565)
             self.assertEqual(data.title, "test with many revisions")
-            self.assertEqual(data.content, "<p><em>3</em></p>")
+            self.assertEqual(data.html, "<p><em>3</em></p>")
 
             mock.assert_called()
